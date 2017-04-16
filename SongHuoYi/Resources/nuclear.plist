@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>data</key>
+	<dict>
+		<key>tasksId</key>
+		<integer>12312312312</integer>
+		<key>startAddr</key>
+		<string>宇宙银河系太阳系地球村中国家浙江窝滨江地</string>
+		<key>lineId</key>
+		<integer>11111111</integer>
+		<key>lineName</key>
+		<string>1线路</string>
+		<key>categoryNum</key>
+		<integer>23</integer>
+		<key>merchantNum</key>
+		<integer>22</integer>
+		<key>taskDetail</key>
+		<integer>12</integer>
+		<key>expectTime</key>
+		<integer>123213123213</integer>
+		<key>collectMoney</key>
+		<integer>123</integer>
+		<key>senderAddr</key>
+		<string>莲花村鱼塘雨天下雨了收衣服了238号</string>
+		<key>senderPhone</key>
+		<real>123123123123</real>
+		<key>senderName</key>
+		<string>小二</string>
+		<key>senderId</key>
+		<integer>152</integer>
+		<key>longitude</key>
+		<integer>120</integer>
+		<key>dimension</key>
+		<integer>30</integer>
+	</dict>
+</dict>
+</plist>

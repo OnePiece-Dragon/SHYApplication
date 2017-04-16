@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>data</key>
+	<dict>
+		<key>userId</key>
+		<integer>123</integer>
+		<key>userName</key>
+		<string>轻音</string>
+		<key>roleId</key>
+		<integer>1</integer>
+		<key>lastLoginTime</key>
+		<integer>1491377025823</integer>
+		<key>messNum</key>
+		<integer>2</integer>
+		<key>taskNum</key>
+		<integer>5</integer>
+		<key>status</key>
+		<integer>1</integer>
+		<key>workTime</key>
+		<integer>1474949916000</integer>
+		<key>offDutyTime</key>
+		<integer>1474949916000</integer>
+	</dict>
+</dict>
+</plist>
