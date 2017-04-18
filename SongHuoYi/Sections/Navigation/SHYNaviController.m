@@ -23,8 +23,8 @@
 - (UILabel *)titleLabel {
     if (!_titleLabel) {
         _titleLabel = [UILabel.alloc initWithFrame:CGRectMake(0, 0, 120, 44)];
-        _titleLabel.font = [UIFont systemFontOfSize:16];
-        _titleLabel.textColor = [UIColor whiteColor];
+        _titleLabel.font = [UIFont systemFontOfSize:18];
+        _titleLabel.textColor = COLOR_WHITE;
         _titleLabel.textAlignment = NSTextAlignmentCenter;
     }
     return _titleLabel;

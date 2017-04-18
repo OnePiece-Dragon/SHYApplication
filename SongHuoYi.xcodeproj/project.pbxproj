@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		57E055C6B55C0B749339C54C /* libPods-SongHuoYiTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0461C35E771F4EE00FB784AE /* libPods-SongHuoYiTests.a */; };
-		8556FC8BF8564C4870674773 /* libPods-SongHuoYiUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B4309528B365F97BE8E9E /* libPods-SongHuoYiUITests.a */; };
-		B7CF5B7D6B903A6ADE1D1F23 /* libPods-SongHuoYi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1B34FED4449C609221C0EC /* libPods-SongHuoYi.a */; };
+		6066A1A4FD2A9A723852E600 /* Pods_SongHuoYiTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2092518CD40D3A9E194AC4F6 /* Pods_SongHuoYiTests.framework */; };
+		64DDC564D62506D473BF5DC6 /* Pods_SongHuoYi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91B6EE453DF6A3902F342AF0 /* Pods_SongHuoYi.framework */; };
+		7840B28A0B3A2C277F15E357 /* Pods_SongHuoYiUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EE2ACC2903AC3B22EAF0A50 /* Pods_SongHuoYiUITests.framework */; };
 		DF24E94C1E9F6FB400804E94 /* UIImage+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = DF24E91A1E9F6FB400804E94 /* UIImage+Ext.m */; };
 		DF24E94D1E9F6FB400804E94 /* UIImage+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = DF24E91A1E9F6FB400804E94 /* UIImage+Ext.m */; };
 		DF24E94E1E9F6FB400804E94 /* UIView+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = DF24E91C1E9F6FB400804E94 /* UIView+Ext.m */; };
@@ -102,6 +102,10 @@
 		DFBC34C71E94D4CB000C7402 /* userMessage.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFBC34C51E94D4CB000C7402 /* userMessage.plist */; };
 		DFBC34CB1E9521EA000C7402 /* SHYIndexItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFBC34CA1E9521EA000C7402 /* SHYIndexItemView.m */; };
 		DFBC34CC1E9521EA000C7402 /* SHYIndexItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = DFBC34CA1E9521EA000C7402 /* SHYIndexItemView.m */; };
+		DFBFE3E31EA470F700EA1406 /* NetClient.m in Sources */ = {isa = PBXBuildFile; fileRef = DFBFE3E21EA470F700EA1406 /* NetClient.m */; };
+		DFBFE3E41EA470F700EA1406 /* NetClient.m in Sources */ = {isa = PBXBuildFile; fileRef = DFBFE3E21EA470F700EA1406 /* NetClient.m */; };
+		DFBFE3EC1EA5F85D00EA1406 /* SHYLoginViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DFBFE3EB1EA5F85D00EA1406 /* SHYLoginViewModel.m */; };
+		DFBFE3ED1EA5F85D00EA1406 /* SHYLoginViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DFBFE3EB1EA5F85D00EA1406 /* SHYLoginViewModel.m */; };
 		DFD925E81E973E4900DFDF32 /* SHYCheckGoodsDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DFD925E71E973E4900DFDF32 /* SHYCheckGoodsDetailModel.m */; };
 		DFD925E91E973E4900DFDF32 /* SHYCheckGoodsDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DFD925E71E973E4900DFDF32 /* SHYCheckGoodsDetailModel.m */; };
 		DFD925EB1E97406600DFDF32 /* nuclear.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFD925EA1E97406600DFDF32 /* nuclear.plist */; };
@@ -173,15 +177,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0461C35E771F4EE00FB784AE /* libPods-SongHuoYiTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SongHuoYiTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		055B4309528B365F97BE8E9E /* libPods-SongHuoYiUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SongHuoYiUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2092518CD40D3A9E194AC4F6 /* Pods_SongHuoYiTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SongHuoYiTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3EE2ACC2903AC3B22EAF0A50 /* Pods_SongHuoYiUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SongHuoYiUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E87B49070F7B68864AE95C2 /* Pods-SongHuoYiUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SongHuoYiUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SongHuoYiUITests/Pods-SongHuoYiUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		53D2C0EA2E10199F0A4A1BB6 /* Pods-SongHuoYiTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SongHuoYiTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SongHuoYiTests/Pods-SongHuoYiTests.release.xcconfig"; sourceTree = "<group>"; };
 		5F8DE9493C947791B2415FA7 /* Pods-SongHuoYiUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SongHuoYiUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SongHuoYiUITests/Pods-SongHuoYiUITests.release.xcconfig"; sourceTree = "<group>"; };
+		91B6EE453DF6A3902F342AF0 /* Pods_SongHuoYi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SongHuoYi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E23F00E73E64DB162E5A938 /* Pods-SongHuoYi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SongHuoYi.release.xcconfig"; path = "Pods/Target Support Files/Pods-SongHuoYi/Pods-SongHuoYi.release.xcconfig"; sourceTree = "<group>"; };
 		AF17F2C198205751376A3B35 /* Pods-SongHuoYi.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SongHuoYi.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SongHuoYi/Pods-SongHuoYi.debug.xcconfig"; sourceTree = "<group>"; };
 		B454177939D59C5D54E130C1 /* Pods-SongHuoYiTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SongHuoYiTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SongHuoYiTests/Pods-SongHuoYiTests.debug.xcconfig"; sourceTree = "<group>"; };
-		BE1B34FED4449C609221C0EC /* libPods-SongHuoYi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SongHuoYi.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF24E9181E9F6FB400804E94 /* SHYCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYCategories.h; sourceTree = "<group>"; };
 		DF24E9191E9F6FB400804E94 /* UIImage+Ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Ext.h"; sourceTree = "<group>"; };
 		DF24E91A1E9F6FB400804E94 /* UIImage+Ext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Ext.m"; sourceTree = "<group>"; };
@@ -283,6 +287,11 @@
 		DFBC34C51E94D4CB000C7402 /* userMessage.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = userMessage.plist; sourceTree = "<group>"; };
 		DFBC34C91E9521EA000C7402 /* SHYIndexItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYIndexItemView.h; sourceTree = "<group>"; };
 		DFBC34CA1E9521EA000C7402 /* SHYIndexItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYIndexItemView.m; sourceTree = "<group>"; };
+		DFBFE3E11EA470F700EA1406 /* NetClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetClient.h; sourceTree = "<group>"; };
+		DFBFE3E21EA470F700EA1406 /* NetClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetClient.m; sourceTree = "<group>"; };
+		DFBFE3E51EA4985300EA1406 /* TipMacro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TipMacro.h; sourceTree = "<group>"; };
+		DFBFE3EA1EA5F85D00EA1406 /* SHYLoginViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYLoginViewModel.h; sourceTree = "<group>"; };
+		DFBFE3EB1EA5F85D00EA1406 /* SHYLoginViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYLoginViewModel.m; sourceTree = "<group>"; };
 		DFD925E61E973E4900DFDF32 /* SHYCheckGoodsDetailModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYCheckGoodsDetailModel.h; sourceTree = "<group>"; };
 		DFD925E71E973E4900DFDF32 /* SHYCheckGoodsDetailModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYCheckGoodsDetailModel.m; sourceTree = "<group>"; };
 		DFD925EA1E97406600DFDF32 /* nuclear.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = nuclear.plist; sourceTree = "<group>"; };
@@ -342,7 +351,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B7CF5B7D6B903A6ADE1D1F23 /* libPods-SongHuoYi.a in Frameworks */,
+				64DDC564D62506D473BF5DC6 /* Pods_SongHuoYi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,7 +359,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				57E055C6B55C0B749339C54C /* libPods-SongHuoYiTests.a in Frameworks */,
+				6066A1A4FD2A9A723852E600 /* Pods_SongHuoYiTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,7 +367,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8556FC8BF8564C4870674773 /* libPods-SongHuoYiUITests.a in Frameworks */,
+				7840B28A0B3A2C277F15E357 /* Pods_SongHuoYiUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,9 +377,9 @@
 		2136130FD4A0D59A6CCEC74C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				BE1B34FED4449C609221C0EC /* libPods-SongHuoYi.a */,
-				0461C35E771F4EE00FB784AE /* libPods-SongHuoYiTests.a */,
-				055B4309528B365F97BE8E9E /* libPods-SongHuoYiUITests.a */,
+				91B6EE453DF6A3902F342AF0 /* Pods_SongHuoYi.framework */,
+				2092518CD40D3A9E194AC4F6 /* Pods_SongHuoYiTests.framework */,
+				3EE2ACC2903AC3B22EAF0A50 /* Pods_SongHuoYiUITests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -445,14 +454,14 @@
 		DF24E9241E9F6FB400804E94 /* Index */ = {
 			isa = PBXGroup;
 			children = (
-				DF24E9251E9F6FB400804E94 /* MyDelivery */,
-				DF24E92A1E9F6FB400804E94 /* MyTask */,
 				DF24E9311E9F6FB400804E94 /* SHYIndexController.h */,
 				DF24E9321E9F6FB400804E94 /* SHYIndexController.m */,
 				DF24E9331E9F6FB400804E94 /* SHYMapNaviController.h */,
 				DF24E9341E9F6FB400804E94 /* SHYMapNaviController.m */,
 				DF24E9351E9F6FB400804E94 /* SHYMessageController.h */,
 				DF24E9361E9F6FB400804E94 /* SHYMessageController.m */,
+				DF24E9251E9F6FB400804E94 /* MyDelivery */,
+				DF24E92A1E9F6FB400804E94 /* MyTask */,
 			);
 			path = Index;
 			sourceTree = "<group>";
@@ -471,12 +480,12 @@
 		DF24E92A1E9F6FB400804E94 /* MyTask */ = {
 			isa = PBXGroup;
 			children = (
+				DF24E92F1E9F6FB400804E94 /* SHYTaskController.h */,
+				DF24E9301E9F6FB400804E94 /* SHYTaskController.m */,
 				DF24E92B1E9F6FB400804E94 /* SHYCheckGoodsDetailController.h */,
 				DF24E92C1E9F6FB400804E94 /* SHYCheckGoodsDetailController.m */,
 				DF24E92D1E9F6FB400804E94 /* SHYReceiveBoxController.h */,
 				DF24E92E1E9F6FB400804E94 /* SHYReceiveBoxController.m */,
-				DF24E92F1E9F6FB400804E94 /* SHYTaskController.h */,
-				DF24E9301E9F6FB400804E94 /* SHYTaskController.m */,
 			);
 			path = MyTask;
 			sourceTree = "<group>";
@@ -486,6 +495,8 @@
 			children = (
 				DF24E9381E9F6FB400804E94 /* SHYLoginController.h */,
 				DF24E9391E9F6FB400804E94 /* SHYLoginController.m */,
+				DFBFE3EA1EA5F85D00EA1406 /* SHYLoginViewModel.h */,
+				DFBFE3EB1EA5F85D00EA1406 /* SHYLoginViewModel.m */,
 				DF24E93A1E9F6FB400804E94 /* SHYLoginModel.h */,
 				DF24E93B1E9F6FB400804E94 /* SHYLoginModel.m */,
 			);
@@ -672,6 +683,8 @@
 			children = (
 				DFBC34B01E949E1A000C7402 /* NetManager.h */,
 				DFBC34B11E949E1A000C7402 /* NetManager.m */,
+				DFBFE3E11EA470F700EA1406 /* NetClient.h */,
+				DFBFE3E21EA470F700EA1406 /* NetClient.m */,
 			);
 			path = netWork;
 			sourceTree = "<group>";
@@ -762,6 +775,7 @@
 				DFBC342F1E936FBB000C7402 /* NotificationMacro.h */,
 				DFBC344F1E93756F000C7402 /* UserDefaultMacro.h */,
 				DFBC34301E936FD1000C7402 /* UrlMacro.h */,
+				DFBFE3E51EA4985300EA1406 /* TipMacro.h */,
 			);
 			path = Macro;
 			sourceTree = "<group>";
@@ -1180,6 +1194,7 @@
 				DFE16DD61E9B7FE300487C6E /* SHYTaskCell.m in Sources */,
 				DFE16DCE1E9B7FE300487C6E /* SHYGoodsCell.m in Sources */,
 				DFD925E81E973E4900DFDF32 /* SHYCheckGoodsDetailModel.m in Sources */,
+				DFBFE3EC1EA5F85D00EA1406 /* SHYLoginViewModel.m in Sources */,
 				DFBC34A61E949590000C7402 /* CustomTextField.m in Sources */,
 				DF24E9681E9F6FB400804E94 /* SHYChangePasswordController.m in Sources */,
 				DFBC349E1E949151000C7402 /* InputTextField.m in Sources */,
@@ -1197,6 +1212,7 @@
 				DF24E9521E9F6FB400804E94 /* SHYHistoryNoteController.m in Sources */,
 				DF24E95A1E9F6FB400804E94 /* SHYReceiveBoxController.m in Sources */,
 				DF24E94E1E9F6FB400804E94 /* UIView+Ext.m in Sources */,
+				DFBFE3E31EA470F700EA1406 /* NetClient.m in Sources */,
 				DFBC347A1E93A7B9000C7402 /* SHYNaviController.m in Sources */,
 				DF24E9661E9F6FB400804E94 /* SHYLoginModel.m in Sources */,
 				DFAE44211E95E077002C20F6 /* SHYIndexItemModel.m in Sources */,
@@ -1230,6 +1246,7 @@
 				DF9677F51E8E343600D80644 /* SongHuoYiTests.m in Sources */,
 				DF24E9691E9F6FB400804E94 /* SHYChangePasswordController.m in Sources */,
 				DFD925FC1E9762EA00DFDF32 /* SHYTwoSideLabel.m in Sources */,
+				DFBFE3ED1EA5F85D00EA1406 /* SHYLoginViewModel.m in Sources */,
 				DF24E9611E9F6FB400804E94 /* SHYMapNaviController.m in Sources */,
 				DF24E9631E9F6FB400804E94 /* SHYMessageController.m in Sources */,
 				DFBC347D1E93A7B9000C7402 /* SHYNavigtionBar.m in Sources */,
@@ -1260,6 +1277,7 @@
 				DFBC34B31E949E1A000C7402 /* Factory.m in Sources */,
 				DFBC349F1E949151000C7402 /* InputTextField.m in Sources */,
 				DFE16DC91E9B7FE300487C6E /* SHYBaseTableView.m in Sources */,
+				DFBFE3E41EA470F700EA1406 /* NetClient.m in Sources */,
 				DFD925F31E974C2000DFDF32 /* SHYNuclearCategoryModel.m in Sources */,
 				DF24E9531E9F6FB400804E94 /* SHYHistoryNoteController.m in Sources */,
 				DF24E9591E9F6FB400804E94 /* SHYCheckGoodsDetailController.m in Sources */,
@@ -1421,6 +1439,7 @@
 				DEVELOPMENT_TEAM = 9TP7NLYBD2;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/Resources/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/SongHuoYi/Resources/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cn.tianxi.liandianyi.SongHuoYi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1439,6 +1458,7 @@
 				DEVELOPMENT_TEAM = 9TP7NLYBD2;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/$(PROJECT_NAME)/Resources/PrefixHeader.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/SongHuoYi/Resources/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = cn.tianxi.liandianyi.SongHuoYi;
 				PRODUCT_NAME = "$(TARGET_NAME)";

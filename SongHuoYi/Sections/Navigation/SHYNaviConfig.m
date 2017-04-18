@@ -11,7 +11,6 @@
 @implementation SHYNaviConfig
 
 + (void)naviConfig {
-    
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageWithColor:NAVI_BACK_COLOR] forBarMetrics:UIBarMetricsDefault];
     [[UINavigationBar appearance] setTintColor:COLOR_WHITE];
 }

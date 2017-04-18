@@ -10,14 +10,6 @@
 
 @implementation SHYIconLabel
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
-
 - (instancetype)initWithFrame:(CGRect)frame icon:(NSString *)icon {
     if ([super initWithFrame:frame]) {
         [self addSubview:self.iconImage];

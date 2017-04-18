@@ -12,7 +12,7 @@
 				<key>categoryId</key>
 				<integer>222</integer>
 				<key>unit</key>
-				<integer>3</integer>
+				<string>箱</string>
 				<key>goodsTotal</key>
 				<string>12</string>
 				<key>wayCategoryName</key>
@@ -49,65 +49,7 @@
 				<key>categoryId</key>
 				<integer>222</integer>
 				<key>unit</key>
-				<integer>3</integer>
-				<key>goodsTotal</key>
-				<string>12</string>
-				<key>wayCategoryName</key>
-				<string>SKU</string>
-				<key>goods</key>
-				<array>
-					<dict>
-						<key>goodsId</key>
-						<integer>123123</integer>
-						<key>goodsNum</key>
-						<integer>11</integer>
-						<key>goodsName</key>
-						<string>白菜</string>
-					</dict>
-					<dict>
-						<key>goodsId</key>
-						<integer>123123</integer>
-						<key>goodsNum</key>
-						<integer>11</integer>
-						<key>goodsName</key>
-						<string>奶粉</string>
-					</dict>
-				</array>
-			</dict>
-			<dict>
-				<key>categoryId</key>
-				<integer>222</integer>
-				<key>unit</key>
-				<integer>3</integer>
-				<key>goodsTotal</key>
-				<string>12</string>
-				<key>wayCategoryName</key>
-				<string>SKU</string>
-				<key>goods</key>
-				<array>
-					<dict>
-						<key>goodsId</key>
-						<integer>123123</integer>
-						<key>goodsNum</key>
-						<integer>11</integer>
-						<key>goodsName</key>
-						<string>白菜</string>
-					</dict>
-					<dict>
-						<key>goodsId</key>
-						<integer>123123</integer>
-						<key>goodsNum</key>
-						<integer>11</integer>
-						<key>goodsName</key>
-						<string>奶粉</string>
-					</dict>
-				</array>
-			</dict>
-			<dict>
-				<key>categoryId</key>
-				<integer>222</integer>
-				<key>unit</key>
-				<integer>3</integer>
+				<string>只</string>
 				<key>goodsTotal</key>
 				<string>12</string>
 				<key>wayCategoryName</key>

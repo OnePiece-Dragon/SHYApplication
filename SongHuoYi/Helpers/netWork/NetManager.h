@@ -7,11 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "NetClient.h"
 #import "UrlMacro.h"
 //@"http://127.0.0.1"
 #define BaseUrl BASE_URL
-#define PORT @"8080"
 
 @interface NetManager : NSObject
 

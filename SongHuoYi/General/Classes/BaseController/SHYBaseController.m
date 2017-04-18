@@ -39,6 +39,7 @@
 
 - (void)setBackItem:(NSString *)backImage {
     UIBarButtonItem * leftItem = [UIBarButtonItem.alloc initWithImage:ImageNamed(backImage) style:UIBarButtonItemStylePlain target:self action:@selector(leftBackItemAction)];
+    leftItem.imageInsets = UIEdgeInsetsMake(0, -10, 0, 0);
     self.navigationItem.leftBarButtonItems = @[leftItem];
 }
 - (void)cancelBackItem {
@@ -95,8 +96,25 @@
     hud.detailsLabel.font = [UIFont systemFontOfSize:14.0];;
     [hud hideAnimated:YES afterDelay:2.f];
 }
-
-
+- (void)showNetTips:(NSString *)tips {
+    UIView * view = [[UIApplication sharedApplication].windows lastObject];
+    // 快速显示一个提示信息
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
+    hud.label.text = tips;
+    // 隐藏时候从父控件中移除
+    hud.removeFromSuperViewOnHide = YES;
+    // YES代表需要蒙版效果
+    //hud.dimBackground = NO;
+}
+- (void)hideNetTips {
+    UIView * view = [[UIApplication sharedApplication].windows lastObject];
+    NSEnumerator *subviewsEnum = [view.subviews reverseObjectEnumerator];
+    for (UIView *subview in subviewsEnum) {
+        if ([subview isKindOfClass:NSClassFromString(@"MBProgressHUD")]) {
+            [(MBProgressHUD*)subview hideAnimated:YES];
+        }
+    }
+}
 
 
 

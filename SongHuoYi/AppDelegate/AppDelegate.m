@@ -45,22 +45,22 @@
     if (!ret) {
         DLog(@"manager start failed!");
     }
-
-    self.window.rootViewController = self.tabBarVC;
     
-//    if ([UserDefaultObjectForKey(USER_LOGIN_STATUS) intValue] == 1 && [UserDefaultObjectForKey(USER_ISAUTO_LOGIN) intValue] == 1) {
-//        //已经登录
-//        self.window.rootViewController = self.tabBarVC;
-//    }else {
-//        SHYLoginModel * loginModel = [SHYLoginModel.alloc init];
-//        loginModel.userPhone = UserDefaultObjectForKey(USER_PHONE);
-//        loginModel.userPassword = UserDefaultObjectForKey(USER_PASSWORD);
-//        loginModel.isAutoLogin = [UserDefaultObjectForKey(USER_ISAUTO_LOGIN) integerValue] == 1 ? YES : NO;
-//        [self.loginVC setLoginModel:loginModel];
-//        self.window.rootViewController = self.loginVC;
-//    }
-//    
     
+    if ([UserDefaultObjectForKey(USER_LOGIN_STATUS) intValue] == 1 && [UserDefaultObjectForKey(USER_ISAUTO_LOGIN) intValue] == 1) {
+        SHYUserModel *model = UnArchiveObjWithData(UserDefaultObjectForKey(USER_MESSAGE));
+        SHYUserModel *newModel = [SHYUserModel shareUserMsg];
+        [newModel mj_setKeyValues:model.mj_keyValues];
+        //已经登录
+        self.window.rootViewController = self.tabBarVC;
+    }else {
+        SHYLoginModel * loginModel = [SHYLoginModel.alloc init];
+        loginModel.userPhone = UserDefaultObjectForKey(USER_PHONE);
+        loginModel.userPassword = UserDefaultObjectForKey(USER_PASSWORD);
+        loginModel.isAutoLogin = [UserDefaultObjectForKey(USER_ISAUTO_LOGIN) integerValue] == 1 ? YES : NO;
+        [self.loginVC setLoginModel:loginModel];
+        self.window.rootViewController = self.loginVC;
+    }
     return YES;
 }
 
@@ -89,6 +89,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    UserDefaultSetObjectForKey(ArchivedDataWithObject([SHYUserModel shareUserMsg]), USER_MESSAGE);
 }
 
 

@@ -11,6 +11,8 @@
 @interface SHYTaskController ()<BMKMapViewDelegate,BMKLocationServiceDelegate>
 
 {
+    NSInteger _page;
+    
     NSInteger _isMap;
     NSInteger _isUserLocation;
     BOOL _mapHaveLoad;
@@ -27,6 +29,8 @@
     // Do any additional setup after loading the view.
     self.orginView = self.view;
     self.naviTitle = @"我的任务";
+    _page = 0;
+    
     kWeakSelf(self);
     _isMap = NO;
     _isUserLocation = NO;
@@ -44,6 +48,8 @@
 - (void)enterCheckGoodsClick:(SHYTaskModel*)model {
     DLog(@"开始核货:%@",model.lineName);
     SHYCheckGoodsDetailController * VC = [SHYCheckGoodsDetailController.alloc init];
+    VC.taskCode = model.tasksId.stringValue;
+    VC.lineCode = model.lineId.stringValue;
     [self.navigationController pushViewController:VC animated:YES];
 }
 
@@ -56,27 +62,28 @@
         
         [self.locService startUserLocationService];
         //以下_mapView为BMKMapView对象
-        //_mapView.showsUserLocation = NO;
         _mapView.userTrackingMode = BMKUserTrackingModeNone;//设置定位的状态
         _mapView.showsUserLocation = YES;//显示定位图层
         
         [self addAnnotationOnMap];
         
+        if (self.dataArray.count) {
+            [self.mapView addSubview:self.annotationDetailView];
+            kWeakSelf(self);
+            [self.annotationDetailView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(weakself.mapView).offset(10);
+                make.right.equalTo(weakself.mapView).offset(-10);
+                make.bottom.equalTo(weakself.mapView);
+                make.height.greaterThanOrEqualTo(@250);
+            }];
+            [self setContentView:_annotationDetailView model:self.dataArray.firstObject];
+        }
         
-        [self.mapView addSubview:self.annotationDetailView];
-        kWeakSelf(self);
-        [self.annotationDetailView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(weakself.mapView).offset(10);
-            make.right.equalTo(weakself.mapView).offset(-10);
-            make.bottom.equalTo(weakself.mapView);
-            make.height.greaterThanOrEqualTo(@250);
-        }];
         if (_mapHaveLoad) {
             _annotationDetailView.hidden = NO;
         }else {
             _annotationDetailView.hidden = YES;
         }
-        [self setContentView:_annotationDetailView model:self.dataArray.firstObject];
     }else {
         //列表模式
         self.taskTableView.hidden = NO;
@@ -96,6 +103,25 @@
 }
 
 - (void)requestData {
+    [self showNetTips:nil];
+    [NetManager post:URL_TASK_LIST param:@{@"userId":USER_ID,
+                                           @"page":@(_page)}
+            progress:^(NSProgress * _Nonnull progress) {
+        
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        [self hideNetTips];
+        [self handleResponseMessage:responseObject];
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        [self hideNetTips];
+        [self showToast:NET_ERROR_TIP];
+        
+        [self handleResponseMessage:nil];
+    }];
+}
+
+- (void)handleResponseMessage:(NSDictionary*)responseObject {
+    DLog(@"responseObject:%@",responseObject);
+    
     NSString *plistPath = PLIST_Name(@"taskList");
     NSDictionary * result = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     
@@ -123,7 +149,6 @@
     [_mapView addAnnotations:annotationArray];
     [_mapView selectAnnotation:annotationArray.firstObject animated:YES];
 }
-
 
 - (void)setContentView:(SHYTaskCell*)view model:(SHYTaskModel*)taskModel {
     [view setCellModel:taskModel];
@@ -306,7 +331,6 @@
 - (SHYTaskCell *)annotationDetailView {
     if (!_annotationDetailView) {
         _annotationDetailView = [SHYTaskCell.alloc initWithFrame:CGRectZero labelCount:6];
-        
         _annotationDetailView.layer.cornerRadius=8.f;
         _annotationDetailView.clipsToBounds = YES;
         

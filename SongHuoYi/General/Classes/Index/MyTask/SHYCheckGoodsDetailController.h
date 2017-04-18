@@ -19,6 +19,15 @@
  */
 @interface SHYCheckGoodsDetailController : SHYBaseController
 
+/**
+ 任务编号
+ */
+@property (nonatomic, strong) NSString * taskCode;
+/**
+ 线路编号
+ */
+@property (nonatomic, strong) NSString * lineCode;
+
 @property (nonatomic, strong) SHYTaskCell * headerDetailView;
 @property (nonatomic, strong) SHYCheckGoodsDetailModel * goodsDetailModel;
 

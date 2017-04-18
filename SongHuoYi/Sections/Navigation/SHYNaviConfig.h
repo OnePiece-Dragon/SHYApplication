@@ -10,7 +10,6 @@
 #import "UIImage+Ext.h"
 #import "AppMacro.h"
 
-#define NAVI_BACK_COLOR COLOR_RGB(99, 184, 255)
 
 @interface SHYNaviConfig : NSObject
 

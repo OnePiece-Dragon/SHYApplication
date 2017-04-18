@@ -34,6 +34,7 @@
 #define COLOR_Hrex(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 
+#define NAVI_BACK_COLOR COLOR_RGB(99, 184, 255)
 #define LINE_COLOR COLOR_RGB(221, 221, 221)
 #define BUTTON_COLOR [UIColor blueColor]
 #define COLOR_WHITE [UIColor whiteColor]

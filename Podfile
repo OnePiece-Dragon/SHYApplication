@@ -1,7 +1,7 @@
 # Uncomment this line to define a global platform for your project
-# platform :ios, '8.0'
+platform :ios, '8.0'
 # Uncomment this line if you're using Swift
-# use_frameworks!
+use_frameworks!
 
 target 'SongHuoYi' do
 pod 'AFNetworking'
@@ -11,6 +11,7 @@ pod 'MBProgressHUD'
 pod 'MJExtension'
 pod 'MJRefresh'
 pod 'TPKeyboardAvoiding'
+pod 'ReactiveObjC'
 
 pod 'BaiduMapKit' #百度地图SDK
 end
@@ -23,11 +24,21 @@ pod 'MBProgressHUD'
 pod 'MJExtension'
 pod 'MJRefresh'
 pod 'TPKeyboardAvoiding'
+pod 'ReactiveObjC'
 
 pod 'BaiduMapKit' #百度地图SDK
 end
 
 target 'SongHuoYiUITests' do
-
+    pod 'AFNetworking'
+    pod 'SDWebImage'
+    pod 'Masonry'
+    pod 'MBProgressHUD'
+    pod 'MJExtension'
+    pod 'MJRefresh'
+    pod 'TPKeyboardAvoiding'
+    pod 'ReactiveObjC'
+    
+    pod 'BaiduMapKit' #百度地图SDK
 end
 

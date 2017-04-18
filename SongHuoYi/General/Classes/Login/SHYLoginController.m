@@ -119,6 +119,7 @@
     self.model.isAutoLogin = _autoLogin.isSelected;
     
     _model.clientId = UserDefaultObjectForKey(DeviceToken);
+    
     if (!_model.clientId) {
         _model.clientId = @"";
     }
@@ -134,35 +135,45 @@
                                 @"password":_model.userPassword,
                                 @"clientId":_model.clientId
                                 };
-    
+    [self showNetTips:@"登录中..."];
     [NetManager post:URL_Login param:paramDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
-        if ([responseObject[@"errcode"] integerValue] == 1) {
+        [self hideNetTips];
+        [self handleWithObj:responseObject];
+        /*
+        if ([responseObject[@"errcode"] integerValue] == 0) {
+            [self handleWithObj:responseObject];
+        }else if ([responseObject[@"errcode"] integerValue] == 1) {
             [self failBlock:responseObject[@"errmsg"]];
         }else {
-            DLog(@"loginRequest:%@",responseObject);
-            UserDefaultSetObjectForKey(_model.userPhone, USER_PHONE);
-            UserDefaultSetObjectForKey(_model.userPassword, USER_PASSWORD);
-            if (_model.isAutoLogin == YES) {
-                UserDefaultSetObjectForKey(@1, USER_ISAUTO_LOGIN);
-            }else {
-                UserDefaultSetObjectForKey(@0, USER_ISAUTO_LOGIN);
-            }
-            
-            UserDefaultSetObjectForKey(@1, USER_LOGIN_STATUS);
-            
-            NSString *plistPath = PLIST_Name(@"userMessage");
-            NSDictionary * dic = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-            SHYUserModel * userModel = [SHYUserModel mj_objectWithKeyValues:dic[@"data"]];
-            NSData * userData = ArchivedDataWithObject(userModel);
-            UserDefaultSetObjectForKey(userData, USER_MESSAGE);
-            
-            [APP_DELEGATE window].rootViewController = [APP_DELEGATE tabBarVC];
-        }
+            [self failBlock:NET_FAIL_TIP];
+        }*/
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [self failBlock:@"网络出错了"];
+        [self hideNetTips];
+        [self failBlock:NET_ERROR_TIP];
     }];
+}
+
+- (void)handleWithObj:(NSDictionary*)responseObject{
+    DLog(@"loginRequest:%@",responseObject);
+    UserDefaultSetObjectForKey(_model.userPhone, USER_PHONE);
+    UserDefaultSetObjectForKey(_model.userPassword, USER_PASSWORD);
+    if (_model.isAutoLogin == YES) {
+        UserDefaultSetObjectForKey(@1, USER_ISAUTO_LOGIN);
+    }else {
+        UserDefaultSetObjectForKey(@0, USER_ISAUTO_LOGIN);
+    }
+    
+    UserDefaultSetObjectForKey(@1, USER_LOGIN_STATUS);
+    
+    NSString *plistPath = PLIST_Name(@"userMessage");
+    NSDictionary * dic = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+    SHYUserModel * userModel = [SHYUserModel shareUserMsg];
+    [userModel mj_setKeyValues:dic[@"data"]];
+    NSData * userData = ArchivedDataWithObject(userModel);
+    UserDefaultSetObjectForKey(userData, USER_MESSAGE);
+    
+    [APP_DELEGATE window].rootViewController = [APP_DELEGATE tabBarVC];
 }
 
 

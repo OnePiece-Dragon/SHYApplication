@@ -14,7 +14,7 @@
 //HTTP manager
 + (AFHTTPSessionManager*)manager {
     //NSURLSessionConfiguration * config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    AFHTTPSessionManager * manager = [AFHTTPSessionManager.alloc initWithBaseURL:[NSURL URLWithString:BaseUrl]];
+    AFHTTPSessionManager * manager = [AFHTTPSessionManager.alloc initWithBaseURL:[NSURL URLWithString:[[NetClient shareClient] getUrl:POST]]];
     //AFHTTPResponseSerializer * responseSerializer = [AFHTTPResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"application/xml",@"text/html",@"text/json",@"text/javascript",@"text/plain",nil];
     return manager;
@@ -24,7 +24,7 @@
      param:(NSDictionary *)param
    success:(void(^)(NSURLSessionDataTask* _Nonnull task,id _Nullable responseObject))success
    failure:(void(^)(NSURLSessionDataTask*_Nullable task,NSError*_Nonnull error))failure{
-    [[self manager] GET:method parameters:param progress:nil success:success failure:failure];
+    [[NetManager manager] GET:method parameters:param progress:nil success:success failure:failure];
 }
 
 
@@ -33,8 +33,7 @@
     progress:(void (^)(NSProgress * _Nonnull))uploadProgress
      success:(void(^)(NSURLSessionDataTask* _Nonnull task,id _Nullable responseObject))success
      failure:(void(^)(NSURLSessionDataTask*_Nullable task,NSError*_Nonnull error))failure{
-    
-    [[self manager] POST:method parameters:param progress:uploadProgress success:success failure:failure];
+    [[NetManager manager] POST:method parameters:param progress:uploadProgress success:success failure:failure];
 }
 
 @end

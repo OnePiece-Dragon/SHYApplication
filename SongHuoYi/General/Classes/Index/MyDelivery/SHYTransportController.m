@@ -51,7 +51,7 @@
     [self requestDeliveryingData];
     [self requestDeliveryDoneData];
 }
-
+//请求配送中的数据
 - (void)requestDeliveryingData {
     NSString * path = PLIST_Name(@"distribute_list");
     NSDictionary * reuslt = [NSDictionary.alloc initWithContentsOfFile:path];
@@ -62,6 +62,7 @@
     }
     [self.deliveryingView reloadData];
 }
+//请求配送完成数据
 - (void)requestDeliveryDoneData {
     NSString * path = PLIST_Name(@"distribute_list");
     NSDictionary * reuslt = [NSDictionary.alloc initWithContentsOfFile:path];
@@ -72,7 +73,7 @@
     }
     [self.deliveryDoneView reloadData];
 }
-
+//添加大头针
 - (void)addAnnotationOnMap {
     NSMutableArray * annotationArray = [NSMutableArray array];
     for (SHYDeliveryModel *model in self.deliveryingArray) {
@@ -90,12 +91,13 @@
     [_mapView addAnnotations:annotationArray];
     [_mapView selectAnnotation:annotationArray.firstObject animated:YES];
 }
-
+//查看配送详情
 - (void)clickToSeeOrderDetail:(SHYDeliveryModel*)model {
     SHYTransportDetailController * VC = [SHYTransportDetailController.alloc init];
     VC.deliveryDetailModel = model;
     [self.navigationController pushViewController:VC animated:YES];
 }
+//结束配送
 - (void)endDeliveryBtn:(SHYDeliveryModel*)model {
     DLog(@"model:%@",model.shopName);
 }
@@ -204,6 +206,7 @@
     }];
 }
 
+#pragma mark -tableViewDelegate-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
@@ -335,20 +338,22 @@
 }
 
 
-
+#pragma mark -Lazing-
 - (UISegmentedControl *)segmentControl{
     if (!_segmentControl) {
         UISegmentedControl * segmentControl = [UISegmentedControl.alloc initWithItems:@[@"配送中",@"已配送"]];
         segmentControl.frame = CGRectMake(0, 0, SCREEN_WIDTH, 49);
+
         segmentControl.tintColor = COLOR_WHITE;
-        
+        [segmentControl setBackgroundImage:[UIImage imageWithColor:COLOR_WHITE] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+        [segmentControl setBackgroundImage:[UIImage imageWithColor:COLOR_WHITE] forState:UIControlStateHighlighted barMetrics:UIBarMetricsDefault];
+        [segmentControl setBackgroundImage:[UIImage imageWithColor:COLOR_WHITE] forState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
         [segmentControl setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor],
                                                  NSFontAttributeName:kFont(16)}
                                       forState:UIControlStateNormal];
-        [segmentControl setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor]} forState:UIControlStateSelected];
-        UIView * lineView = [UIView.alloc initWithFrame:CGRectMake(SCREEN_WIDTH/2.f, 0, 1.f, 49)];
-        [segmentControl addSubview:lineView];
-        //[segmentControl setDividerImage:[UIImage imageWithColor:LINE_COLOR] forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+        [segmentControl setTitleTextAttributes:@{NSForegroundColorAttributeName:NAVI_BACK_COLOR} forState:UIControlStateSelected];
+        [segmentControl setDividerImage:[UIImage imageWithColor:LINE_COLOR] forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+        
         [segmentControl addTarget:self
                            action:@selector(segmentClickItem:)
                  forControlEvents:UIControlEventValueChanged];
@@ -358,10 +363,12 @@
     }
     return _segmentControl;
 }
+
+//slide Line View
 - (UIView *)segmentLineView {
     if (!_segmentLineView) {
         _segmentLineView = [UIView.alloc initWithFrame:CGRectMake(0, 49, SCREEN_WIDTH/2.f, 1.f)];
-        _segmentLineView.backgroundColor = BUTTON_COLOR;
+        _segmentLineView.backgroundColor = NAVI_BACK_COLOR;
     }
     return _segmentLineView;
 }

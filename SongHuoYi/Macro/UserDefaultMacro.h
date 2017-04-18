@@ -9,6 +9,10 @@
 #ifndef UserDefaultMacro_h
 #define UserDefaultMacro_h
 
+#define USER_MODEL          [SHYUserModel shareUserMsg]
+#define USER_ID             [[SHYUserModel shareUserMsg] userId]
+#define USER_WORK_STATUS    [[SHYUserModel shareUserMsg] status]
+
 #define DeviceToken         @"DeviceToken"
 #define USER_LOGIN_STATUS   @"1"
 #define USER_PHONE          @"user_phone"
@@ -16,6 +20,7 @@
 #define USER_ISAUTO_LOGIN   @"user_auto_login"
 
 #define USER_MESSAGE        @"usere_login_message"
+
 
 /**
  *  the saving objects      存储对象

@@ -42,12 +42,26 @@
     }];
     [self setUI];
     [self setContent];
-    
 }
 
+- (void)setUI {
+    [self.view addSubview:self.indexListView];
+    
+    kWeakSelf(self);
+    [self.indexListView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.right.equalTo(weakself.view);
+        make.bottom.equalTo(weakself.view).offset(kTabBarH);
+    }];
+}
 -(void)setContent {
     NSArray * imageArray = @[@"dianjiwoderenwu2",@"dianjiwodepeisong2",@"dianjikaishishangban"];
-    NSArray * titleArray = @[@"我的任务",@"我的配送",@"我要上班"];
+    NSString * workStatusString = nil;
+    if ([USER_WORK_STATUS integerValue] != 1) {
+        workStatusString = @"我要上班";
+    }else {
+        workStatusString = @"我要下班";
+    }
+    NSArray * titleArray = @[@"我的任务",@"我的配送",workStatusString];
     NSArray * descArray = @[@"",@"",@""];
     int i = 0;
     for (NSString * imageString in imageArray) {
@@ -63,9 +77,59 @@
     [self.indexListView reloadData];
 }
 
+//消息列表
 - (void)messageItem {
     SHYMessageController * VC = [SHYMessageController.alloc init];
     [self.navigationController pushViewController:VC animated:YES];
+}
+//我的任务
+- (void)myTaskItemClick {
+    SHYTaskController * VC = [SHYTaskController.alloc init];
+    [self.navigationController pushViewController:VC animated:YES];
+}
+//我的配送
+- (void)myTransportClick {
+    SHYTransportController * VC = [SHYTransportController.alloc init];
+    [self.navigationController pushViewController:VC animated:YES];
+}
+//上下班Click
+- (void)workStatusSet {
+    [self showNetTips:@"处理中..."];
+    [NetManager post:URL_WORK_UPDATE param:@{@"userId":USER_ID} progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        [self hideNetTips];
+        
+        NSDictionary * result = responseObject[@"data"];
+        
+        
+        ((SHYUserModel*)USER_MODEL).status = result[@"status"];
+        [self showToast:result[@"valStatusMsg"]];
+        if ([USER_WORK_STATUS integerValue] == 1) {
+            //上班状态
+            [self workModelStatus:1 workTime:result[@"workTime"]];
+        }else {
+            [self workModelStatus:[result[@"status"] integerValue] workTime:result[@"offDutyTime"]];
+        }
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        [self hideNetTips];
+        [self showToast:NET_ERROR_TIP];
+    }];
+}
+
+//status == 1 上班状态
+- (void)workModelStatus:(NSInteger)status workTime:(NSNumber*)time{
+    //我的工作
+    SHYIndexItemModel * model = _dataArray.lastObject;
+    if (status == 1) {
+        model.isClick = 1;
+        model.titleName = @"我要下班";
+        model.descName= [TimeManager timeWithTimeIntervalString:time.stringValue format:@"HH:mm"];
+    }else {
+        model.isClick = 0;
+        model.titleName = @"我要上班";
+        model.descName = @"";
+    }
+    [self.indexListView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 - (void)clickItemAt:(NSInteger)row {
@@ -73,31 +137,18 @@
         case 0:
         {
             //我的任务
-            SHYTaskController * VC = [SHYTaskController.alloc init];
-            [self.navigationController pushViewController:VC animated:YES];
+            [self myTaskItemClick];
         }
         break;
         case 1:
         {
             //我的配送
-            SHYTransportController * VC = [SHYTransportController.alloc init];
-            [self.navigationController pushViewController:VC animated:YES];
+            [self myTransportClick];
         }
         break;
         case 2:
         {
-            //我的工作
-            SHYIndexItemModel * model = _dataArray.lastObject;
-            if (model.isClick == 0) {
-                model.isClick = 1;
-                model.titleName = @"我要下班";
-                model.descName= @"12小时28分";
-            }else {
-                model.isClick = 0;
-                model.titleName = @"我要上班";
-                model.descName = @"";
-            }
-            [self.indexListView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+            [self workStatusSet];
         }
         break;
         default:
@@ -106,15 +157,6 @@
 }
 
 
-- (void)setUI {
-    [self.view addSubview:self.indexListView];
-    
-    kWeakSelf(self);
-    [self.indexListView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.equalTo(weakself.view);
-        make.bottom.equalTo(weakself.view).offset(kTabBarH);
-    }];
-}
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return SCREEN_WIDTH / 2.f;

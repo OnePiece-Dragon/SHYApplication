@@ -28,5 +28,7 @@
            rightBlock:(void (^)(id))rightBlock;
 
 - (void)showToast:(NSString*)toast;
+- (void)showNetTips:(NSString*)tips;
+- (void)hideNetTips;
 
 @end

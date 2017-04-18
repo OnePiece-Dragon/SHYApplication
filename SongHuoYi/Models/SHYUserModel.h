@@ -18,6 +18,7 @@
 @property (nonatomic, strong) NSNumber * lastLoginTime;
 @property (nonatomic, strong) NSNumber * messNum;
 @property (nonatomic, strong) NSNumber * taskNum;
+//配送员上下班状态
 @property (nonatomic, strong) NSNumber * status;
 @property (nonatomic, strong) NSNumber * workTime;
 @property (nonatomic, strong) NSNumber * offDutyTime;

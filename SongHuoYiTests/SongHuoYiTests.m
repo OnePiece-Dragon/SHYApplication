@@ -46,7 +46,6 @@
 }
 
 - (void)testNetRequest {
-    //String_Combine(BASE_URL, URL_Login)
     [NetManager post:URL_Login param:@{@"mobile":@"18633338888",
                                        @"password":@"123456",
                                        @"clientId":@""} progress:^(NSProgress * _Nonnull uploadProgress) {
@@ -58,6 +57,32 @@
                                            NOTIFY;
                                        }];
     WAIT;
+}
+
+- (void)testStartWork {
+    [NetManager post:URL_WORK_UPDATE param:@{@"userId":@242,
+                                             @"status":@1} progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        DLog(@"reslut:%@",responseObject);
+        NOTIFY;
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        DLog(@"error:%@",error);
+        NOTIFY
+    }];
+    WAIT
+}
+
+- (void)testMyTaskList {
+    [NetManager post:URL_WORK_UPDATE param:@{@"userId":@242,
+                                             @"page":@1} progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                                                 DLog(@"reslut:%@",responseObject);
+                                                 NOTIFY;
+                                                 
+                                             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                                                 DLog(@"error:%@",error);
+                                                 NOTIFY
+                                             }];
+    WAIT
 }
 
 - (void)testPerformanceExample {

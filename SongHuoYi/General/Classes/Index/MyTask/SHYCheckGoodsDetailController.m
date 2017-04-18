@@ -11,6 +11,10 @@
 
 @interface SHYCheckGoodsDetailController ()
 
+{
+    NSInteger _page;
+}
+
 @property (nonatomic, strong) UIPasteboard * pasteBoard;
 
 @end
@@ -20,17 +24,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    _page = 1;
     kWeakSelf(self);
-    
     self.naviTitle = @"核货详情";
     [self setRightItem:@"daohang" rightBlock:^{
         [weakself mapGuide];
     }];
-    [self requestData];
+    //核货详情
+    [self requestNuclearDetailData];
+    //核货详情类别
+    [self requestNuclearCategoryData];
     [self setUI];
 }
 
 - (void)mapGuide {
+    if (!self.goodsDetailModel.longitude) {
+        return;
+    }
+    
     SHYMapNaviController * VC = [SHYMapNaviController.alloc init];
     VC.model = self.goodsDetailModel;
     [self.navigationController pushViewController:VC animated:YES];
@@ -42,25 +53,62 @@
 }
 
 - (void)sendGoodsBtnClick {
-    DLog(@"开始配送");
+    DLog(@"一键核货");
 }
 
-- (void)requestData {
-    NSString *plistPath = PLIST_Name(@"nuclear");
-    NSDictionary * result = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-    
-    SHYCheckGoodsDetailModel * model = [SHYCheckGoodsDetailModel mj_objectWithKeyValues:result[@"data"]];
-    _goodsDetailModel = model;
-    //[self setContentView:self.headerDetailView model:model];
-    
-    //nuclear_category
-    NSString *category_plistPath = PLIST_Name(@"nuclear_category");
-    NSDictionary * category_result = [NSDictionary dictionaryWithContentsOfFile:category_plistPath];
-    for (NSDictionary * dic in category_result[@"data"][@"rows"]) {
-        SHYNuclearCategoryModel * category_model = [SHYNuclearCategoryModel mj_objectWithKeyValues:dic];
-        [self.dataArray addObject:category_model];
+- (void)requestNuclearDetailData {
+    [self showNetTips:nil];
+    [NetManager post:URL_TASK_NUCLEAR_LIST
+               param:@{@"userId":USER_ID,
+                       @"taskCode":self.taskCode,
+                       @"lineCode":self.lineCode}
+            progress:^(NSProgress * _Nonnull progress) {}
+             success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                 [self hideNetTips];
+                 [self handleResponseObj:responseObject nulClearDetail:YES];
+             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                 [self hideNetTips];
+                 [self showToast:NET_ERROR_TIP];
+                 
+                 [self handleResponseObj:nil nulClearDetail:YES];
+             }];
+}
+
+- (void)requestNuclearCategoryData {
+    [self showNetTips:nil];
+    [NetManager post:URL_TASK_NUCLEAR_CATEGORY
+               param:@{@"userId":USER_ID,
+                       @"taskCode":self.taskCode,
+                       @"lineCode":self.lineCode,
+                       @"page":@(_page)}
+            progress:^(NSProgress * _Nonnull progress) {}
+             success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                 [self hideNetTips];
+                 [self handleResponseObj:responseObject nulClearDetail:NO];
+             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                 [self hideNetTips];
+                 [self showToast:NET_ERROR_TIP];
+                 
+                 
+                 [self handleResponseObj:nil nulClearDetail:NO];
+             }];
+}
+
+- (void)handleResponseObj:(NSDictionary*)responseObj nulClearDetail:(BOOL)detail{
+    if (detail) {
+        NSString *plistPath = PLIST_Name(@"nuclear");
+        NSDictionary * result = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+        SHYCheckGoodsDetailModel * model = [SHYCheckGoodsDetailModel mj_objectWithKeyValues:result[@"data"]];
+        _goodsDetailModel = model;
+    }else {
+        //nuclear_category
+        NSString *category_plistPath = PLIST_Name(@"nuclear_category");
+        NSDictionary * category_result = [NSDictionary dictionaryWithContentsOfFile:category_plistPath];
+        for (NSDictionary * dic in category_result[@"data"][@"rows"]) {
+            SHYNuclearCategoryModel * category_model = [SHYNuclearCategoryModel mj_objectWithKeyValues:dic];
+            [self.dataArray addObject:category_model];
+        }
     }
-    
     [self.checkGoodsDetailView reloadData];
 }
 
@@ -119,38 +167,61 @@
                                                 attribute:@{NSForegroundColorAttributeName:[UIColor orangeColor]}
                                                     range:NSMakeRange(4, label7.titleLabel.text.length - 4)]];
     
-    
     [label6.titleLabel attachTapGesture];
 }
 
-
+#pragma mark -tableViewDataSource-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
+    NSInteger section = 0;
+    if (self.goodsDetailModel) {
+        section +=2;
+    }
+    if (self.dataArray.count) {
+        section ++;
+    }
+    return section;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 0) {
-        return 1;
-    }else if (section == 1) {
+    if (self.goodsDetailModel) {
+        if (section == 2) {
+            return self.dataArray.count;
+        }
         return 1;
     }
     return self.dataArray.count;
 }
+
+#pragma mark -tableViewDelegate-
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    kWeakSelf(self);
-    if (indexPath.section == 0) {
-        SHYTaskCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
-        if (!cell) {
-            cell = [SHYTaskCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID labelCount:7];
-        }
-        [cell.backView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.right.equalTo(cell);
-        }];
-        
-        if (_goodsDetailModel) {
+    
+    if (self.goodsDetailModel) {
+        if (indexPath.section == 0) {
+            SHYTaskCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+            if (!cell) {
+                cell = [SHYTaskCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID labelCount:7];
+            }
+            [cell.backView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.left.right.equalTo(cell);
+            }];
+            
             [self setContentView:cell model:_goodsDetailModel];
+            
+            return cell;
+        }else if (indexPath.section == 1) {
+            return [self goodsCategoryAndAll:YES tableView:tableView indexPath:indexPath];
+        }else {
+            return [self goodsCategoryAndAll:NO tableView:tableView indexPath:indexPath];
         }
-        return cell;
-    }else if(indexPath.section == 1){
+    }else {
+        return [self goodsCategoryAndAll:NO tableView:tableView indexPath:indexPath];
+    }
+}
+
+- (UITableViewCell*)goodsCategoryAndAll:(BOOL)isAll
+                              tableView:(UITableView*)tableView
+                              indexPath:(NSIndexPath *)indexPath {
+    kWeakSelf(self);
+    if (isAll) {
         //货物清单  SHYGoodsCell
         SHYGoodsCell * cell = [tableView dequeueReusableCellWithIdentifier:@"SHYGoodsCell"];
         if (!cell) {
@@ -172,7 +243,7 @@
         };
         
         return cell;
-    }else if(indexPath.section == 2) {
+    }else {
         SHYNuclearCategoryModel * model = self.dataArray[indexPath.row];
         //货物种类
         SHYGoodsCell * cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"SHYGoodsCell_CAT:%ld",model.goods.count+1]];
@@ -196,12 +267,12 @@
         }
         return cell;
     }
-    return nil;
 }
+
 - (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     if (section == 2) {
         UIView * footerView = [UIView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 120)];
-        UIButton * startSendGoods = [Factory createBtn:CGRectMake(40, 20, SCREEN_WIDTH - 80, 44) title:@"开始配送" type:UIButtonTypeCustom target:self action:@selector(sendGoodsBtnClick)];
+        UIButton * startSendGoods = [Factory createBtn:CGRectMake(40, 20, SCREEN_WIDTH - 80, 44) title:@"一键核货" type:UIButtonTypeCustom target:self action:@selector(sendGoodsBtnClick)];
         startSendGoods.layer.cornerRadius = 8.f;
         startSendGoods.backgroundColor = BUTTON_COLOR;
         [footerView addSubview:startSendGoods];
@@ -250,6 +321,18 @@
         _dataArray = [NSMutableArray array];
     }
     return _dataArray;
+}
+- (NSString *)taskCode {
+    if (!_taskCode) {
+        _taskCode = @"";
+    }
+    return _taskCode;
+}
+- (NSString *)lineCode {
+    if (!_lineCode) {
+        _lineCode = @"";
+    }
+    return _lineCode;
 }
 - (UIPasteboard *)pasteBoard {
     if (!_pasteBoard) {
