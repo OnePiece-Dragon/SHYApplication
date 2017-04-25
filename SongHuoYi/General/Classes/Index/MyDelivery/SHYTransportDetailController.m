@@ -91,13 +91,13 @@
     
     //字体颜色
     [label3.titleLabel setAttributedText:[Factory setText:label3.titleLabel.text
-                                                attribute:@{NSForegroundColorAttributeName:[UIColor orangeColor]}
+                                                attribute:@{NSForegroundColorAttributeName:COLOR_PRICE}
                                                     range:NSMakeRange(3, label3.titleLabel.text.length - 3)]];
     [label5.titleLabel setAttributedText:[Factory setText:label5.titleLabel.text
-                                                attribute:@{NSForegroundColorAttributeName:[UIColor greenColor]}
+                                                attribute:@{NSForegroundColorAttributeName:COLOR_ADRESS}
                                                     range:NSMakeRange(3, label5.titleLabel.text.length - 3)]];
     [label6.titleLabel setAttributedText:[Factory setText:label6.titleLabel.text
-                                                attribute:@{NSForegroundColorAttributeName:[UIColor greenColor]}
+                                                attribute:@{NSForegroundColorAttributeName:COLOR_ADRESS}
                                                     range:NSMakeRange(3, label6.titleLabel.text.length - 3)]];
     
     

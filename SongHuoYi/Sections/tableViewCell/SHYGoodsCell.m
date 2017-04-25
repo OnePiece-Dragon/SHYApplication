@@ -10,14 +10,6 @@
 
 @implementation SHYGoodsCell
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
-
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
               reuseIdentifier:(NSString *)reuseIdentifier
                         isAll:(BOOL)isAll
@@ -42,6 +34,7 @@
             SHYTwoSideLabel * label = [_rowArray objectAtIndex:i];
             [label mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.right.equalTo(weakself);
+                make.height.mas_equalTo(32);
             }];
             if (i == 0) {
                 [label mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -85,7 +78,7 @@
 - (UIView *)topView {
     if (!_topView) {
         _topView = [UIView.alloc init];
-        _topView.backgroundColor = [UIColor lightGrayColor];
+        _topView.backgroundColor = BACKGROUND_COLOR;
     }
     return _topView;
 }

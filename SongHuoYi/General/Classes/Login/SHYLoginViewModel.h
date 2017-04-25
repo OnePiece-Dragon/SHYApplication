@@ -6,10 +6,20 @@
 //  Copyright © 2017年 TianXi. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-
-@interface SHYLoginViewModel : NSObject
+#import "SHYBaseViewModel.h"
 
 
+@interface SHYLoginViewModel : SHYBaseViewModel
+
+@property (nonatomic, strong) NSString * userName;
+@property (nonatomic, strong) NSString * password;
+@property (nonatomic, assign) BOOL isAutoLogin;
+
+
+@property (nonatomic, strong) RACSignal * usernameSignal;
+@property (nonatomic, strong) RACSignal * passwordSignal;
+@property (nonatomic, strong) RACSignal * valueSignal;
+
+@property (nonatomic, strong) RACSignal * loginBtnSignal;
 
 @end

@@ -12,6 +12,7 @@
 #define USER_MODEL          [SHYUserModel shareUserMsg]
 #define USER_ID             [[SHYUserModel shareUserMsg] userId]
 #define USER_WORK_STATUS    [[SHYUserModel shareUserMsg] status]
+#define USER_WORK_TIME      @"work_time"
 
 #define DeviceToken         @"DeviceToken"
 #define USER_LOGIN_STATUS   @"1"

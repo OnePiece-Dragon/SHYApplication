@@ -1,14 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -21,6 +26,62 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+        </scene>
+        <!--Feed Back Controller-->
+        <scene sceneID="DIG-3n-LuH">
+            <objects>
+                <viewController storyboardIdentifier="FeedBackVC" hidesBottomBarWhenPushed="YES" id="vPm-Nr-gJj" customClass="SHYFeedBackController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ycu-vI-cnV"/>
+                        <viewControllerLayoutGuide type="bottom" id="2rI-9p-hhq"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Smt-7Q-91P">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" restorationIdentifier="FeedBackVC" keyboardDismissMode="interactive" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HmO-ew-0wX">
+                                <rect key="frame" x="16" y="28" width="343" height="250"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="250" id="1YK-nc-csb"/>
+                                </constraints>
+                                <attributedString key="attributedText">
+                                    <fragment content="请输入您的反馈信息...">
+                                        <attributes>
+                                            <font key="NSFont" size="14" name=".PingFangSC-Regular"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SuA-hm-qUF">
+                                <rect key="frame" x="16" y="286" width="343" height="46"/>
+                                <color key="backgroundColor" red="0.0" green="0.56558893200000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="46" id="RvW-So-clK"/>
+                                </constraints>
+                                <state key="normal" title="提交"/>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="leadingMargin" secondItem="HmO-ew-0wX" secondAttribute="leading" id="7vc-Eo-wed"/>
+                            <constraint firstItem="SuA-hm-qUF" firstAttribute="top" secondItem="HmO-ew-0wX" secondAttribute="bottom" constant="8" id="JCC-Mc-yoV"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="SuA-hm-qUF" secondAttribute="leading" id="g5b-tc-Bux"/>
+                            <constraint firstItem="HmO-ew-0wX" firstAttribute="top" secondItem="ycu-vI-cnV" secondAttribute="bottom" constant="8" id="gXW-NN-dms"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="SuA-hm-qUF" secondAttribute="trailing" id="lDb-a4-baS"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="HmO-ew-0wX" secondAttribute="trailing" id="rLO-wQ-iaH"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="submitBtn" destination="SuA-hm-qUF" id="zGj-lM-haN"/>
+                        <outlet property="textView" destination="HmO-ew-0wX" id="1tQ-3g-Ms2"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cKd-z2-ZKy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="944.79999999999995" y="99.400299850074973"/>
         </scene>
     </scenes>
 </document>

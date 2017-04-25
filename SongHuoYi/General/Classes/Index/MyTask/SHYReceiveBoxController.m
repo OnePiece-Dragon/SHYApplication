@@ -9,7 +9,7 @@
 #import "SHYReceiveBoxController.h"
 #import "SHYCheckGoodsCell.h"
 
-@interface SHYReceiveBoxController ()
+@interface SHYReceiveBoxController ()<UITextFieldDelegate>
 
 @property (nonatomic, strong) SHYReceiveBoxView * topBoxView;
 @property (nonatomic, strong) SHYBaseTableView * checkGoodsListView;
@@ -24,13 +24,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.naviTitle = @"收箱";
-    self.view.backgroundColor = LINE_COLOR;
+    self.naviTitle = @"核货";
     // Do any additional setup after loading the view from its nib.
     [self setUI];
     [self requestData];
 }
-
 
 /**
  提交
@@ -40,39 +38,75 @@
 }
 
 /**
- 收箱完成
+ 一键核货
  */
 - (void)receiveBoxDone {
-    DLog(@"收箱完成");
+    DLog(@"一键核货");
+    [self showNetTips:@"处理中..."];
+    [NetManager post:URL_TASK_ONCENUCLEAR_UPDATE
+               param:@{@"userId":USER_ID,
+                       @"taskId":self.taskId,
+                       @"lineId":self.lineId,
+                       @"categoryId":self.nuclearModel.categoryId.stringValue}
+            progress:^(NSProgress * _Nonnull progress) {
+                       } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                           [self hideNetTips];
+                           
+                           DLog(@"responseObj核对:%@",responseObject);
+                           
+                       } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                           [self hideNetTips];
+                           [self showToast:NET_ERROR_TIP];
+                       }];
 }
 
 /**
  每行的核货
  */
-- (void)checkRowGoods:(NSDictionary*)dic {
-    DLog(@"row核货:%@",dic);
+- (void)checkRowGoods:(SHYGoodsModel*)goodsModel cell:(SHYCheckGoodsCell*)cell {
+    kWeakSelf(self);
+    DLog(@"row:%@",goodsModel.mj_keyValues);
+    UIAlertController * alertController = [UIAlertController alertControllerWithTitle:goodsModel.goodsName message:@"请输入核对货物数量" preferredStyle:UIAlertControllerStyleAlert];
+    __weak typeof(UIAlertController*) weakAlert = alertController;
+    __weak typeof(SHYGoodsModel*) weakModel = goodsModel;
+    UIAlertAction * sureAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [weakself inputRowTextModel:weakModel action:action alertController:weakAlert cell:cell];
+    }];
+    UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    [alertController addAction:sureAction];
+    [alertController addAction:cancelAction];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = [NSString stringWithFormat:@"最大收箱数：%@",goodsModel.buyNum];
+        textField.delegate = weakself;
+    }];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)inputRowTextModel:(SHYGoodsModel*)model action:(UIAlertAction*)action alertController:(UIAlertController*)alertController cell:(SHYCheckGoodsCell*)cell{
+    UITextField *userNameTextField = alertController.textFields.firstObject;
+    cell.labelView.rightLabel.text= @"已核货";
+    
+    [self.checkGoodsListView reloadData];
 }
 
 - (void)requestData {
-    self.dataArray = (NSMutableArray*)@[@{@"goodsName":@"ASD123123",@"status":@"已核货"},
-                                        @{@"goodsName":@"BBS123123",@"status":@"未核货"},
-                                        @{@"goodsName":@"RAG123123",@"status":@"已核货"}];
+    self.dataArray = self.nuclearModel.goods;
     [self.checkGoodsListView reloadData];
 }
 
 - (void)setUI {
     kWeakSelf(self);
-    [self.view addSubview:self.topBoxView];
-    [self.topBoxView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.equalTo(weakself.view);
-        make.height.mas_equalTo(@56);
-    }];
-    
+//    [self.view addSubview:self.topBoxView];
+//    [self.topBoxView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.top.equalTo(weakself.view);
+//        make.height.mas_equalTo(@56);
+//    }];
     
     [self.view addSubview:self.checkGoodsListView];
     [self.checkGoodsListView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(weakself.view);
-        make.top.equalTo(weakself.topBoxView.mas_bottom).offset(8);
+        make.top.equalTo(weakself.view).offset(8);
         make.bottom.equalTo(weakself.view);
     }];
 }
@@ -101,17 +135,26 @@
     SHYCheckGoodsCell * cell = [tableView dequeueReusableCellWithIdentifier:reuseId];
     if (!cell) {
         cell = [SHYCheckGoodsCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseId direction:direction];
+        cell.backView.backgroundColor = BACKGROUND_COLOR;
+        cell.labelView.backgroundColor=COLOR_WHITE;
     }
     
     kWeakSelf(self);
-    cell.tapActionBlock = ^(id model){
-        [weakself checkRowGoods:weakself.dataArray[indexPath.row]];
+    __weak typeof(SHYCheckGoodsCell*)weakCell = cell;
+    cell.labelView.clickBlock = ^(){
+        [weakself checkRowGoods:weakself.dataArray[indexPath.row] cell:weakCell];
     };
     
-    NSDictionary * cellDic = self.dataArray[indexPath.row];
+    SHYGoodsModel * model = self.dataArray[indexPath.row];
     
-    cell.labelView.leftLabel.text = cellDic[@"goodsName"];
-    cell.labelView.rightLabel.text = cellDic[@"status"];
+    cell.labelView.leftLabel.text = model.goodsName;
+    
+    if ([model.nuclearStatus integerValue] == 1) {
+        //已核货
+        cell.labelView.rightLabel.text = @"已核货";
+    }else {
+        cell.labelView.rightLabel.text = @"未核货";
+    }
     
     return cell;
 }
@@ -122,7 +165,7 @@
 }
 - (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     UIView * view = [UIView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 110)];
-    view.backgroundColor = LINE_COLOR;
+    view.backgroundColor = BACKGROUND_COLOR;
     _footerTopView = [UIView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 8)];
     _footerTopView.backgroundColor = COLOR_WHITE;
     [view addSubview:_footerTopView];
@@ -173,9 +216,10 @@
 }
 - (UIButton *)receiveDoneBtn {
     if (!_receiveDoneBtn) {
-        _receiveDoneBtn = [Factory createBtn:CGRectMake(20, 60, SCREEN_WIDTH - 40, 44) title:@"收箱完成" type:UIButtonTypeCustom target:self action:@selector(receiveBoxDone)];
+        _receiveDoneBtn = [Factory createBtn:CGRectMake(20, 60, SCREEN_WIDTH - 40, 44) title:@"一键核货" type:UIButtonTypeCustom target:self action:@selector(receiveBoxDone)];
         [_receiveDoneBtn setBackgroundImage:[UIImage imageWithColor:BUTTON_COLOR] forState:UIControlStateNormal];
         _receiveDoneBtn.layer.cornerRadius = 8.f;
+        _receiveDoneBtn.clipsToBounds = YES;
         _receiveDoneBtn.layer.shadowColor = [UIColor blackColor].CGColor;
         _receiveDoneBtn.layer.shadowOffset = CGSizeMake(2,2);//shadowOffset阴影偏移,x向右偏移4，y向下偏移4，默认(0, -3),这个跟shadowRadius配合使用
         _receiveDoneBtn.layer.shadowOpacity = 0.8;//阴影透明度，默认0

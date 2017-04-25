@@ -22,7 +22,6 @@
 + (void)startTime:(CGFloat)count countTime:(void (^)(CGFloat))countTime {
     __block CGFloat originalCount = 0;
     
-    
     dispatch_queue_t queue = dispatch_get_main_queue();
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     dispatch_time_t start = dispatch_time(DISPATCH_TIME_NOW, 0 * NSEC_PER_SEC);
@@ -47,19 +46,19 @@
     //CGFloat date = [[NSDate date] timeIntervalSince1970];
     //NSString * string = @"2017/04/01 14:02:00";
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:format];//@"YYYY/MM/DD HH:mm:ss"
+    [formatter setDateFormat:format];//@"yyyy/MM/dd HH:mm:ss"
     //[formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"]];
     NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Beijing"];
     [formatter setTimeZone:timeZone];
     NSDate * timeDate = [formatter dateFromString:timeString];
-    CGFloat time = [timeDate timeIntervalSince1970];
+    CGFloat time = [timeDate timeIntervalSince1970];//ss
     return time;
 }
 + (NSString *)timeWithTimeIntervalString:(NSString *)timeString format:(NSString*)format
 {
     // 格式化时间
     NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
-    formatter.timeZone = [NSTimeZone timeZoneWithName:@"Asia/Beijing"];
+    formatter.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     [formatter setTimeStyle:NSDateFormatterShortStyle];
     [formatter setDateFormat:format];

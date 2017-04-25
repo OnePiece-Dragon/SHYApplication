@@ -20,10 +20,11 @@
     self.view.backgroundColor = COLOR_WHITE;
     self.naviTitle = @"修改密码";
     
-    [self.view addSubview:self.originalPasswordView];
-    [self.view addSubview:self.nPasswordView];
-    [self.view addSubview:self.confirmPasswordView];
-    [self.view addSubview:self.submitBtn];
+    [self.view addSubview:self.backView];
+    [self.backView addSubview:self.originalPasswordView];
+    [self.backView addSubview:self.nPasswordView];
+    [self.backView addSubview:self.confirmPasswordView];
+    [self.backView addSubview:self.submitBtn];
     
     [_originalPasswordView setFieldMode:UITextFieldViewModeAlways direction:Left];
     _originalPasswordView.backgroundColor = COLOR_WHITE;
@@ -81,7 +82,12 @@
     
 }
 
-
+- (UIScrollView *)backView {
+    if (!_backView) {
+        _backView = [UIScrollView.alloc init];
+    }
+    return _backView;
+}
 - (InputTextField *)originalPasswordView {
     if (!_originalPasswordView) {
         _originalPasswordView = [InputTextField.alloc initWithFrame:CGRectZero

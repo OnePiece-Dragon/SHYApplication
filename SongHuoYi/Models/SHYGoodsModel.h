@@ -10,6 +10,8 @@
 
 @interface SHYGoodsModel : SHYBaseModel
 
+@property (nonatomic, strong) NSNumber * orderId;
+@property (nonatomic, strong) NSNumber * orderItemId;
 /**
  商品ID
  */
@@ -18,7 +20,7 @@
 /**
  商品数量
  */
-@property (nonatomic, strong) NSNumber * goodsNum;
+@property (nonatomic, strong) NSNumber * buyNum;
 
 /**
  商品名称
@@ -34,7 +36,8 @@
  商品类别
  */
 @property (nonatomic, strong) NSString * categoryName;
-
+@property (nonatomic, strong) NSNumber * categoryId;
+@property (nonatomic, strong) NSString * goodsBrand;
 /**
  规格
  */
@@ -43,6 +46,12 @@
 /**
  商品价格（分）
  */
-@property (nonatomic, strong) NSNumber * price;
+@property (nonatomic, strong) NSNumber * goodsPrice;
+
+
+/**
+ 核货状态
+ */
+@property (nonatomic, strong) NSNumber * nuclearStatus;
 
 @end

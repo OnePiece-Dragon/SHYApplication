@@ -20,4 +20,6 @@
 #import "SHYTaskHistoryModel.h"
 #import "SHYCategoryModel.h"
 
+#import "SHYWorkStatusModel.h"
+
 #endif /* modelHeader_h */

@@ -36,4 +36,20 @@
     [[NetManager manager] POST:method parameters:param progress:uploadProgress success:success failure:failure];
 }
 
++ (RACSignal *)signalRequestUrl:(NSString *)url params:(NSDictionary *)params {
+    return [RACSignal createSignal:^RACDisposable * _Nullable(id<RACSubscriber>  _Nonnull subscriber) {
+        [NetManager post:url param:params progress:^(NSProgress * _Nonnull progress) {
+            
+        } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [subscriber sendNext:responseObject];
+            [subscriber sendCompleted];
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [subscriber sendError:error];
+        }];
+        return [RACDisposable disposableWithBlock:^{
+            
+        }];
+    }];
+}
+
 @end

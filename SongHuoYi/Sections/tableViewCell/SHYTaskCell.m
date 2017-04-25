@@ -21,13 +21,6 @@
 
 @implementation SHYTaskCell
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 - (instancetype)initWithFrame:(CGRect)frame labelCount:(NSInteger)count {
     if ([super initWithFrame:frame]) {
         [self setUI:count];
@@ -43,7 +36,7 @@
               reuseIdentifier:(NSString *)reuseIdentifier
                    labelCount:(NSInteger)count {
     if ([super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        self.backgroundColor = LINE_COLOR;
+        self.backgroundColor = BACKGROUND_COLOR;
         [self setUI:count];
     }
     return self;
@@ -92,6 +85,8 @@
         make.right.top.equalTo(wSelf.backView);
         make.size.mas_equalTo(CGSizeMake(56*SCREEN_POINT, 56*SCREEN_POINT));
     }];
+    self.backView.layer.cornerRadius=8.f;
+    self.backView.clipsToBounds = YES;
     _rightIconView.hidden = YES;
     
     CGFloat _bottomLabelOffset = 0;
@@ -119,7 +114,7 @@
                 make.bottom.equalTo(weakself).offset(-_bottomLabelOffset);
             }];
         }else {
-            SHYIconLabel * forwardLabel = self.labelArray.lastObject;
+            SHYIconLabel * forwardLabel = self.labelArray[i-1];
             [iconLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.equalTo(forwardLabel.mas_bottom);
             }];
@@ -138,7 +133,7 @@
             make.width.mas_equalTo(100);
         }];
     }
-    [_enterBtn setTitleColor:BUTTON_COLOR forState:UIControlStateNormal];
+    
     
     if (!_isBottomBtn) {
         [self.backView addSubview:self.startBtn];
@@ -200,6 +195,7 @@
     if (!_enterBtn) {
         _enterBtn = [Factory createBtn:CGRectZero title:@"进入核货" type:UIButtonTypeCustom target:self action:@selector(enterBtnClick)];
         [_enterBtn setImage:ImageNamed(@"dianji") forState:UIControlStateNormal];
+        [_enterBtn setTitleColor:COLOR_RGB(104,69,251) forState:UIControlStateNormal];
         _enterBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 70, 0, 0);
         _enterBtn.titleEdgeInsets = UIEdgeInsetsMake(0, -60, 0, 0);
     }

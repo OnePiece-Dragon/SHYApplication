@@ -31,4 +31,5 @@
 - (void)showNetTips:(NSString*)tips;
 - (void)hideNetTips;
 
+
 @end

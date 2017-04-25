@@ -7,12 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <ReactiveObjC/ReactiveObjC.h>
 #import "NetClient.h"
 #import "UrlMacro.h"
 //@"http://127.0.0.1"
 #define BaseUrl BASE_URL
 
 @interface NetManager : NSObject
+
++ (nonnull RACSignal *)signalRequestUrl:(nonnull NSString *)url params:(nonnull NSDictionary *)params;
 
 +(void)get:(nonnull NSString *)method
      param:(nonnull NSDictionary *)param

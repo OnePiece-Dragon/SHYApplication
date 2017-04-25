@@ -53,6 +53,8 @@
 }
 //请求配送中的数据
 - (void)requestDeliveryingData {
+    
+    
     NSString * path = PLIST_Name(@"distribute_list");
     NSDictionary * reuslt = [NSDictionary.alloc initWithContentsOfFile:path];
     

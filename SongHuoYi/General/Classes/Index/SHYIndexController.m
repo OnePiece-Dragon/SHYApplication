@@ -13,8 +13,14 @@
 #import "SHYTransportController.h"
 
 #import "SHYReceiveBoxController.h"
+#import "SHYWorkStatusModel.h"
 
 @interface SHYIndexController ()
+
+{
+    BOOL _canWork;
+    NSInteger _workStartTime;
+}
 
 @property (nonatomic, strong) SHYBaseTableView * indexListView;
 @property (nonatomic, strong) NSMutableArray * dataArray;
@@ -35,7 +41,6 @@
     // Do any additional setup after loading the view.
     [self cancelBackItem];
     self.naviTitle = @"送货易";
-    
     kWeakSelf(self);
     [self setRightItem:@"ditumoshi" rightBlock:^{
         [weakself messageItem];
@@ -54,6 +59,8 @@
     }];
 }
 -(void)setContent {
+    [self workStatusSet:0];
+    
     NSArray * imageArray = @[@"dianjiwoderenwu2",@"dianjiwodepeisong2",@"dianjikaishishangban"];
     NSString * workStatusString = nil;
     if ([USER_WORK_STATUS integerValue] != 1) {
@@ -93,23 +100,32 @@
     [self.navigationController pushViewController:VC animated:YES];
 }
 //上下班Click
-- (void)workStatusSet {
-    [self showNetTips:@"处理中..."];
-    [NetManager post:URL_WORK_UPDATE param:@{@"userId":USER_ID} progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [self hideNetTips];
-        
-        NSDictionary * result = responseObject[@"data"];
-        
-        
-        ((SHYUserModel*)USER_MODEL).status = result[@"status"];
-        [self showToast:result[@"valStatusMsg"]];
-        if ([USER_WORK_STATUS integerValue] == 1) {
-            //上班状态
-            [self workModelStatus:1 workTime:result[@"workTime"]];
-        }else {
-            [self workModelStatus:[result[@"status"] integerValue] workTime:result[@"offDutyTime"]];
-        }
-        
+- (void)workStatusSet:(NSInteger)status {
+    [self showNetTips:@"请稍后..."];
+    [NetManager post:URL_WORK_UPDATE
+               param:@{@"userId":USER_ID,
+                       @"status":@(status)}
+            progress:nil
+             success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                 [self hideNetTips];
+                 if ([responseObject[@"errcode"] integerValue] == 0) {
+                     SHYWorkStatusModel * model = [SHYWorkStatusModel mj_objectWithKeyValues:responseObject[@"data"]];
+                     
+                     NSDictionary * result = responseObject[@"data"];
+                     ((SHYUserModel*)USER_MODEL).status = model.status;
+                     if (model.valStatusMsg) {
+                         [self showToast:model.valStatusMsg];
+                     }
+                     if ([USER_WORK_STATUS integerValue] == 1) {
+                         //上班状态
+                         [self workModelStatus:1 workTime:model.workTime];
+                     }else {
+                         [self workModelStatus:model.status.integerValue workTime:nil];
+                     }
+                 }else {
+                     [self showToast:@"操作失败"];
+                 }
+                
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         [self hideNetTips];
         [self showToast:NET_ERROR_TIP];
@@ -117,18 +133,46 @@
 }
 
 //status == 1 上班状态
-- (void)workModelStatus:(NSInteger)status workTime:(NSNumber*)time{
+- (void)workModelStatus:(NSInteger)status workTime:(NSString*)timeString{
+    kWeakSelf(self);
     //我的工作
+    DLog(@"timeString:%@",timeString);
     SHYIndexItemModel * model = _dataArray.lastObject;
     if (status == 1) {
         model.isClick = 1;
         model.titleName = @"我要下班";
-        model.descName= [TimeManager timeWithTimeIntervalString:time.stringValue format:@"HH:mm"];
+        [TimeManager startTime:60 countTime:^(CGFloat count) {
+            [weakself setWorkTime:timeString];
+        }];
+        //model.descName= [TimeManager timeWithTimeIntervalString:[NSString stringWithFormat:@"%f",[TimeManager timeSwitchTimeString:timeString format:@"YYYY/MM/DD HH:mm:ss"]] format:@"HH:mm"];
     }else {
+        [TimeManager cancelTimer];
+        
         model.isClick = 0;
         model.titleName = @"我要上班";
         model.descName = @"";
     }
+    [self.indexListView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+}
+
+- (void)setWorkTime:(NSString*)timeString {
+    SHYIndexItemModel * model = _dataArray.lastObject;
+    NSTimeInterval startWorkTime = [TimeManager timeSwitchTimeString:timeString format:@"yyyy-MM-dd HH:mm:ss"];
+    NSInteger timeSecd = NSDate.date.timeIntervalSince1970 - startWorkTime;
+    //NSLog(@"timeSecond:%ld",timeSecd);
+    NSString * formatStr = nil;
+    
+    if (timeSecd<0) {
+        timeSecd = 0;
+    }
+    if (timeSecd/3600 >= 1) {
+        formatStr = [NSString stringWithFormat:@"%ld小时%ld分",timeSecd/3600,(timeSecd%3600)/60];
+    }else {
+        formatStr = [NSString stringWithFormat:@"%ld分钟",timeSecd/60];
+    }
+    //NSString * timeStr = [TimeManager timeWithTimeIntervalString:[NSString stringWithFormat:@"%ld",timeSecd] format:formatStr];
+    model.descName = formatStr;
+    
     [self.indexListView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
 }
 
@@ -148,7 +192,12 @@
         break;
         case 2:
         {
-            [self workStatusSet];
+            if (((SHYUserModel*)USER_MODEL).status.integerValue != 1) {
+                //我要上班
+                [self workStatusSet:1];
+            }else {
+                [self workStatusSet:2];
+            }
         }
         break;
         default:
@@ -159,18 +208,18 @@
 
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return SCREEN_WIDTH / 2.f;
+    return SCREEN_WIDTH / 2.f + 80;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return _dataArray.count;
+    return self.dataArray.count;
 }
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SHYIndexCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
-    [cell setCellModel:_dataArray[indexPath.row]];
+    [cell setCellModel:self.dataArray[indexPath.row]];
     
     kWeakSelf(self);
     cell.tapActionBlock = ^(SHYIndexItemModel * model){

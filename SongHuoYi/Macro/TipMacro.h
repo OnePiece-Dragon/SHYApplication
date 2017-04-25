@@ -9,8 +9,10 @@
 #ifndef TipMacro_h
 #define TipMacro_h
 
+#define NET_EMPTY_MSG   @"暂无数据"
+
 #define NET_SUCCESS_TIP @"请求成功"
 #define NET_FAIL_TIP    @"请求失败"
-#define NET_ERROR_TIP   @"网络未连接"
+#define NET_ERROR_TIP   @"网络状态不好"
 
 #endif /* TipMacro_h */

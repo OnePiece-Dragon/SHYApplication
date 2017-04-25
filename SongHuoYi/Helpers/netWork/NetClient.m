@@ -25,7 +25,7 @@
         _port = IP_PORT;
     }
     if (_port.length) {
-        _port = [NSString stringWithFormat:@":%@",_port];
+        _port = [NSString stringWithFormat:@":%@",IP_PORT];
     }
     
     NSString * defaultUrl = [NSString stringWithFormat:@"%@://%@%@",_requestWay,_ip,_port];

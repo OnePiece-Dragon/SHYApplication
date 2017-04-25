@@ -11,6 +11,8 @@
 
 @interface SHYChangePasswordController : SHYBaseController
 
+@property (nonatomic, strong) UIScrollView * backView;
+
 @property (nonatomic, strong) InputTextField * originalPasswordView;
 @property (nonatomic, strong) InputTextField * nPasswordView;
 @property (nonatomic, strong) InputTextField * confirmPasswordView;

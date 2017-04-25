@@ -12,8 +12,10 @@
 #import "TipMacro.h"
 
 //192.168.31.197:8080
-#define BASE_URL                    @"120.27.238.62"
-#define IP_PORT                     @""
+//120.27.238.62
+#define BASE_URL                    @"192.168.31.197"
+//8080
+#define IP_PORT                     @"8080"
 //登录
 #define URL_Login                   @"/app/user/login"
 //开始上班
@@ -29,11 +31,11 @@
 //核货接口一键核货（按任务编号）
 #define URL_TASK_ONCENUCLEAR_UPDATE @"/app/task/oncenuclear/update"
 //收箱
-#define URL_TASK_NUCLEAR_CGTUPDATE  @"/app/ task/nuclear/ cgtUpdate"
+#define URL_TASK_NUCLEAR_CGTUPDATE  @"/app/task/nuclear/cgtUpdate"
 //提交问题
-#define URL_TASK_CREATEPRO          @"/app/task/nuclear/ createPro"
+#define URL_TASK_CREATEPRO          @"/app/task/nuclear/createPro"
 //我的配送
-#define URL_DISTRIBUTE_LIST         @"/app/distribute /order/list"
+#define URL_DISTRIBUTE_LIST         @"/app/distribute/order/list"
 //我的配送（地图模式）
 #define URL_DISTRIBUTE_MAP          @"/app/distribute/map/list"
 

@@ -8,10 +8,17 @@
 
 #import "SHYBaseController.h"
 #import "SHYReceiveBoxView.h"
-
+#import "SHYNuclearCategoryModel.h"
 /**
  收箱
  */
 @interface SHYReceiveBoxController : SHYBaseController
+
+@property (nonatomic, strong) NSNumber * taskId;
+@property (nonatomic, strong) NSNumber * lineId;
+
+@property (nonatomic, strong) SHYNuclearCategoryModel * nuclearModel;
+
+@property (nonatomic, copy) void (^responseBlock)();
 
 @end

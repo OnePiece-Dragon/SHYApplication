@@ -13,6 +13,8 @@
 
 {
     NSInteger _page;
+    
+    BOOL _canCheckBtnClick;
 }
 
 @property (nonatomic, strong) UIPasteboard * pasteBoard;
@@ -25,6 +27,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     _page = 1;
+    _canCheckBtnClick = YES;
     kWeakSelf(self);
     self.naviTitle = @"核货详情";
     [self setRightItem:@"daohang" rightBlock:^{
@@ -47,21 +50,38 @@
     [self.navigationController pushViewController:VC animated:YES];
 }
 
-- (void)goodsList {
+- (void)goodsList:(BOOL)isAll model:(SHYNuclearCategoryModel*)model {
     SHYReceiveBoxController * VC = [SHYReceiveBoxController.alloc init];
+    VC.taskId = self.taskId;
+    VC.lineId = self.lineId;
+    VC.nuclearModel = model;
     [self.navigationController pushViewController:VC animated:YES];
 }
 
 - (void)sendGoodsBtnClick {
     DLog(@"一键核货");
+    [self showNetTips:@"处理中..."];
+    [NetManager post:URL_TASK_ONCENUCLEAR_UPDATE
+               param:@{@"userId":USER_ID,
+                       @"taskId":self.taskId,
+                       @"lineId":self.lineId,
+                       @"categoryId":@""} progress:^(NSProgress * _Nonnull progress) {
+                       } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                           [self hideNetTips];
+                           DLog(@"responseObj核对:%@",responseObject);
+                           
+                       } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                           [self hideNetTips];
+                           [self showToast:NET_ERROR_TIP];
+                       }];
 }
 
 - (void)requestNuclearDetailData {
     [self showNetTips:nil];
     [NetManager post:URL_TASK_NUCLEAR_LIST
                param:@{@"userId":USER_ID,
-                       @"taskCode":self.taskCode,
-                       @"lineCode":self.lineCode}
+                       @"taskId":self.taskId,
+                       @"lineId":self.lineId}
             progress:^(NSProgress * _Nonnull progress) {}
              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                  [self hideNetTips];
@@ -78,8 +98,8 @@
     [self showNetTips:nil];
     [NetManager post:URL_TASK_NUCLEAR_CATEGORY
                param:@{@"userId":USER_ID,
-                       @"taskCode":self.taskCode,
-                       @"lineCode":self.lineCode,
+                       @"taskId":self.taskId,
+                       @"lineId":self.lineId,
                        @"page":@(_page)}
             progress:^(NSProgress * _Nonnull progress) {}
              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
@@ -89,22 +109,23 @@
                  [self hideNetTips];
                  [self showToast:NET_ERROR_TIP];
                  
-                 
                  [self handleResponseObj:nil nulClearDetail:NO];
              }];
 }
 
 - (void)handleResponseObj:(NSDictionary*)responseObj nulClearDetail:(BOOL)detail{
     if (detail) {
-        NSString *plistPath = PLIST_Name(@"nuclear");
-        NSDictionary * result = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-        SHYCheckGoodsDetailModel * model = [SHYCheckGoodsDetailModel mj_objectWithKeyValues:result[@"data"]];
+        DLog(@"responseObj_detail:%@",responseObj);
+        //NSString *plistPath = PLIST_Name(@"nuclear");
+        //NSDictionary * result = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+        SHYCheckGoodsDetailModel * model = [SHYCheckGoodsDetailModel mj_objectWithKeyValues:responseObj[@"data"]];
         _goodsDetailModel = model;
     }else {
+        DLog(@"responseObj_category:%@",responseObj);
         //nuclear_category
-        NSString *category_plistPath = PLIST_Name(@"nuclear_category");
-        NSDictionary * category_result = [NSDictionary dictionaryWithContentsOfFile:category_plistPath];
-        for (NSDictionary * dic in category_result[@"data"][@"rows"]) {
+        //NSString *category_plistPath = PLIST_Name(@"nuclear_category");
+        //NSDictionary * category_result = [NSDictionary dictionaryWithContentsOfFile:category_plistPath];
+        for (NSDictionary * dic in responseObj[@"data"][@"rows"]) {
             SHYNuclearCategoryModel * category_model = [SHYNuclearCategoryModel mj_objectWithKeyValues:dic];
             [self.dataArray addObject:category_model];
         }
@@ -139,7 +160,7 @@
     [label3 setIcon:@"dizhi" size:CGSizeMake(24, 28)];
     
     label1.titleLabel.text = model.lineName;
-    label2.titleLabel.text = [NSString stringWithFormat:@"任务单号：%@",model.tasksId];
+    label2.titleLabel.text = [NSString stringWithFormat:@"任务单号：%@",model.taskId];
     label3.titleLabel.text = [NSString stringWithFormat:@"地址：%@",model.startAddr];
     label4.titleLabel.text = [NSString stringWithFormat:@"姓名：%@",model.senderName];
     label5.titleLabel.text = [NSString stringWithFormat:@"电话：%@",model.senderPhone];
@@ -154,18 +175,19 @@
         [label7 mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(view.backView.mas_bottom);
         }];
+        [label7.titleLabel setAttributedText:[Factory setText:label7.titleLabel.text
+                                                    attribute:@{NSForegroundColorAttributeName:COLOR_PRICE}
+                                                        range:NSMakeRange(4, label7.titleLabel.text.length - 4)]];
     }
     
     //字体颜色
     [label5.titleLabel setAttributedText:[Factory setText:label5.titleLabel.text
-                                                attribute:@{NSForegroundColorAttributeName:[UIColor greenColor]}
+                                                attribute:@{NSForegroundColorAttributeName:COLOR_ADRESS}
                                                     range:NSMakeRange(3, label5.titleLabel.text.length - 3)]];
     [label6.titleLabel setAttributedText:[Factory setText:label6.titleLabel.text
-                                                attribute:@{NSForegroundColorAttributeName:[UIColor greenColor]}
+                                                attribute:@{NSForegroundColorAttributeName:COLOR_ADRESS}
                                                     range:NSMakeRange(3, label6.titleLabel.text.length - 3)]];
-    [label7.titleLabel setAttributedText:[Factory setText:label7.titleLabel.text
-                                                attribute:@{NSForegroundColorAttributeName:[UIColor orangeColor]}
-                                                    range:NSMakeRange(4, label7.titleLabel.text.length - 4)]];
+    
     
     [label6.titleLabel attachTapGesture];
 }
@@ -174,7 +196,7 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     NSInteger section = 0;
     if (self.goodsDetailModel) {
-        section +=2;
+        section ++;
     }
     if (self.dataArray.count) {
         section ++;
@@ -183,7 +205,7 @@
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (self.goodsDetailModel) {
-        if (section == 2) {
+        if (section == 1) {
             return self.dataArray.count;
         }
         return 1;
@@ -198,7 +220,7 @@
         if (indexPath.section == 0) {
             SHYTaskCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
             if (!cell) {
-                cell = [SHYTaskCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID labelCount:7];
+                cell = [SHYTaskCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID labelCount:7 enterBtnIndex:0 bottomBtn:YES];
             }
             [cell.backView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.left.right.equalTo(cell);
@@ -207,8 +229,6 @@
             [self setContentView:cell model:_goodsDetailModel];
             
             return cell;
-        }else if (indexPath.section == 1) {
-            return [self goodsCategoryAndAll:YES tableView:tableView indexPath:indexPath];
         }else {
             return [self goodsCategoryAndAll:NO tableView:tableView indexPath:indexPath];
         }
@@ -234,12 +254,12 @@
         
         [label1 setLeftStr:@"货物清单" rightStr:nil rightIcon:nil];
         [label2 setLeftStr:[NSString stringWithFormat:@"箱数：（%@）",self.goodsDetailModel.taskDetail] rightStr:nil rightIcon:@"xialazhanshi"];
-        [label3 setLeftStr:@"" rightStr:@"箱数：0/15" rightIcon:nil];
+        [label3 setLeftStr:@"" rightStr:@"箱数：" rightIcon:nil];
         [label3 setTopLineHiden:YES bottomHiden:YES];
         
         [label2 addBaseTapClickAction];
         label2.clickBlock = ^(){
-            [weakself goodsList];
+            [weakself goodsList:YES model:nil];
         };
         
         return cell;
@@ -254,27 +274,43 @@
         
         int i = 0;
         for (SHYTwoSideLabel * label in cell.rowArray) {
+            label.rightLabel.textAlignment = NSTextAlignmentRight;
             if (i == 0) {
-                [label setLeftStr:[NSString stringWithFormat:@"%@（%@）",model.wayCategoryName,model.goodsTotal]
+                [label setLeftStr:[NSString stringWithFormat:@"%@（%@）",model.categoryName,model.goodsTotal]
                          rightStr:nil rightIcon:@"xialazhanshi"];
             }else {
                 [label setLeftStr:[(SHYGoodsModel*)model.goods[i-1] goodsName]
-                         rightStr:[NSString stringWithFormat:@"箱数：0/%@",[(SHYGoodsModel*)model.goods[i-1] goodsNum]] rightIcon:nil];
+                         rightStr:[NSString stringWithFormat:@"%@：",
+                                   [(SHYGoodsModel*)model.goods[i-1] unit]] rightIcon:nil];
+                [label updateRightTipsLabel];
+                label.rightTipsLabel.text = [(SHYGoodsModel*)model.goods[i-1] buyNum].stringValue;
             }
             if (i++ == cell.rowArray.count - 1) {
                 [label setTopLineHiden:YES bottomHiden:YES];
             }
+            
+            label.clickBlock = ^(){
+                [weakself goodsList:NO model:model];
+            };
         }
         return cell;
     }
 }
 
 - (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if (section == 2) {
+    if (section == 1) {
         UIView * footerView = [UIView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 120)];
         UIButton * startSendGoods = [Factory createBtn:CGRectMake(40, 20, SCREEN_WIDTH - 80, 44) title:@"一键核货" type:UIButtonTypeCustom target:self action:@selector(sendGoodsBtnClick)];
         startSendGoods.layer.cornerRadius = 8.f;
-        startSendGoods.backgroundColor = BUTTON_COLOR;
+        [startSendGoods setTitle:@"已核货" forState:UIControlStateDisabled];
+        
+        if (_canCheckBtnClick == YES) {
+            startSendGoods.enabled = YES;
+            startSendGoods.backgroundColor = BUTTON_COLOR;
+        }else {
+            startSendGoods.enabled = NO;
+            startSendGoods.backgroundColor = [UIColor grayColor];
+        }
         [footerView addSubview:startSendGoods];
         return footerView;
     }
@@ -284,20 +320,16 @@
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         return 270;
-    }else if(indexPath.section == 1){
-        return 150.f;
     }
-    return 160.f;
+    SHYNuclearCategoryModel * model = self.dataArray[indexPath.row];
+    return 5+(model.goods.count+1)*(32+4);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == 0 || section == 2) {
-        return 0.1f;
-    }
-    return 8.f;
+    return 0.1f;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    if (section == 2) {
+    if (section == 1) {
         return 120;
     }
     return 0.1f;
@@ -306,7 +338,7 @@
 - (SHYBaseTableView *)checkGoodsDetailView {
     if (!_checkGoodsDetailView) {
         _checkGoodsDetailView = [SHYBaseTableView.alloc initWithFrame:CGRectZero style:UITableViewStyleGrouped target:self];
-        _checkGoodsDetailView.backgroundColor = LINE_COLOR;
+        _checkGoodsDetailView.backgroundColor = BACKGROUND_COLOR;
     }
     return _checkGoodsDetailView;
 }
@@ -321,18 +353,6 @@
         _dataArray = [NSMutableArray array];
     }
     return _dataArray;
-}
-- (NSString *)taskCode {
-    if (!_taskCode) {
-        _taskCode = @"";
-    }
-    return _taskCode;
-}
-- (NSString *)lineCode {
-    if (!_lineCode) {
-        _lineCode = @"";
-    }
-    return _lineCode;
 }
 - (UIPasteboard *)pasteBoard {
     if (!_pasteBoard) {

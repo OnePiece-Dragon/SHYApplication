@@ -17,7 +17,5 @@
 @property (nonatomic, strong) SHYTabBarController * tabBarVC;
 @property (nonatomic, strong) SHYLoginController * loginVC;
 
-
-
 @end
 

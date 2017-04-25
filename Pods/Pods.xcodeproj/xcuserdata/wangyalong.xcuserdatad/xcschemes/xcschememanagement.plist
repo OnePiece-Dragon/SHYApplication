@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>IQKeyboardManager.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>MBProgressHUD.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -54,15 +59,10 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>TPKeyboardAvoiding.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>284622849159B77BF90CDB2A4F84502F</key>
+		<key>0567FF0D39EE215010CF29E55461534B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -77,27 +77,27 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6E6023D569482616215E9167F66B221A</key>
+		<key>6163B7BB08805704A8124340EA76296E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8CED4729F6D3AD504FDFB1E26AF4EA69</key>
+		<key>670C248CB588F956281D8C7D852BB822</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9B381956B2362B5BA5161B51CAD7CC64</key>
+		<key>9500F0BD77CB36329D1F4B35E773CD1C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>ADFFA75316D4436E1F916B6DC3086E6D</key>
+		<key>C2AB3AB80C0EDF94E29E750578F9A507</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>CBA8B4C9085B7443316AB70C843F6FAF</key>
+		<key>C36CB2CB977A4E7D954935096D00A1ED</key>
 		<dict>
 			<key>primary</key>
 			<true/>

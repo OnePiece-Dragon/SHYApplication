@@ -15,11 +15,13 @@
  任务单号
  */
 @property (nonatomic, strong) NSNumber * tasksId;
+@property (nonatomic, strong) NSString * taskCode;
 
 /**
  线路id
  */
 @property (nonatomic, strong) NSNumber * lineId;
+@property (nonatomic, strong) NSString * lineCode;
 
 /**
  线路名称
@@ -46,7 +48,7 @@
 /**
  任务详细共计
  */
-@property (nonatomic, strong) NSNumber * taskDetail;
+@property (nonatomic, strong) NSString * taskDetail;
 
 /**
  预计时间

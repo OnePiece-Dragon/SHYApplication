@@ -39,10 +39,13 @@
 - (void)testExample {
     // This is an example of a functional test case.
     // Use XCTAssert and related functions to verify your tests produce the correct results.
-    NSString *plistPath = PLIST_Name(@"userMessage");
-    NSDictionary * dic = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-    NSLog(@"dic:%@",dic);
+//    NSString *plistPath = PLIST_Name(@"userMessage");
+//    NSDictionary * dic = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+//    NSLog(@"dic:%@",dic);
     
+    NSTimeInterval startWorkTime = [TimeManager timeSwitchTimeString:@"2017/04/20 18:18:59" format:@"yyyy/MM/dd HH:mm:ss"];
+    NSString * timeStr = [TimeManager timeWithTimeIntervalString:[NSString stringWithFormat:@"%f",(NSDate.date.timeIntervalSince1970 - startWorkTime)] format:@"HH:mm"];
+    NSLog(@"time:%f",startWorkTime);
 }
 
 - (void)testNetRequest {

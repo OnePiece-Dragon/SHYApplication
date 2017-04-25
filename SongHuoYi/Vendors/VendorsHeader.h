@@ -9,9 +9,7 @@
 #ifndef VendorsHeader_h
 #define VendorsHeader_h
 
-#import "TPKeyboardAvoidingCollectionView.h"
-#import "TPKeyboardAvoidingScrollView.h"
-#import "TPKeyboardAvoidingTableView.h"
-#import "UIScrollView+TPKeyboardAvoidingAdditions.h"
+
+#import "UIScrollView+EmptyDataSet.h"
 
 #endif /* VendorsHeader_h */

@@ -8,10 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "SHYBaseCell.h"
+#import "UIScrollView+EmptyDataSet.h"
 
 #define cellID @"baseCell"
 
-@interface SHYBaseTableView : UITableView
+@interface SHYBaseTableView : UITableView<DZNEmptyDataSetSource,DZNEmptyDataSetDelegate>
+
+@property (nonatomic, strong) NSString * emptyBtnString;
+
+@property (nonatomic, copy) void (^emptyRequestAgainBlock)();
 
 - (instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style target:(nullable id)target;
 

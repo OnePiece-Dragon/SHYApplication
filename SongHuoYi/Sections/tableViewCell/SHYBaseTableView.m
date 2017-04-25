@@ -11,21 +11,45 @@
 
 @implementation SHYBaseTableView
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 - (instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style target:(id)target {
     if ([super initWithFrame:frame style:style]) {
+        self.emptyBtnString = NET_EMPTY_MSG;
+        
+        self.backgroundColor = BACKGROUND_COLOR;
+        
         self.delegate = target;
         self.dataSource = target;
         self.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.showsVerticalScrollIndicator = NO;
+        
+        self.emptyDataSetSource = self;
+        self.emptyDataSetDelegate = self;
     }
     return self;
+}
+
+- (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return [UIImage imageNamed:@"empty_placeholder"];
+}
+- (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state
+{
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:17.0f]};
+    
+    return [[NSAttributedString alloc] initWithString:self.emptyBtnString attributes:attributes];
+}
+- (void)emptyDataSet:(UIScrollView *)scrollView didTapView:(UIView *)view {
+    if (self.emptyRequestAgainBlock) {
+        self.emptyRequestAgainBlock();
+    }
+}
+
+- (void)emptyDataSet:(UIScrollView *)scrollView didTapButton:(UIButton *)button
+{
+    // Do something
+    if (self.emptyRequestAgainBlock) {
+        self.emptyRequestAgainBlock();
+    }
 }
 
 @end

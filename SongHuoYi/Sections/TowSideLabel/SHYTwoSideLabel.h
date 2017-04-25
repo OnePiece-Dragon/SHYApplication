@@ -15,6 +15,8 @@
 
 @property (nonatomic, strong) UILabel * leftLabel;
 @property (nonatomic, strong) UILabel * rightLabel;
+@property (nonatomic, strong) UILabel * rightTipsLabel;
+
 @property (nonatomic, strong) UIImageView * rightIcon;
 
 
@@ -25,5 +27,7 @@
 
 - (void)setTopLineHiden:(BOOL)topHiden
             bottomHiden:(BOOL)bottomHiden;
+
+- (void)updateRightTipsLabel;
 
 @end

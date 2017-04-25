@@ -17,7 +17,7 @@
 /**
  任务单号
  */
-@property (nonatomic, strong) NSNumber * tasksId;
+@property (nonatomic, strong) NSNumber * taskId;
 /**
  始发地
  */

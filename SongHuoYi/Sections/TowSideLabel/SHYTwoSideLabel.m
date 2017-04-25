@@ -18,6 +18,7 @@
     if ([super initWithFrame:frame]) {
         [self addSubview:self.leftLabel];
         [self addSubview:self.rightLabel];
+        [self addSubview:self.rightTipsLabel];
         [self addSubview:self.rightIcon];
         [self addSubview:self.topLine];
         [self addSubview:self.bottomLine];
@@ -26,18 +27,28 @@
         _rightLabel.userInteractionEnabled = YES;
         _rightIcon.userInteractionEnabled = YES;
         
+        _leftLabel.font = kFont(14);
+        _rightLabel.font = kFont(14);
+        _rightTipsLabel.font = kFont(14);
+        
         kWeakSelf(self);
         [self.leftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(weakself).offset(8);
             make.top.equalTo(weakself).offset(4);
             make.bottom.equalTo(weakself).offset(-4);
-            make.right.equalTo(weakself).offset(-SCREEN_WIDTH/3);
+            make.right.lessThanOrEqualTo(weakself).offset(-SCREEN_WIDTH/3);
         }];
         [self.rightLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(weakself).offset(-8);
             make.top.equalTo(weakself).offset(4);
             make.bottom.equalTo(weakself).offset(-4);
-            make.left.equalTo(weakself).offset(SCREEN_WIDTH*2/3);
+            make.left.lessThanOrEqualTo(weakself).offset(SCREEN_WIDTH*2/3);
+        }];
+        [self.rightTipsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(weakself).offset(4);
+            make.bottom.equalTo(weakself).offset(-4);
+            make.right.equalTo(weakself).offset(-8);
+            make.width.equalTo(@0);
         }];
         [self.rightIcon mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(weakself);
@@ -102,6 +113,18 @@
     self.bottomLine.hidden = bottomHiden;
 }
 
+- (void)updateRightTipsLabel {
+    kWeakSelf(self);
+    _rightLabel.numberOfLines = 1;
+    [self.rightLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(weakself).offset(-60);
+        
+    }];
+    [self.rightTipsLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(@50);
+    }];
+}
+
 - (UILabel *)leftLabel {
     if (!_leftLabel) {
         _leftLabel = [UILabel.alloc init];
@@ -137,5 +160,11 @@
         _bottomLine.backgroundColor = LINE_COLOR;
     }
     return _bottomLine;
+}
+- (UILabel *)rightTipsLabel {
+    if (!_rightTipsLabel) {
+        _rightTipsLabel = [UILabel.alloc init];
+    }
+    return _rightTipsLabel;
 }
 @end

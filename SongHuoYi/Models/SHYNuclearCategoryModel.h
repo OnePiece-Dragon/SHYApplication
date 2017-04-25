@@ -13,9 +13,14 @@
 @interface SHYNuclearCategoryModel : SHYBaseModel
 
 @property (nonatomic, strong) NSNumber * categoryId;
-@property (nonatomic, strong) NSNumber * unit;
+@property (nonatomic, strong) NSString * categoryName;
 @property (nonatomic, strong) NSNumber * goodsTotal;
 @property (nonatomic, strong) NSString * wayCategoryName;
 @property (nonatomic, strong) NSMutableArray<SHYGoodsModel*> * goods;
+
+/**
+ 核货状态
+ */
+@property (nonatomic, strong) NSNumber * nuclearStatus;
 
 @end

@@ -29,6 +29,8 @@
 #import "NetManager.h"
 #import "Factory.h"
 
+#import "SHYBaseViewModel.h"
+
 #define APP_DELEGATE (AppDelegate*)[UIApplication sharedApplication].delegate
 
 //Using dlog to print while in debug model.        调试状态下打印日志

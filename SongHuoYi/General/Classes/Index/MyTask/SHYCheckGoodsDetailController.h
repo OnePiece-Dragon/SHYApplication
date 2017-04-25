@@ -22,11 +22,11 @@
 /**
  任务编号
  */
-@property (nonatomic, strong) NSString * taskCode;
+@property (nonatomic, strong) NSNumber * taskId;
 /**
  线路编号
  */
-@property (nonatomic, strong) NSString * lineCode;
+@property (nonatomic, strong) NSNumber * lineId;
 
 @property (nonatomic, strong) SHYTaskCell * headerDetailView;
 @property (nonatomic, strong) SHYCheckGoodsDetailModel * goodsDetailModel;

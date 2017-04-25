@@ -32,6 +32,11 @@
                 make.centerY.equalTo(weakSelf);
             }];
         }else {
+            [self.iconImage mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(weakSelf);
+                make.left.equalTo(weakSelf).offset(8);
+                make.size.mas_equalTo(CGSizeZero);
+            }];
             //没图
             [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.equalTo(weakSelf);
@@ -49,9 +54,7 @@
     if (iconString) {
         //有图片的情况
         _iconImage.image = [UIImage imageNamed:iconString];
-        [self.iconImage mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(weakSelf);
-            make.left.equalTo(weakSelf).offset(8);
+        [self.iconImage mas_updateConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(size);
         }];
         [self.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {

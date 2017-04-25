@@ -138,15 +138,13 @@
     [self showNetTips:@"登录中..."];
     [NetManager post:URL_Login param:paramDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [self hideNetTips];
-        [self handleWithObj:responseObject];
-        /*
-        if ([responseObject[@"errcode"] integerValue] == 0) {
+        if ([responseObject[@"errcode"] isEqualToString:@"0"]) {
             [self handleWithObj:responseObject];
         }else if ([responseObject[@"errcode"] integerValue] == 1) {
             [self failBlock:responseObject[@"errmsg"]];
         }else {
             [self failBlock:NET_FAIL_TIP];
-        }*/
+        }
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         [self hideNetTips];
@@ -169,7 +167,7 @@
     NSString *plistPath = PLIST_Name(@"userMessage");
     NSDictionary * dic = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     SHYUserModel * userModel = [SHYUserModel shareUserMsg];
-    [userModel mj_setKeyValues:dic[@"data"]];
+    [userModel mj_setKeyValues:responseObject[@"data"]];
     NSData * userData = ArchivedDataWithObject(userModel);
     UserDefaultSetObjectForKey(userData, USER_MESSAGE);
     

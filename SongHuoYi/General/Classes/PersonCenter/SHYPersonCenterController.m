@@ -10,6 +10,9 @@
 #import "SHYPersonCenterCell.h"
 
 #import "SHYChangePasswordController.h"
+#import "SHYFeedBackController.h"
+
+#define SERVE_PHONE     @"0571-8888888"
 
 @interface SHYPersonCenterController ()
 
@@ -41,7 +44,10 @@
     switch (index) {
         case 0:
         {
-            
+            UIStoryboard * mainSB = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            SHYFeedBackController * VC = [mainSB instantiateViewControllerWithIdentifier:@"FeedBackVC"];
+            //SHYFeedBackController * VC = [SHYFeedBackController.alloc init];
+            [self.navigationController pushViewController:VC animated:YES];
         }
         break;
         case 1:
@@ -52,7 +58,9 @@
         break;
         case 2:
         {
-            
+            UIWebView * callWebview = [[UIWebView alloc] init];
+            [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:String_Combine(@"tel:", SERVE_PHONE)]]];
+            [self.view addSubview:callWebview];
         }
         break;
         case 3:
@@ -98,9 +106,28 @@
                              rightStr:nil
                             rightIcon:@"xialazhanshi"];
     }*/
-    [cell.contentLabel setLeftStr:self.dataArray[indexPath.row]
-                         rightStr:nil
-                        rightIcon:@"xialazhanshi"];
+    
+    if (indexPath.row == 2) {
+        //联系客服
+        [cell.contentLabel setLeftStr:self.dataArray[indexPath.row]
+                             rightStr:SERVE_PHONE
+                            rightIcon:nil];
+        cell.contentLabel.rightLabel.textAlignment = NSTextAlignmentRight;
+        UIImageView * callImageView = [UIImageView.alloc initWithImage:ImageNamed(@"dianhua")];
+        [cell.contentLabel addSubview:callImageView];
+        __weak typeof(SHYTwoSideLabel*)weakView = cell.contentLabel;
+        [callImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(weakView);
+            make.right.equalTo(weakView.mas_left).offset(SCREEN_WIDTH*2/3);
+            make.size.mas_equalTo(CGSizeMake(24, 24));
+        }];
+        
+    }else {
+        [cell.contentLabel setLeftStr:self.dataArray[indexPath.row]
+                             rightStr:nil
+                            rightIcon:@"xialazhanshi"];
+    }
+    
     
     kWeakSelf(self);
     cell.contentLabel.clickBlock = ^(){
@@ -124,7 +151,7 @@
     return _personTableView;
 }
 - (NSArray *)dataArray {
-    return @[@"意见反馈",@"修改密码",@"帮助中心",@"消息设置"];
+    return @[@"意见反馈",@"修改密码",@"联系客服",@"帮助中心"];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

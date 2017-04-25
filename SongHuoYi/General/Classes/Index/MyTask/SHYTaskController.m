@@ -29,7 +29,7 @@
     // Do any additional setup after loading the view.
     self.orginView = self.view;
     self.naviTitle = @"我的任务";
-    _page = 0;
+    _page = 1;
     
     kWeakSelf(self);
     _isMap = NO;
@@ -48,8 +48,8 @@
 - (void)enterCheckGoodsClick:(SHYTaskModel*)model {
     DLog(@"开始核货:%@",model.lineName);
     SHYCheckGoodsDetailController * VC = [SHYCheckGoodsDetailController.alloc init];
-    VC.taskCode = model.tasksId.stringValue;
-    VC.lineCode = model.lineId.stringValue;
+    VC.taskId = model.tasksId;
+    VC.lineId = model.lineId;
     [self.navigationController pushViewController:VC animated:YES];
 }
 
@@ -65,10 +65,11 @@
         _mapView.userTrackingMode = BMKUserTrackingModeNone;//设置定位的状态
         _mapView.showsUserLocation = YES;//显示定位图层
         
-        [self addAnnotationOnMap];
-        
         if (self.dataArray.count) {
-            [self.mapView addSubview:self.annotationDetailView];
+            [self addAnnotationOnMap];
+            if (!self.annotationDetailView.superview) {
+                [self.mapView addSubview:self.annotationDetailView];
+            }
             kWeakSelf(self);
             [self.annotationDetailView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(weakself.mapView).offset(10);
@@ -102,6 +103,12 @@
     }];
 }
 
+- (void)resetDataWithRequest {
+    [self.dataArray removeAllObjects];
+    _page = 1;
+    [self requestData];
+}
+
 - (void)requestData {
     [self showNetTips:nil];
     [NetManager post:URL_TASK_LIST param:@{@"userId":USER_ID,
@@ -109,9 +116,13 @@
             progress:^(NSProgress * _Nonnull progress) {
         
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        self.taskTableView.emptyBtnString = NET_EMPTY_MSG;
+        
         [self hideNetTips];
         [self handleResponseMessage:responseObject];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        self.taskTableView.emptyBtnString = NET_ERROR_TIP;
+        
         [self hideNetTips];
         [self showToast:NET_ERROR_TIP];
         
@@ -122,14 +133,15 @@
 - (void)handleResponseMessage:(NSDictionary*)responseObject {
     DLog(@"responseObject:%@",responseObject);
     
-    NSString *plistPath = PLIST_Name(@"taskList");
-    NSDictionary * result = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+    //NSString *plistPath = PLIST_Name(@"taskList");
+    //NSDictionary * result = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     
-    for (NSDictionary * dic in result[@"data"][@"rows"]) {
+    for (NSDictionary * dic in responseObject[@"data"][@"rows"]) {
         SHYTaskModel * model = [SHYTaskModel mj_objectWithKeyValues:dic];
         [self.dataArray addObject:model];
     }
     [self.taskTableView reloadData];
+    
 }
 
 - (void)addAnnotationOnMap {
@@ -165,9 +177,9 @@
     label1.titleLabel.text = taskModel.lineName;
     label2.titleLabel.text = [NSString stringWithFormat:@"任务单号：%@",taskModel.tasksId];
     label3.titleLabel.text = [NSString stringWithFormat:@"地址：%@",taskModel.startAddr];
-    label4.titleLabel.text = [NSString stringWithFormat:@"取件任务数：%@",taskModel.taskDetail];
+    label4.titleLabel.text = [NSString stringWithFormat:@"取件任务数：%@",taskModel.orderNum];
     label5.titleLabel.text = [NSString stringWithFormat:@"商户数量：%@",taskModel.merchantNum];
-    label6.titleLabel.text = [NSString stringWithFormat:@"共计：%@",taskModel.orderNum];
+    label6.titleLabel.text = [NSString stringWithFormat:@"共计：%@",taskModel.taskDetail];
 }
 
 - (void)hideAnnotationView {
@@ -258,19 +270,24 @@
  */
 - (void)mapView:(BMKMapView *)mapView annotationViewForBubble:(BMKAnnotationView *)view {
     DLog(@"当点击annotation view弹出的泡泡时，调用此接口");
-    [self updateAnnotationDetailViewLocation];
-    [self showAnnotationView];
+    SHYTaskAnnotationModel *annotation = (SHYTaskAnnotationModel*)view.annotation;
+    if (![annotation.title isEqualToString:@"我的位置"]) {
+        //进入
+        //[self enterCheckGoodsClick:annotation.taskModel];
+    }
 }
 /**
  *当选中一个annotation views时，调用此接口
  *@param mapView 地图View
  */
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view {
-    [self updateAnnotationDetailViewLocation];
+    DLog(@"当选中annotation view时");
     SHYTaskAnnotationModel *annotation = (SHYTaskAnnotationModel*)view.annotation;
     if ([annotation.title isEqualToString:@"我的位置"]) {
         [self hideAnnotationView];
     }else {
+        [self showAnnotationView];
+        [self updateAnnotationDetailViewLocation];
         [self setContentView:_annotationDetailView model:annotation.taskModel];
     }
 }
@@ -309,7 +326,11 @@
 - (SHYBaseTableView *)taskTableView {
     if (!_taskTableView) {
         _taskTableView = [SHYBaseTableView.alloc initWithFrame:CGRectZero style:UITableViewStyleGrouped target:self];
-        _taskTableView.backgroundColor = [UIColor lightGrayColor];
+        kWeakSelf(self);
+        _taskTableView.backgroundColor = BACKGROUND_COLOR;
+        _taskTableView.emptyRequestAgainBlock = ^(){
+            [weakself resetDataWithRequest];
+        };
     }
     return _taskTableView;
 }
@@ -331,8 +352,6 @@
 - (SHYTaskCell *)annotationDetailView {
     if (!_annotationDetailView) {
         _annotationDetailView = [SHYTaskCell.alloc initWithFrame:CGRectZero labelCount:6];
-        _annotationDetailView.layer.cornerRadius=8.f;
-        _annotationDetailView.clipsToBounds = YES;
         
         kWeakSelf(self);
         _annotationDetailView.startBtnClickBlock = ^(SHYTaskModel * model){
