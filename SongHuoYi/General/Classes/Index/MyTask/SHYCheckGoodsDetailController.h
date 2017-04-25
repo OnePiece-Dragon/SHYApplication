@@ -34,5 +34,6 @@
 @property (nonatomic, strong) SHYBaseTableView * checkGoodsDetailView;
 @property (nonatomic, strong) NSMutableArray<SHYNuclearCategoryModel*> * dataArray;
 
+@property (nonatomic, copy) void (^backBlock)();
 
 @end

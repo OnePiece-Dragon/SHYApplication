@@ -61,11 +61,13 @@
 -(void)setContent {
     [self workStatusSet:0];
     
-    NSArray * imageArray = @[@"dianjiwoderenwu2",@"dianjiwodepeisong2",@"dianjikaishishangban"];
-    NSString * workStatusString = nil;
+    NSArray * imageArray = @[@"woderenwu",@"wodepeisong",@"kaishishangban"];
+    NSArray * highlightArray =
+    @[@"dianjiwoderenwu",@"dianjiwodepeisong",@"dianjikaishishangban"];
+    NSString * workStatusString = @"";
     if ([USER_WORK_STATUS integerValue] != 1) {
         workStatusString = @"我要上班";
-    }else {
+    }else if ([USER_WORK_STATUS integerValue] != 0){
         workStatusString = @"我要下班";
     }
     NSArray * titleArray = @[@"我的任务",@"我的配送",workStatusString];
@@ -76,6 +78,7 @@
         model.currentIndex = i;
         model.isClick = 0;
         model.imageName = imageString;
+        model.highlightImageName = [highlightArray objectAtIndex:i];
         model.descName = [descArray objectAtIndex:i];
         model.titleName = [titleArray objectAtIndex:i++];
         [self.dataArray addObject:model];
@@ -105,13 +108,10 @@
     [NetManager post:URL_WORK_UPDATE
                param:@{@"userId":USER_ID,
                        @"status":@(status)}
-            progress:nil
-             success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                 [self hideNetTips];
-                 if ([responseObject[@"errcode"] integerValue] == 0) {
-                     SHYWorkStatusModel * model = [SHYWorkStatusModel mj_objectWithKeyValues:responseObject[@"data"]];
-                     
-                     NSDictionary * result = responseObject[@"data"];
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                  [self hideNetTips];
+                 if (code) {
+                     SHYWorkStatusModel * model = [SHYWorkStatusModel mj_objectWithKeyValues:responseObj];
                      ((SHYUserModel*)USER_MODEL).status = model.status;
                      if (model.valStatusMsg) {
                          [self showToast:model.valStatusMsg];
@@ -123,13 +123,12 @@
                          [self workModelStatus:model.status.integerValue workTime:nil];
                      }
                  }else {
-                     [self showToast:@"操作失败"];
+                     [self showToast:failMessag];
                  }
-                
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [self hideNetTips];
-        [self showToast:NET_ERROR_TIP];
-    }];
+             } failure:^(NSString * _Nonnull errorStr) {
+                 [self hideNetTips];
+                 [self showToast:errorStr];
+             }];
 }
 
 //status == 1 上班状态

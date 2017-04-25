@@ -51,6 +51,8 @@
     [_autoLogin setImage:ImageNamed(@"buxuanze") forState:UIControlStateNormal];
     [_autoLogin setImage:ImageNamed(@"xuanze") forState:UIControlStateSelected];
     
+    _bigLogin.layer.cornerRadius = 8.f;
+    _bigLogin.clipsToBounds = YES;
     [_bigLogin setTitleColor:COLOR_RGB(2, 166, 255) forState:UIControlStateNormal];
     [_bigLogin setBackgroundImage:[UIImage imageWithColor:COLOR_WHITE] forState:UIControlStateNormal];
     
@@ -136,20 +138,18 @@
                                 @"clientId":_model.clientId
                                 };
     [self showNetTips:@"登录中..."];
-    [NetManager post:URL_Login param:paramDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [self hideNetTips];
-        if ([responseObject[@"errcode"] isEqualToString:@"0"]) {
-            [self handleWithObj:responseObject];
-        }else if ([responseObject[@"errcode"] integerValue] == 1) {
-            [self failBlock:responseObject[@"errmsg"]];
-        }else {
-            [self failBlock:NET_FAIL_TIP];
-        }
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [self hideNetTips];
-        [self failBlock:NET_ERROR_TIP];
-    }];
+    [NetManager post:URL_Login param:paramDic
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self hideNetTips];
+                 if (code) {
+                     [self handleWithObj:responseObj];
+                 }else {
+                     [self failBlock:failMessag];
+                 }
+             } failure:^(NSString * _Nonnull errorStr) {
+                 [self hideNetTips];
+                 [self failBlock:errorStr];
+             }];
 }
 
 - (void)handleWithObj:(NSDictionary*)responseObject{
@@ -164,10 +164,10 @@
     
     UserDefaultSetObjectForKey(@1, USER_LOGIN_STATUS);
     
-    NSString *plistPath = PLIST_Name(@"userMessage");
-    NSDictionary * dic = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+    //NSString *plistPath = PLIST_Name(@"userMessage");
+    //NSDictionary * dic = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     SHYUserModel * userModel = [SHYUserModel shareUserMsg];
-    [userModel mj_setKeyValues:responseObject[@"data"]];
+    [userModel mj_setKeyValues:responseObject];
     NSData * userData = ArchivedDataWithObject(userModel);
     UserDefaultSetObjectForKey(userData, USER_MESSAGE);
     

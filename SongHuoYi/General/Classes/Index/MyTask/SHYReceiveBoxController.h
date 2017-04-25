@@ -16,6 +16,7 @@
 
 @property (nonatomic, strong) NSNumber * taskId;
 @property (nonatomic, strong) NSNumber * lineId;
+@property (nonatomic, strong) NSNumber * senderId;
 
 @property (nonatomic, strong) SHYNuclearCategoryModel * nuclearModel;
 

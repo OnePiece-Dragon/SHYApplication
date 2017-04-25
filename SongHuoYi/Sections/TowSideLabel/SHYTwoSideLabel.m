@@ -102,6 +102,7 @@
     if (icon) {
         self.rightIcon.image = [UIImage imageNamed:icon];
         [self.rightIcon mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(weakself);
             make.size.mas_equalTo(CGSizeMake(24, 24));
         }];
     }

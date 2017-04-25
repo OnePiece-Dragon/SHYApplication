@@ -14,6 +14,7 @@
 @property (nonatomic, assign) NSInteger isClick;
 
 @property (nonatomic, strong) NSString * imageName;
+@property (nonatomic, strong) NSString * highlightImageName;
 @property (nonatomic, strong) NSString * titleName;
 
 @property (nonatomic, strong) NSString * descName;

@@ -13,6 +13,9 @@
 
 @interface SHYTransportController ()<BMKMapViewDelegate,BMKLocationServiceDelegate>
 {
+    NSInteger _leftPage;
+    NSInteger _rightPage;
+    
     NSInteger _isMap;
     NSInteger _isUserLocation;
     BOOL _mapHaveLoad;
@@ -40,6 +43,9 @@
     self.orginView = self.view;
     self.naviTitle = @"我的配送";
     kWeakSelf(self);
+    _leftPage   = 1;
+    _rightPage  = 1;
+    
     _isMap = NO;
     _isUserLocation = NO;
     _mapHaveLoad = NO;
@@ -53,19 +59,53 @@
 }
 //请求配送中的数据
 - (void)requestDeliveryingData {
+    [NetManager post:URL_DISTRIBUTE_LIST
+               param:@{@"userId":USER_ID,
+                       @"distrStatus":@1,
+                       @"curAddr":@"",
+                       @"page":@(_leftPage)}
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                   if (code) {
+                       
+                       for (NSDictionary * dic in responseObj[@"rows"]) {
+                           SHYDeliveryModel * model = [SHYDeliveryModel mj_objectWithKeyValues:dic];
+                           [self.deliveryingArray addObject:model];
+                       }
+                       [self.deliveryingView reloadData];
+                       
+                   }else {
+                       [self showToast:failMessag];
+                   }
+             } failure:^(NSString * _Nonnull errorStr) {
+                 [self showToast:errorStr];
+             }];
     
-    
-    NSString * path = PLIST_Name(@"distribute_list");
-    NSDictionary * reuslt = [NSDictionary.alloc initWithContentsOfFile:path];
-    
-    for (NSDictionary * dic in reuslt[@"data"][@"rows"]) {
-        SHYDeliveryModel * model = [SHYDeliveryModel mj_objectWithKeyValues:dic];
-        [self.deliveryingArray addObject:model];
-    }
-    [self.deliveryingView reloadData];
+    //NSString * path = PLIST_Name(@"distribute_list");
+    //NSDictionary * reuslt = [NSDictionary.alloc initWithContentsOfFile:path];
 }
 //请求配送完成数据
 - (void)requestDeliveryDoneData {
+    [NetManager post:URL_DISTRIBUTE_LIST
+               param:@{@"userId":USER_ID,
+                       @"distrStatus":@2,
+                       @"curAddr":@"",
+                       @"page":@(_rightPage)}
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 if (code) {
+                     
+                     for (NSDictionary * dic in responseObj[@"rows"]) {
+                         SHYDeliveryModel * model = [SHYDeliveryModel mj_objectWithKeyValues:dic];
+                         [self.deliveryDoneArray addObject:model];
+                     }
+                     [self.deliveryDoneView reloadData];
+                 }else {
+                     [self showToast:failMessag];
+                 }
+             } failure:^(NSString * _Nonnull errorStr) {
+                 [self showToast:errorStr];
+             }];
+    
+    /*
     NSString * path = PLIST_Name(@"distribute_list");
     NSDictionary * reuslt = [NSDictionary.alloc initWithContentsOfFile:path];
     
@@ -74,6 +114,7 @@
         [self.deliveryDoneArray addObject:model];
     }
     [self.deliveryDoneView reloadData];
+     */
 }
 //添加大头针
 - (void)addAnnotationOnMap {
@@ -138,23 +179,25 @@
         _mapView.userTrackingMode = BMKUserTrackingModeNone;//设置定位的状态
         _mapView.showsUserLocation = YES;//显示定位图层
         
-        [self addAnnotationOnMap];
         
-        
-        [self.mapView addSubview:self.annotationDetailView];
-        kWeakSelf(self);
-        [self.annotationDetailView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(weakself.mapView).offset(10);
-            make.right.equalTo(weakself.mapView).offset(-10);
-            make.bottom.equalTo(weakself.mapView);
-            make.height.greaterThanOrEqualTo(@250);
-        }];
-        if (_mapHaveLoad) {
-            _annotationDetailView.hidden = NO;
-        }else {
-            _annotationDetailView.hidden = YES;
+        if (self.deliveryingArray.count) {
+            [self addAnnotationOnMap];
+            
+            [self.mapView addSubview:self.annotationDetailView];
+            kWeakSelf(self);
+            [self.annotationDetailView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(weakself.mapView).offset(10);
+                make.right.equalTo(weakself.mapView).offset(-10);
+                make.bottom.equalTo(weakself.mapView);
+                make.height.greaterThanOrEqualTo(@250);
+            }];
+            if (_mapHaveLoad) {
+                _annotationDetailView.hidden = NO;
+            }else {
+                _annotationDetailView.hidden = YES;
+            }
+            [self setContentView:_annotationDetailView model:self.deliveryingArray.firstObject];
         }
-        [self setContentView:_annotationDetailView model:self.deliveryingArray.firstObject];
     }else {
         //列表模式
         self.segmentControl.hidden = NO;

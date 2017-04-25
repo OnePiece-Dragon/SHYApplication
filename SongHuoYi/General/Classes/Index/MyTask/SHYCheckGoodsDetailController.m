@@ -16,7 +16,7 @@
     
     BOOL _canCheckBtnClick;
 }
-
+@property (nonatomic, strong) UIButton * startSendGoods;
 @property (nonatomic, strong) UIPasteboard * pasteBoard;
 
 @end
@@ -27,12 +27,19 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     _page = 1;
-    _canCheckBtnClick = YES;
+    _canCheckBtnClick = NO;
     kWeakSelf(self);
     self.naviTitle = @"核货详情";
     [self setRightItem:@"daohang" rightBlock:^{
         [weakself mapGuide];
     }];
+    self.leftBar=^(){
+        if (weakself.backBlock) {
+            weakself.backBlock();
+        }
+        [weakself.navigationController popViewControllerAnimated:YES];
+    };
+    
     //核货详情
     [self requestNuclearDetailData];
     //核货详情类别
@@ -51,10 +58,24 @@
 }
 
 - (void)goodsList:(BOOL)isAll model:(SHYNuclearCategoryModel*)model {
+    if (!_canCheckBtnClick) {
+        return;
+    }
+    
     SHYReceiveBoxController * VC = [SHYReceiveBoxController.alloc init];
     VC.taskId = self.taskId;
     VC.lineId = self.lineId;
+    VC.senderId = self.goodsDetailModel.senderId;
     VC.nuclearModel = model;
+    
+    kWeakSelf(self);
+    VC.responseBlock=^(){
+        _page = 1;
+        _canCheckBtnClick = NO;
+        [weakself.dataArray removeAllObjects];
+        [weakself requestNuclearCategoryData];
+    };
+    
     [self.navigationController pushViewController:VC animated:YES];
 }
 
@@ -65,15 +86,24 @@
                param:@{@"userId":USER_ID,
                        @"taskId":self.taskId,
                        @"lineId":self.lineId,
-                       @"categoryId":@""} progress:^(NSProgress * _Nonnull progress) {
-                       } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                           [self hideNetTips];
-                           DLog(@"responseObj核对:%@",responseObject);
-                           
-                       } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                           [self hideNetTips];
-                           [self showToast:NET_ERROR_TIP];
-                       }];
+                       @"categoryId":@""}
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 if (code) {
+                     [self hideNetTips];
+                     DLog(@"responseObj核对:%@",responseObj);
+                     [self showToast:@"核货成功"];
+
+                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                         [self.navigationController popViewControllerAnimated:YES];
+                     });
+                     
+                 }else {
+                     [self showToast:failMessag];
+                 }
+             } failure:^(NSString * _Nonnull errorStr) {
+                 [self hideNetTips];
+                 [self showToast:errorStr];
+             }];
 }
 
 - (void)requestNuclearDetailData {
@@ -82,34 +112,35 @@
                param:@{@"userId":USER_ID,
                        @"taskId":self.taskId,
                        @"lineId":self.lineId}
-            progress:^(NSProgress * _Nonnull progress) {}
-             success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
                  [self hideNetTips];
-                 [self handleResponseObj:responseObject nulClearDetail:YES];
-             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                 if (code == YES) {
+                     [self hideNetTips];
+                     [self handleResponseObj:responseObj nulClearDetail:YES];
+                 }else {
+                     [self showToast:failMessag];
+                 }
+             } failure:^(NSString * _Nonnull errorStr) {
                  [self hideNetTips];
-                 [self showToast:NET_ERROR_TIP];
-                 
-                 [self handleResponseObj:nil nulClearDetail:YES];
+                 [self showToast:errorStr];
              }];
 }
 
 - (void)requestNuclearCategoryData {
-    [self showNetTips:nil];
     [NetManager post:URL_TASK_NUCLEAR_CATEGORY
                param:@{@"userId":USER_ID,
                        @"taskId":self.taskId,
                        @"lineId":self.lineId,
                        @"page":@(_page)}
-            progress:^(NSProgress * _Nonnull progress) {}
-             success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                 [self hideNetTips];
-                 [self handleResponseObj:responseObject nulClearDetail:NO];
-             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                 [self hideNetTips];
-                 [self showToast:NET_ERROR_TIP];
-                 
-                 [self handleResponseObj:nil nulClearDetail:NO];
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 if (code) {
+                     [self hideNetTips];
+                     [self handleResponseObj:responseObj nulClearDetail:NO];
+                 }else {
+                     [self showToast:failMessag];
+                 }
+             } failure:^(NSString * _Nonnull errorStr) {
+                 [self showToast:errorStr];
              }];
 }
 
@@ -118,14 +149,14 @@
         DLog(@"responseObj_detail:%@",responseObj);
         //NSString *plistPath = PLIST_Name(@"nuclear");
         //NSDictionary * result = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-        SHYCheckGoodsDetailModel * model = [SHYCheckGoodsDetailModel mj_objectWithKeyValues:responseObj[@"data"]];
+        SHYCheckGoodsDetailModel * model = [SHYCheckGoodsDetailModel mj_objectWithKeyValues:responseObj];
         _goodsDetailModel = model;
     }else {
         DLog(@"responseObj_category:%@",responseObj);
         //nuclear_category
         //NSString *category_plistPath = PLIST_Name(@"nuclear_category");
         //NSDictionary * category_result = [NSDictionary dictionaryWithContentsOfFile:category_plistPath];
-        for (NSDictionary * dic in responseObj[@"data"][@"rows"]) {
+        for (NSDictionary * dic in responseObj[@"rows"]) {
             SHYNuclearCategoryModel * category_model = [SHYNuclearCategoryModel mj_objectWithKeyValues:dic];
             [self.dataArray addObject:category_model];
         }
@@ -272,6 +303,17 @@
         }
         [cell addTopView];
         
+        if ([model.nuclearStatus integerValue] == 0) {
+            _canCheckBtnClick = YES;
+        }
+        if (_canCheckBtnClick == YES) {
+            self.startSendGoods.enabled = YES;
+            [self.startSendGoods setTitle:@"一键核货" forState:UIControlStateNormal];
+        }else {
+            self.startSendGoods.enabled = NO;
+            [self.startSendGoods setTitle:@"已核货" forState:UIControlStateDisabled];
+        }
+        
         int i = 0;
         for (SHYTwoSideLabel * label in cell.rowArray) {
             label.rightLabel.textAlignment = NSTextAlignmentRight;
@@ -300,18 +342,7 @@
 - (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     if (section == 1) {
         UIView * footerView = [UIView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 120)];
-        UIButton * startSendGoods = [Factory createBtn:CGRectMake(40, 20, SCREEN_WIDTH - 80, 44) title:@"一键核货" type:UIButtonTypeCustom target:self action:@selector(sendGoodsBtnClick)];
-        startSendGoods.layer.cornerRadius = 8.f;
-        [startSendGoods setTitle:@"已核货" forState:UIControlStateDisabled];
-        
-        if (_canCheckBtnClick == YES) {
-            startSendGoods.enabled = YES;
-            startSendGoods.backgroundColor = BUTTON_COLOR;
-        }else {
-            startSendGoods.enabled = NO;
-            startSendGoods.backgroundColor = [UIColor grayColor];
-        }
-        [footerView addSubview:startSendGoods];
+        [footerView addSubview:self.startSendGoods];
         return footerView;
     }
     return nil;
@@ -322,7 +353,7 @@
         return 270;
     }
     SHYNuclearCategoryModel * model = self.dataArray[indexPath.row];
-    return 5+(model.goods.count+1)*(32+4);
+    return (model.goods.count+1)*50;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -347,6 +378,18 @@
         _headerDetailView = [SHYTaskCell.alloc initWithFrame:CGRectZero labelCount:7];
     }
     return _headerDetailView;
+}
+- (UIButton *)startSendGoods {
+    if (!_startSendGoods) {
+        UIButton * startSendGoods = [Factory createBtn:CGRectMake(40, 20, SCREEN_WIDTH - 80, 44) title:@"一键核货" type:UIButtonTypeCustom target:self action:@selector(sendGoodsBtnClick)];
+        startSendGoods.layer.cornerRadius = 8.f;
+        startSendGoods.clipsToBounds = YES;
+        [startSendGoods setTitle:@"已核货" forState:UIControlStateDisabled];
+        [startSendGoods setBackgroundImage:[UIImage imageWithColor:[UIColor grayColor]] forState:UIControlStateDisabled];
+        [startSendGoods setBackgroundImage:[UIImage imageWithColor:BUTTON_COLOR] forState:UIControlStateNormal];
+        _startSendGoods = startSendGoods;
+    }
+    return _startSendGoods;
 }
 - (NSMutableArray<SHYNuclearCategoryModel *> *)dataArray {
     if (!_dataArray) {

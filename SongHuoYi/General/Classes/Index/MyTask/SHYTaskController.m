@@ -47,9 +47,13 @@
 }
 - (void)enterCheckGoodsClick:(SHYTaskModel*)model {
     DLog(@"开始核货:%@",model.lineName);
+    kWeakSelf(self);
     SHYCheckGoodsDetailController * VC = [SHYCheckGoodsDetailController.alloc init];
     VC.taskId = model.tasksId;
     VC.lineId = model.lineId;
+    VC.backBlock=^(){
+        [weakself resetDataWithRequest];
+    };
     [self.navigationController pushViewController:VC animated:YES];
 }
 
@@ -111,23 +115,21 @@
 
 - (void)requestData {
     [self showNetTips:nil];
-    [NetManager post:URL_TASK_LIST param:@{@"userId":USER_ID,
-                                           @"page":@(_page)}
-            progress:^(NSProgress * _Nonnull progress) {
-        
-    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        self.taskTableView.emptyBtnString = NET_EMPTY_MSG;
-        
-        [self hideNetTips];
-        [self handleResponseMessage:responseObject];
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        self.taskTableView.emptyBtnString = NET_ERROR_TIP;
-        
-        [self hideNetTips];
-        [self showToast:NET_ERROR_TIP];
-        
-        [self handleResponseMessage:nil];
-    }];
+    [NetManager post:URL_TASK_LIST
+               param:@{@"userId":USER_ID,@"page":@(_page)}
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 self.taskTableView.emptyBtnString = NET_EMPTY_MSG;
+                 if (code) {
+                     [self hideNetTips];
+                     [self handleResponseMessage:responseObj];
+                 }else{
+                     [self showToast:failMessag];
+                 }
+             } failure:^(NSString * _Nonnull errorStr) {
+                 self.taskTableView.emptyBtnString = NET_ERROR_TIP;
+                 [self hideNetTips];
+                 [self showToast:errorStr];
+             }];
 }
 
 - (void)handleResponseMessage:(NSDictionary*)responseObject {
@@ -136,7 +138,7 @@
     //NSString *plistPath = PLIST_Name(@"taskList");
     //NSDictionary * result = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     
-    for (NSDictionary * dic in responseObject[@"data"][@"rows"]) {
+    for (NSDictionary * dic in responseObject[@"rows"]) {
         SHYTaskModel * model = [SHYTaskModel mj_objectWithKeyValues:dic];
         [self.dataArray addObject:model];
     }
@@ -180,6 +182,15 @@
     label4.titleLabel.text = [NSString stringWithFormat:@"取件任务数：%@",taskModel.orderNum];
     label5.titleLabel.text = [NSString stringWithFormat:@"商户数量：%@",taskModel.merchantNum];
     label6.titleLabel.text = [NSString stringWithFormat:@"共计：%@",taskModel.taskDetail];
+    
+    
+    if ([taskModel.nuclearStatus integerValue] == 0) {
+        //未核货
+        [view.enterBtn setTitle:@"进入核货" forState:UIControlStateNormal];
+    }else if ([taskModel.nuclearStatus integerValue] == 1){
+        //核货完成
+        [view.enterBtn setTitle:@"核货完成" forState:UIControlStateNormal];
+    }
 }
 
 - (void)hideAnnotationView {
@@ -241,7 +252,7 @@
 }
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView * view = [UIView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 4)];
-    view.backgroundColor = LINE_COLOR;
+    view.backgroundColor = BACKGROUND_COLOR;
     return view;
 }
 

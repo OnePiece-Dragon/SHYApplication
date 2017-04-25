@@ -11,6 +11,10 @@
 
 @interface SHYReceiveBoxController ()<UITextFieldDelegate>
 
+{
+    BOOL _canBtnClick;
+}
+
 @property (nonatomic, strong) SHYReceiveBoxView * topBoxView;
 @property (nonatomic, strong) SHYBaseTableView * checkGoodsListView;
 @property (nonatomic, strong) UIView * footerTopView;
@@ -28,6 +32,15 @@
     // Do any additional setup after loading the view from its nib.
     [self setUI];
     [self requestData];
+    
+    _canBtnClick = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (self.responseBlock) {
+        self.responseBlock();
+    }
 }
 
 /**
@@ -48,16 +61,44 @@
                        @"taskId":self.taskId,
                        @"lineId":self.lineId,
                        @"categoryId":self.nuclearModel.categoryId.stringValue}
-            progress:^(NSProgress * _Nonnull progress) {
-                       } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                           [self hideNetTips];
-                           
-                           DLog(@"responseObj核对:%@",responseObject);
-                           
-                       } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                           [self hideNetTips];
-                           [self showToast:NET_ERROR_TIP];
-                       }];
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self hideNetTips];
+                 if (code) {
+                     DLog(@"responseObj:%@",responseObj);
+                     [self showToast:@"操作成功"];
+                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                         [self.navigationController popViewControllerAnimated:YES];
+                     });
+                 }else {
+                     [self showToast:failMessag];
+                 }
+             } failure:^(NSString * _Nonnull errorStr) {
+                 [self hideNetTips];
+                 [self showToast:errorStr];
+             }];
+}
+
+- (void)receiveBoxGoodsItem:(NSInteger)countNum goodsModel:(SHYGoodsModel*)goodsModel{
+    [NetManager post:URL_TASK_NUCLEAR_CGTUPDATE
+               param:@{@"userId":USER_ID,
+                       @"taskId":self.taskId,
+                       @"senderId":@"",
+                       @"categoryId":self.nuclearModel.categoryId,
+                       @"receivedNum":@(countNum),
+                       @"orderItemId":goodsModel.orderItemId}
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 if (code) {
+                     DLog(@"responseObj:%@",responseObj);
+                     goodsModel.nuclearStatus = @1;
+                     [self.checkGoodsListView reloadData];
+                     
+                 }else {
+                     [self showToast:failMessag];
+                 }
+             } failure:^(NSString * _Nonnull errorStr) {
+                 [self hideNetTips];
+                 [self showToast:errorStr];
+             }];
 }
 
 /**
@@ -85,9 +126,10 @@
 
 - (void)inputRowTextModel:(SHYGoodsModel*)model action:(UIAlertAction*)action alertController:(UIAlertController*)alertController cell:(SHYCheckGoodsCell*)cell{
     UITextField *userNameTextField = alertController.textFields.firstObject;
-    cell.labelView.rightLabel.text= @"已核货";
-    
-    [self.checkGoodsListView reloadData];
+    //cell.labelView.rightLabel.text= @"已核货";
+    //[self.checkGoodsListView reloadData];
+    [self receiveBoxGoodsItem:userNameTextField.text.integerValue
+                   goodsModel:model];
 }
 
 - (void)requestData {
@@ -147,13 +189,26 @@
     
     SHYGoodsModel * model = self.dataArray[indexPath.row];
     
+    if ([model.nuclearStatus integerValue] == 0) {
+        _canBtnClick = YES;
+    }
+    if (_canBtnClick == YES) {
+        self.receiveDoneBtn.enabled = YES;
+    }else {
+        self.receiveDoneBtn.enabled = NO;
+    }
+    
     cell.labelView.leftLabel.text = model.goodsName;
     
     if ([model.nuclearStatus integerValue] == 1) {
         //已核货
         cell.labelView.rightLabel.text = @"已核货";
+        cell.labelView.rightLabel.textColor = BUTTON_COLOR;
+        [self.receiveDoneBtn setTitle:@"已核货" forState:UIControlStateDisabled];
     }else {
         cell.labelView.rightLabel.text = @"未核货";
+        cell.labelView.rightLabel.textColor = COLOR_PRICE;
+        [self.receiveDoneBtn setTitle:@"未核货" forState:UIControlStateNormal];
     }
     
     return cell;
@@ -217,6 +272,8 @@
 - (UIButton *)receiveDoneBtn {
     if (!_receiveDoneBtn) {
         _receiveDoneBtn = [Factory createBtn:CGRectMake(20, 60, SCREEN_WIDTH - 40, 44) title:@"一键核货" type:UIButtonTypeCustom target:self action:@selector(receiveBoxDone)];
+        [_receiveDoneBtn setTitle:@"已核货" forState:UIControlStateDisabled];
+        [_receiveDoneBtn setBackgroundImage:[UIImage imageWithColor:[UIColor grayColor]] forState:UIControlStateDisabled];
         [_receiveDoneBtn setBackgroundImage:[UIImage imageWithColor:BUTTON_COLOR] forState:UIControlStateNormal];
         _receiveDoneBtn.layer.cornerRadius = 8.f;
         _receiveDoneBtn.clipsToBounds = YES;
