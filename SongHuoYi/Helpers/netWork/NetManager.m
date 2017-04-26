@@ -45,12 +45,14 @@
                     parameters:param
                       progress:nil
                        success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                           
                            BOOL s_code = NO;
                            NSString * faileString = nil;
                            NSDictionary * response = nil;
                            if ([responseObject[@"errcode"] integerValue] == 0) {
                                s_code = YES;
+                               if ([responseObject[@"errcode"] isEqualToString:@"sys.error"]) {
+                                   s_code = NO;
+                               }
                            }
                            if (responseObject[@"errmsg"] && ![responseObject[@"errmsg"] isEqual:[NSNull null]]) {
                                faileString = responseObject[@"errmsg"];

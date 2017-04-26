@@ -45,7 +45,12 @@
 
 - (void)sendGoodsBtnClick:(SHYTaskModel*)model {
     DLog(@"开始配送:%@",model.lineName);
-    [self showNetTips:@"处理中..."];
+    if (model.nuclearStatus.integerValue == 0) {
+        [self showToast:@"请先完成核货"];
+        return;
+    }
+    
+    [self showNetTips:LOADING_DISPOSE];
     [NetManager post:URL_TASK_STATUS_UPDATE
                param:@{@"taskId":model.tasksId,
                        @"status":@3,
@@ -105,6 +110,7 @@
                 make.height.greaterThanOrEqualTo(@250);
             }];
             [self setContentView:_annotationDetailView model:self.dataArray.firstObject];
+            [_mapView setCenterCoordinate:[(SHYTaskAnnotationModel*)_mapView.annotations.firstObject coordinate] animated:NO];
         }
         
         if (_mapHaveLoad) {
@@ -137,7 +143,7 @@
 }
 
 - (void)requestData {
-    [self showNetTips:nil];
+    [self showNetTips:LOADING_TIPS];
     [NetManager post:URL_TASK_LIST
                param:@{@"userId":USER_ID,@"page":@(_page)}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
@@ -149,7 +155,7 @@
                      [self showToast:failMessag];
                  }
              } failure:^(NSString * _Nonnull errorStr) {
-                 self.taskTableView.emptyBtnString = NET_ERROR_TIP;
+                 self.taskTableView.emptyBtnString = errorStr;
                  [self hideNetTips];
                  [self showToast:errorStr];
              }];
@@ -174,7 +180,7 @@
     for (SHYTaskModel *model in self.dataArray) {
         SHYTaskAnnotationModel* annotation = [[SHYTaskAnnotationModel alloc]init];
         CLLocationCoordinate2D coor;
-        coor.latitude = [model.latitude floatValue];
+        coor.latitude = [model.dimension floatValue];
         coor.longitude = [model.longitude floatValue];
         annotation.coordinate = coor;
         annotation.title = model.lineName;
@@ -349,9 +355,12 @@
     //NSLog(@"didUpdateUserLocation lat %f,long %f",userLocation.location.coordinate.latitude,userLocation.location.coordinate.longitude);
     _userLocation = userLocation;
     [_mapView updateLocationData:userLocation];
+    
     if (!_isUserLocation) {
         _isUserLocation = !_isUserLocation;
-        [_mapView setCenterCoordinate:_userLocation.location.coordinate animated:NO];
+        if (!self.dataArray.count) {
+            [_mapView setCenterCoordinate:_userLocation.location.coordinate animated:NO];
+        }
     }
 }
 

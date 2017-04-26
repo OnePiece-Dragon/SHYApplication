@@ -1,0 +1,6 @@
+framework module Pods_SongHuoYiUITests {
+  umbrella header "Pods-SongHuoYiUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -15,6 +15,7 @@
 {
     NSInteger _leftPage;
     NSInteger _rightPage;
+    BOOL _haveSlide;
     
     NSInteger _isMap;
     NSInteger _isUserLocation;
@@ -45,6 +46,7 @@
     kWeakSelf(self);
     _leftPage   = 1;
     _rightPage  = 1;
+    _haveSlide = NO;
     
     _isMap = NO;
     _isUserLocation = NO;
@@ -58,18 +60,20 @@
     [self setUI];
     
     [self requestDeliveryingData];
-    [self requestDeliveryDoneData];
+    //[self requestDeliveryDoneData];
 }
 //请求配送中的数据
 - (void)requestDeliveryingData {
+    [self showNetTips:LOADING_TIPS];
     [NetManager post:URL_DISTRIBUTE_LIST
                param:@{@"userId":USER_ID,
                        @"distrStatus":@1,
                        @"curAddr":@"",
                        @"page":@(_leftPage)}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self hideNetTips];
                    if (code) {
-                       
+                       DLog(@"responseObj:%@",responseObj);
                        for (NSDictionary * dic in responseObj[@"rows"]) {
                            SHYDeliveryModel * model = [SHYDeliveryModel mj_objectWithKeyValues:dic];
                            [self.deliveryingArray addObject:model];
@@ -80,6 +84,7 @@
                        [self showToast:failMessag];
                    }
              } failure:^(NSString * _Nonnull errorStr) {
+                 [self hideNetTips];
                  [self showToast:errorStr];
              }];
     
@@ -88,6 +93,11 @@
 }
 //请求配送完成数据
 - (void)requestDeliveryDoneData {
+    if (!_haveSlide) {
+        return;
+    }
+    
+    [self showNetTips:LOADING_TIPS];
     [NetManager post:URL_DISTRIBUTE_LIST
                param:@{@"userId":USER_ID,
                        @"distrStatus":@2,
@@ -95,7 +105,7 @@
                        @"page":@(_rightPage)}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
                  if (code) {
-                     
+                     [self hideNetTips];
                      for (NSDictionary * dic in responseObj[@"rows"]) {
                          SHYDeliveryModel * model = [SHYDeliveryModel mj_objectWithKeyValues:dic];
                          [self.deliveryDoneArray addObject:model];
@@ -105,6 +115,7 @@
                      [self showToast:failMessag];
                  }
              } failure:^(NSString * _Nonnull errorStr) {
+                 [self hideNetTips];
                  [self showToast:errorStr];
              }];
     
@@ -119,6 +130,13 @@
     [self.deliveryDoneView reloadData];
      */
 }
+- (void)endTransportRequest {
+    _leftPage = 1;
+    _rightPage = 1;
+    [self.deliveryingArray removeAllObjects];
+    [self requestDeliveryingData];
+}
+
 //添加大头针
 - (void)addAnnotationOnMap {
     NSMutableArray * annotationArray = [NSMutableArray array];
@@ -146,7 +164,11 @@
 //结束配送
 - (void)endDeliveryBtn:(SHYDeliveryModel*)model {
     DLog(@"model:%@",model.shopName);
+    [self showAlertVCWithTitle:@"确认消息:" info:@"该货物已送达！" CancelTitle:@"取消" okTitle:@"确定" cancelBlock:nil okBlock:^{
+        [self endTransportRequest];
+    }];
 }
+
 
 - (void)setContentView:(SHYTaskCell*)view model:(SHYDeliveryModel*)model {
     [view setCellModel:model];
@@ -161,8 +183,12 @@
     
     label1.titleLabel.text = model.shopName;
     label2.titleLabel.text = [NSString stringWithFormat:@"订单号：%@",model.orderId];
-    label3.titleLabel.text = [NSString stringWithFormat:@"代收：%@",model.collectMoney];
+    label3.titleLabel.text = [NSString stringWithFormat:@"代收：%.2f元",model.collectMoney.floatValue/100.0];
     label4.titleLabel.text = [NSString stringWithFormat:@"地址：%@",model.targetAddr];
+    
+    [label3.titleLabel setAttributedText:[Factory setText:label3.titleLabel.text
+                                                attribute:@{NSForegroundColorAttributeName:COLOR_PRICE}
+                                                    range:NSMakeRange(3, label3.titleLabel.text.length - 3)]];
 }
 
 
@@ -248,6 +274,11 @@
 }
 
 - (void)slideAndSegItemSelectedIndex:(NSInteger)index {
+    if (index == 1) {
+        //
+        _haveSlide = YES;
+    }
+    
     [_segmentContentView setPageIndex:index];
     [UIView animateWithDuration:0.7f animations:^{
         self.segmentLineView.x = (SCREEN_WIDTH/2.f)*index;
@@ -379,9 +410,13 @@
     //NSLog(@"didUpdateUserLocation lat %f,long %f",userLocation.location.coordinate.latitude,userLocation.location.coordinate.longitude);
     _userLocation = userLocation;
     [_mapView updateLocationData:userLocation];
+    
     if (!_isUserLocation) {
         _isUserLocation = !_isUserLocation;
-        [_mapView setCenterCoordinate:_userLocation.location.coordinate animated:NO];
+        
+        if (!self.deliveryingArray.count) {
+            [_mapView setCenterCoordinate:_userLocation.location.coordinate animated:NO];
+        }
     }
 }
 

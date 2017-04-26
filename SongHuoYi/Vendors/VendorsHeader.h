@@ -9,7 +9,8 @@
 #ifndef VendorsHeader_h
 #define VendorsHeader_h
 
-
 #import "UIScrollView+EmptyDataSet.h"
+
+#import "UIView+Toast.h"
 
 #endif /* VendorsHeader_h */

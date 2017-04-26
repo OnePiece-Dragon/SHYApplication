@@ -89,6 +89,7 @@
 }
 
 - (void)receiveBoxGoodsItem:(NSInteger)countNum goodsModel:(SHYGoodsModel*)goodsModel{
+    [self showNetTips:@"处理中..."];
     [NetManager post:URL_TASK_NUCLEAR_CGTUPDATE
                param:@{@"userId":USER_ID,
                        @"taskId":self.taskId,
@@ -97,9 +98,11 @@
                        @"receivedNum":@(countNum),
                        @"orderItemId":goodsModel.orderItemId}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self hideNetTips];
                  if (code) {
                      DLog(@"responseObj:%@",responseObj);
                      goodsModel.nuclearStatus = @1;
+                     goodsModel.actualNum = @(countNum);
                      _canBtnClick = NO;
                      _checkBoxChange = YES;
                      [self.checkGoodsListView reloadData];
@@ -126,6 +129,7 @@
                  if (code) {
                      DLog(@"responseObj:%@",responseObj);
                      goodsModel.nuclearStatus = @1;
+                     goodsModel.actualNum = @(countNum);
                      _canBtnClick = NO;
                      _checkBoxChange = YES;
                      [self.checkGoodsListView reloadData];
@@ -250,8 +254,17 @@
     
     if ([model.nuclearStatus integerValue] == 1) {
         //已核货
-        cell.labelView.rightLabel.text = @"已核货";
-        cell.labelView.rightLabel.textColor = BUTTON_COLOR;
+        NSString * string = @"";
+        UIColor * color = BUTTON_COLOR;
+        if (model.actualNum.integerValue == model.buyNum.integerValue) {
+            string = @"已核货";
+        }else if (model.actualNum.integerValue < model.buyNum.integerValue &&
+                  model.actualNum.integerValue>0) {
+            string = [NSString stringWithFormat:@"%@/%@（%@）",model.actualNum,model.buyNum,model.unit];
+            color = COLOR_PRICE;
+        }
+        cell.labelView.rightLabel.text = string;
+        cell.labelView.rightLabel.textColor = color;
         [self.receiveDoneBtn setTitle:@"已核货" forState:UIControlStateDisabled];
     }else {
         cell.labelView.rightLabel.text = @"未核货";

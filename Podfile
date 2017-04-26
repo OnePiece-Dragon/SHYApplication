@@ -8,10 +8,12 @@ use_frameworks!
 pod 'AFNetworking'
 pod 'SDWebImage'
 pod 'Masonry'
+
 pod 'MBProgressHUD'
+#pod 'Toast'
 pod 'MJExtension'
 pod 'MJRefresh'
-#pod 'TPKeyboardAvoiding'
+
 pod 'IQKeyboardManager' 
 pod 'ReactiveObjC'
 

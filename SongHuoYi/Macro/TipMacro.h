@@ -9,6 +9,10 @@
 #ifndef TipMacro_h
 #define TipMacro_h
 
+#define LOADING_TIPS    @"加载中..."
+#define LOADING_WAIT    @"请稍后..."
+#define LOADING_DISPOSE @"处理中..."
+
 #define NET_EMPTY_MSG   @"暂无数据"
 
 #define NET_SUCCESS_TIP @"请求成功"

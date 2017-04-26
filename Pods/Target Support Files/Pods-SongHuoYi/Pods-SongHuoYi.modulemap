@@ -1,0 +1,6 @@
+framework module Pods_SongHuoYi {
+  umbrella header "Pods-SongHuoYi-umbrella.h"
+
+  export *
+  module * { export * }
+}

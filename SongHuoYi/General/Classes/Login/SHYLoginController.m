@@ -221,7 +221,6 @@
     }];
 }
 
-
 - (void)endEditing {
     [_phoneField.inputTextField endEditing:YES];
     [_passWordField.inputTextField endEditing:YES];
@@ -291,9 +290,9 @@
     return _bigLogin;
 }
 
-- (UIView *)backView {
+- (TPKeyboardAvoidingScrollView *)backView {
     if (!_backView) {
-        _backView = [UIView.alloc init];
+        _backView = [TPKeyboardAvoidingScrollView.alloc init];
     }
     return _backView;
 }

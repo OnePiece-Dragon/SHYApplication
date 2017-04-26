@@ -135,13 +135,15 @@
 
 #pragma mark -show Toast-
 - (void)showToast:(NSString *)toast {
+    [self.view makeToast:toast duration:2.0 position:CSToastPositionCenter];
+    
+    
+    /*
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeText;
     hud.detailsLabel.text = toast;
     hud.detailsLabel.font = [UIFont systemFontOfSize:14.0];
-    
-    
-    [hud hideAnimated:YES afterDelay:2.f];
+    [hud hideAnimated:YES afterDelay:2.f];*/
 }
 - (void)showNetTips:(NSString *)tips {
     //UIView * view = [[UIApplication sharedApplication].windows lastObject];

@@ -29,7 +29,11 @@
 @implementation AppDelegate
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-    UserDefaultSetObjectForKey(@"", DeviceToken);
+    GCDWithGlobal(^{
+        if (!UserDefaultObjectForKey(DeviceToken)) {
+            UserDefaultSetObjectForKey(@"", DeviceToken);
+        }
+    });
 }
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
@@ -152,15 +156,20 @@
 - (void)GeTuiSdkDidRegisterClient:(NSString *)clientId {
     //个推SDK已注册，返回clientId
     NSLog(@"\n>>>[GeTuiSdk RegisterClient]:%@\n\n", clientId);
-    // 将deviceToken保存在本地
-    UserDefaultSetObjectForKey(clientId, DeviceToken);
+    GCDWithGlobal(^{
+        // 将deviceToken保存在本地
+        UserDefaultSetObjectForKey(clientId, DeviceToken);
+    });
 }
 
 /** SDK遇到错误回调 */
 - (void)GeTuiSdkDidOccurError:(NSError *)error {
     //个推错误报告，集成步骤发生的任何错误都在这里通知，如果集成后，无法正常收到消息，查看这里的通知。
     NSLog(@"\n>>>[GexinSdk error]:%@\n\n", [error localizedDescription]);
-    UserDefaultSetObjectForKey(@"", DeviceToken);
+    GCDWithGlobal(^{
+        // 将deviceToken保存在本地
+        UserDefaultSetObjectForKey(@"", DeviceToken);
+    });
 }
 
 
@@ -258,5 +267,7 @@
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:apn_type];
     }
 }
-
+-(void)dealloc{
+    [GeTuiSdk destroy];
+}
 @end

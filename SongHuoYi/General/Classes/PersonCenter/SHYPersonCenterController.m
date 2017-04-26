@@ -11,6 +11,7 @@
 
 #import "SHYChangePasswordController.h"
 #import "SHYFeedBackController.h"
+#import "SHYHelpCenterController.h"
 
 #define SERVE_PHONE     @"0571-8888888"
 
@@ -71,6 +72,8 @@
         case 3:
         {
             //帮助中心
+            SHYHelpCenterController * VC = [SHYHelpCenterController.alloc init];
+            [self.navigationController pushViewController:VC animated:YES];
         }
         break;
         case 4:
@@ -127,7 +130,7 @@
         
         [callImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(weakView);
-            make.right.equalTo(weakView.mas_left).offset(SCREEN_WIDTH*2/3);
+            make.right.equalTo(weakView.mas_right).offset(-SCREEN_WIDTH/3);
             make.size.mas_equalTo(CGSizeMake(24, 24));
         }];
         

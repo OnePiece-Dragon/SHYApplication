@@ -15,6 +15,7 @@
     NSInteger _page;
     
     BOOL _canCheckBtnClick;
+    BOOL _haveChanged;
 }
 @property (nonatomic, strong) UIButton * startSendGoods;
 @property (nonatomic, strong) UIPasteboard * pasteBoard;
@@ -28,6 +29,7 @@
     // Do any additional setup after loading the view.
     _page = 1;
     _canCheckBtnClick = NO;
+    _haveChanged = NO;
     kWeakSelf(self);
     self.naviTitle = @"核货详情";
     [self setRightItem:@"daohang" rightBlock:^{
@@ -43,13 +45,12 @@
     [self requestNuclearCategoryData];
     [self setUI];
     
-    
     NOTICENTER_Register(self,@selector(checkBoxChangeDone), Noti_CheckBox);
     
 }
 
 - (void)leftBarAction {
-    if (!_canCheckBtnClick) {
+    if (_haveChanged) {
         if (self.backBlock) {
             self.backBlock();
         }
@@ -82,6 +83,8 @@
 }
 
 - (void)checkBoxChangeDone {
+    _haveChanged = YES;
+    
     _page = 1;
     _canCheckBtnClick = NO;
     [self.dataArray removeAllObjects];
@@ -96,7 +99,7 @@
 }
 
 - (void)onceAllGoodsCheck {
-    [self showNetTips:@"处理中..."];
+    [self showNetTips:LOADING_DISPOSE];
     [NetManager post:URL_TASK_ONCENUCLEAR_UPDATE
                param:@{@"userId":USER_ID,
                        @"taskId":self.taskId,
@@ -122,7 +125,8 @@
 }
 
 - (void)requestNuclearDetailData {
-    [self showNetTips:nil];
+    [self showNetTips:LOADING_TIPS];
+    
     [NetManager post:URL_TASK_NUCLEAR_LIST
                param:@{@"userId":USER_ID,
                        @"taskId":self.taskId,
@@ -130,8 +134,9 @@
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
                  [self hideNetTips];
                  if (code == YES) {
-                     [self hideNetTips];
                      [self handleResponseObj:responseObj nulClearDetail:YES];
+                     //请求分类
+                     [self requestNuclearCategoryData];
                  }else {
                      [self showToast:failMessag];
                  }
@@ -148,13 +153,15 @@
                        @"lineId":self.lineId,
                        @"page":@(_page)}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self hideNetTips];
                  if (code) {
-                     [self hideNetTips];
                      [self handleResponseObj:responseObj nulClearDetail:NO];
+                     [self.checkGoodsDetailView reloadData];
                  }else {
                      [self showToast:failMessag];
                  }
              } failure:^(NSString * _Nonnull errorStr) {
+                 [self hideNetTips];
                  [self showToast:errorStr];
              }];
 }
@@ -176,7 +183,6 @@
             [self.dataArray addObject:category_model];
         }
     }
-    [self.checkGoodsDetailView reloadData];
 }
 
 - (void)setUI {
@@ -340,7 +346,8 @@
                          rightStr:[NSString stringWithFormat:@"%@：",
                                    [(SHYGoodsModel*)model.goods[i-1] unit]] rightIcon:nil];
                 [label updateRightTipsLabel];
-                label.rightTipsLabel.text = [(SHYGoodsModel*)model.goods[i-1] buyNum].stringValue;
+                SHYGoodsModel * itemModel = (SHYGoodsModel*)model.goods[i-1];
+                label.rightTipsLabel.text = [NSString stringWithFormat:@"%@/%@",itemModel.actualNum,itemModel.buyNum];
             }
             if (i++ == cell.rowArray.count - 1) {
                 [label setTopLineHiden:YES bottomHiden:YES];

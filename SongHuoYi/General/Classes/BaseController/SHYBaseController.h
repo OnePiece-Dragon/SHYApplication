@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "AppMacro.h"
 #import "SHYBaseTableView.h"
+#import "UIView+Toast.h"
 
 @interface SHYBaseController : UIViewController<UITableViewDelegate,UITableViewDataSource>
 

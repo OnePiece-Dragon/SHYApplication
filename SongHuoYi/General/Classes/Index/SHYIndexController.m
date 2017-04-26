@@ -107,7 +107,7 @@
 }
 //上下班Click
 - (void)workStatusSet:(NSInteger)status {
-    [self showNetTips:@"请稍后..."];
+    [self showNetTips:LOADING_WAIT];
     [NetManager post:URL_WORK_UPDATE
                param:@{@"userId":USER_ID,
                        @"status":@(status)}

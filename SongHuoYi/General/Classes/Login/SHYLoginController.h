@@ -16,9 +16,11 @@
 #import "SHYLoginModel.h"
 #import "SHYUserModel.h"
 
+#import "TPKeyboardAvoidingScrollView.h"
+
 @interface SHYLoginController : SHYBaseController
 
-@property (nonatomic, strong) UIView * backView;
+@property (nonatomic, strong) TPKeyboardAvoidingScrollView * backView;
 
 @property (nonatomic, strong) UIImageView * iconImage;
 @property (nonatomic, strong) InputTextField * phoneField;

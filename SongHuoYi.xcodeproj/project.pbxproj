@@ -53,6 +53,18 @@
 		DF611E851EAE2CE000534AC4 /* SHYFeedBackController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF611E821EAE2CE000534AC4 /* SHYFeedBackController.m */; };
 		DF9677F51E8E343600D80644 /* SongHuoYiTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9677F41E8E343600D80644 /* SongHuoYiTests.m */; };
 		DF9678001E8E343600D80644 /* SongHuoYiUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9677FF1E8E343600D80644 /* SongHuoYiUITests.m */; };
+		DF9694CC1EB07ED200EA6C02 /* TPKeyboardAvoidingCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9694C51EB07ED200EA6C02 /* TPKeyboardAvoidingCollectionView.m */; };
+		DF9694CD1EB07ED200EA6C02 /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9694C71EB07ED200EA6C02 /* TPKeyboardAvoidingScrollView.m */; };
+		DF9694CE1EB07ED200EA6C02 /* TPKeyboardAvoidingTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9694C91EB07ED200EA6C02 /* TPKeyboardAvoidingTableView.m */; };
+		DF9694CF1EB07ED200EA6C02 /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9694CB1EB07ED200EA6C02 /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
+		DF9694D61EB0A15E00EA6C02 /* SHYHelpCenterController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9694D51EB0A15E00EA6C02 /* SHYHelpCenterController.m */; };
+		DF9694D71EB0A15E00EA6C02 /* SHYHelpCenterController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9694D51EB0A15E00EA6C02 /* SHYHelpCenterController.m */; };
+		DF9694DA1EB0A18400EA6C02 /* SHYHelpCenterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9694D91EB0A18400EA6C02 /* SHYHelpCenterCell.m */; };
+		DF9694DB1EB0A18400EA6C02 /* SHYHelpCenterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9694D91EB0A18400EA6C02 /* SHYHelpCenterCell.m */; };
+		DF9694DE1EB0A19F00EA6C02 /* SHYHelpCenterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9694DD1EB0A19F00EA6C02 /* SHYHelpCenterModel.m */; };
+		DF9694DF1EB0A19F00EA6C02 /* SHYHelpCenterModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9694DD1EB0A19F00EA6C02 /* SHYHelpCenterModel.m */; };
+		DF9694E31EB0A93A00EA6C02 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9694E21EB0A93A00EA6C02 /* UIView+Toast.m */; };
+		DF9694E41EB0A93A00EA6C02 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9694E21EB0A93A00EA6C02 /* UIView+Toast.m */; };
 		DFAE44211E95E077002C20F6 /* SHYIndexItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DFAE44201E95E077002C20F6 /* SHYIndexItemModel.m */; };
 		DFAE44221E95E077002C20F6 /* SHYIndexItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DFAE44201E95E077002C20F6 /* SHYIndexItemModel.m */; };
 		DFAE44361E95F4A5002C20F6 /* SHYIconLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = DFAE44351E95F4A5002C20F6 /* SHYIconLabel.m */; };
@@ -253,6 +265,22 @@
 		DF9677FB1E8E343600D80644 /* SongHuoYiUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SongHuoYiUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF9677FF1E8E343600D80644 /* SongHuoYiUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SongHuoYiUITests.m; sourceTree = "<group>"; };
 		DF9678011E8E343600D80644 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DF9694C41EB07ED200EA6C02 /* TPKeyboardAvoidingCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingCollectionView.h; sourceTree = "<group>"; };
+		DF9694C51EB07ED200EA6C02 /* TPKeyboardAvoidingCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingCollectionView.m; sourceTree = "<group>"; };
+		DF9694C61EB07ED200EA6C02 /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingScrollView.h; sourceTree = "<group>"; };
+		DF9694C71EB07ED200EA6C02 /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = "<group>"; };
+		DF9694C81EB07ED200EA6C02 /* TPKeyboardAvoidingTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingTableView.h; sourceTree = "<group>"; };
+		DF9694C91EB07ED200EA6C02 /* TPKeyboardAvoidingTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingTableView.m; sourceTree = "<group>"; };
+		DF9694CA1EB07ED200EA6C02 /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = "<group>"; };
+		DF9694CB1EB07ED200EA6C02 /* UIScrollView+TPKeyboardAvoidingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+TPKeyboardAvoidingAdditions.m"; sourceTree = "<group>"; };
+		DF9694D41EB0A15E00EA6C02 /* SHYHelpCenterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYHelpCenterController.h; sourceTree = "<group>"; };
+		DF9694D51EB0A15E00EA6C02 /* SHYHelpCenterController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYHelpCenterController.m; sourceTree = "<group>"; };
+		DF9694D81EB0A18400EA6C02 /* SHYHelpCenterCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYHelpCenterCell.h; sourceTree = "<group>"; };
+		DF9694D91EB0A18400EA6C02 /* SHYHelpCenterCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYHelpCenterCell.m; sourceTree = "<group>"; };
+		DF9694DC1EB0A19F00EA6C02 /* SHYHelpCenterModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYHelpCenterModel.h; sourceTree = "<group>"; };
+		DF9694DD1EB0A19F00EA6C02 /* SHYHelpCenterModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYHelpCenterModel.m; sourceTree = "<group>"; };
+		DF9694E11EB0A93A00EA6C02 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
+		DF9694E21EB0A93A00EA6C02 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Toast.m"; sourceTree = "<group>"; };
 		DFAE441F1E95E077002C20F6 /* SHYIndexItemModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYIndexItemModel.h; sourceTree = "<group>"; };
 		DFAE44201E95E077002C20F6 /* SHYIndexItemModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYIndexItemModel.m; sourceTree = "<group>"; };
 		DFAE44341E95F4A5002C20F6 /* SHYIconLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYIconLabel.h; sourceTree = "<group>"; };
@@ -547,6 +575,7 @@
 				DF24E93E1E9F6FB400804E94 /* SHYChangePasswordController.m */,
 				DF611E811EAE2CE000534AC4 /* SHYFeedBackController.h */,
 				DF611E821EAE2CE000534AC4 /* SHYFeedBackController.m */,
+				DF9694D31EB0A14600EA6C02 /* helpCenter */,
 			);
 			path = PersonCenter;
 			sourceTree = "<group>";
@@ -648,6 +677,43 @@
 				DF9678011E8E343600D80644 /* Info.plist */,
 			);
 			path = SongHuoYiUITests;
+			sourceTree = "<group>";
+		};
+		DF9694C31EB07E5B00EA6C02 /* TPKeyboardAvoiding */ = {
+			isa = PBXGroup;
+			children = (
+				DF9694C41EB07ED200EA6C02 /* TPKeyboardAvoidingCollectionView.h */,
+				DF9694C51EB07ED200EA6C02 /* TPKeyboardAvoidingCollectionView.m */,
+				DF9694C61EB07ED200EA6C02 /* TPKeyboardAvoidingScrollView.h */,
+				DF9694C71EB07ED200EA6C02 /* TPKeyboardAvoidingScrollView.m */,
+				DF9694C81EB07ED200EA6C02 /* TPKeyboardAvoidingTableView.h */,
+				DF9694C91EB07ED200EA6C02 /* TPKeyboardAvoidingTableView.m */,
+				DF9694CA1EB07ED200EA6C02 /* UIScrollView+TPKeyboardAvoidingAdditions.h */,
+				DF9694CB1EB07ED200EA6C02 /* UIScrollView+TPKeyboardAvoidingAdditions.m */,
+			);
+			path = TPKeyboardAvoiding;
+			sourceTree = "<group>";
+		};
+		DF9694D31EB0A14600EA6C02 /* helpCenter */ = {
+			isa = PBXGroup;
+			children = (
+				DF9694D41EB0A15E00EA6C02 /* SHYHelpCenterController.h */,
+				DF9694D51EB0A15E00EA6C02 /* SHYHelpCenterController.m */,
+				DF9694D81EB0A18400EA6C02 /* SHYHelpCenterCell.h */,
+				DF9694D91EB0A18400EA6C02 /* SHYHelpCenterCell.m */,
+				DF9694DC1EB0A19F00EA6C02 /* SHYHelpCenterModel.h */,
+				DF9694DD1EB0A19F00EA6C02 /* SHYHelpCenterModel.m */,
+			);
+			path = helpCenter;
+			sourceTree = "<group>";
+		};
+		DF9694E01EB0A93A00EA6C02 /* Toast */ = {
+			isa = PBXGroup;
+			children = (
+				DF9694E11EB0A93A00EA6C02 /* UIView+Toast.h */,
+				DF9694E21EB0A93A00EA6C02 /* UIView+Toast.m */,
+			);
+			path = Toast;
 			sourceTree = "<group>";
 		};
 		DFAE44331E95F47B002C20F6 /* IconLabel */ = {
@@ -920,6 +986,8 @@
 				DF7B9C3D1E9C7AA500FC2669 /* VendorsHeader.h */,
 				DF3B752E1EAA2E3E00DE9D96 /* UIScrollView+EmptyDataSet.h */,
 				DF3B752F1EAA2E3E00DE9D96 /* UIScrollView+EmptyDataSet.m */,
+				DF9694E01EB0A93A00EA6C02 /* Toast */,
+				DF9694C31EB07E5B00EA6C02 /* TPKeyboardAvoiding */,
 			);
 			path = Vendors;
 			sourceTree = "<group>";
@@ -1240,6 +1308,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF9694DE1EB0A19F00EA6C02 /* SHYHelpCenterModel.m in Sources */,
 				DFBC34B21E949E1A000C7402 /* Factory.m in Sources */,
 				DFBC34801E93A7B9000C7402 /* SHYTabBarController.m in Sources */,
 				DFE16DD01E9B7FE300487C6E /* SHYGoodsDetailCell.m in Sources */,
@@ -1250,8 +1319,11 @@
 				DF611E841EAE2CE000534AC4 /* SHYFeedBackController.m in Sources */,
 				DF24E9701E9F6FB400804E94 /* SHYBaseView.m in Sources */,
 				DF24E9581E9F6FB400804E94 /* SHYCheckGoodsDetailController.m in Sources */,
+				DF9694CC1EB07ED200EA6C02 /* TPKeyboardAvoidingCollectionView.m in Sources */,
 				DFE16DCA1E9B7FE300487C6E /* SHYCheckGoodsCell.m in Sources */,
 				DFBFE4421EA7046300EA1406 /* SHYMessageModel.m in Sources */,
+				DF9694D61EB0A15E00EA6C02 /* SHYHelpCenterController.m in Sources */,
+				DF9694CF1EB07ED200EA6C02 /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				DFE16D7E1E9B1DB800487C6E /* DatePickerView.m in Sources */,
 				DFE16DD41E9B7FE300487C6E /* SHYPersonCenterCell.m in Sources */,
 				DF24E9601E9F6FB400804E94 /* SHYMapNaviController.m in Sources */,
@@ -1260,6 +1332,7 @@
 				DFAE443A1E961067002C20F6 /* SHYTaskModel.m in Sources */,
 				DFEB51071E8E47F1006A133D /* main.m in Sources */,
 				DFD9261A1E979ABB00DFDF32 /* SHYReceiveBoxView.m in Sources */,
+				DF9694CD1EB07ED200EA6C02 /* TPKeyboardAvoidingScrollView.m in Sources */,
 				DFD925FB1E9762EA00DFDF32 /* SHYTwoSideLabel.m in Sources */,
 				DF24E9641E9F6FB400804E94 /* SHYLoginController.m in Sources */,
 				DFBC34B61E949E1A000C7402 /* TimeManager.m in Sources */,
@@ -1275,6 +1348,7 @@
 				DFBC349E1E949151000C7402 /* InputTextField.m in Sources */,
 				DFB9CDFA1E98D8B0004A157E /* SHYDeliveryModel.m in Sources */,
 				DFBC34941E948010000C7402 /* SHYNaviConfig.m in Sources */,
+				DF9694CE1EB07ED200EA6C02 /* TPKeyboardAvoidingTableView.m in Sources */,
 				DFBC347E1E93A7B9000C7402 /* SHYTabBar.m in Sources */,
 				DF24E94C1E9F6FB400804E94 /* UIImage+Ext.m in Sources */,
 				DFAE44411E967622002C20F6 /* SHYTaskAnnotationModel.m in Sources */,
@@ -1298,11 +1372,13 @@
 				DFAE44211E95E077002C20F6 /* SHYIndexItemModel.m in Sources */,
 				DFBFE6E81EA7724700EA1406 /* NSObject+SHYExt.m in Sources */,
 				DF24E96A1E9F6FB400804E94 /* SHYPersonCenterController.m in Sources */,
+				DF9694E31EB0A93A00EA6C02 /* UIView+Toast.m in Sources */,
 				DFBFE4461EA7068200EA1406 /* SHYMessageCell.m in Sources */,
 				DF24E96E1E9F6FB400804E94 /* CustomLabel.m in Sources */,
 				DFD925F21E974C2000DFDF32 /* SHYNuclearCategoryModel.m in Sources */,
 				DFBC347C1E93A7B9000C7402 /* SHYNavigtionBar.m in Sources */,
 				DF24E9561E9F6FB400804E94 /* SHYTransportDetailController.m in Sources */,
+				DF9694DA1EB0A18400EA6C02 /* SHYHelpCenterCell.m in Sources */,
 				DF24E95C1E9F6FB400804E94 /* SHYTaskController.m in Sources */,
 				DFB9CDE91E9880D6004A157E /* SHYLeftRightLabel.m in Sources */,
 				DFAE44361E95F4A5002C20F6 /* SHYIconLabel.m in Sources */,
@@ -1319,17 +1395,21 @@
 				DFE16D871E9B326200487C6E /* SHYCategoryModel.m in Sources */,
 				DFE16D831E9B315000487C6E /* SHYTaskHistoryModel.m in Sources */,
 				DFE16D7F1E9B1DB800487C6E /* DatePickerView.m in Sources */,
+				DF9694DB1EB0A18400EA6C02 /* SHYHelpCenterCell.m in Sources */,
 				DFE16DCF1E9B7FE300487C6E /* SHYGoodsCell.m in Sources */,
 				DF611E851EAE2CE000534AC4 /* SHYFeedBackController.m in Sources */,
 				DFB9CDFB1E98D8B0004A157E /* SHYDeliveryModel.m in Sources */,
 				DFE16DD31E9B7FE300487C6E /* SHYIndexCell.m in Sources */,
+				DF9694DF1EB0A19F00EA6C02 /* SHYHelpCenterModel.m in Sources */,
 				DF24E9511E9F6FB400804E94 /* SHYBaseController.m in Sources */,
 				DF24E9551E9F6FB400804E94 /* SHYTransportController.m in Sources */,
+				DF9694D71EB0A15E00EA6C02 /* SHYHelpCenterController.m in Sources */,
 				DF9677F51E8E343600D80644 /* SongHuoYiTests.m in Sources */,
 				DFBFE6E91EA7724700EA1406 /* NSObject+SHYExt.m in Sources */,
 				DF24E9691E9F6FB400804E94 /* SHYChangePasswordController.m in Sources */,
 				DFD925FC1E9762EA00DFDF32 /* SHYTwoSideLabel.m in Sources */,
 				DF24E9611E9F6FB400804E94 /* SHYMapNaviController.m in Sources */,
+				DF9694E41EB0A93A00EA6C02 /* UIView+Toast.m in Sources */,
 				DFBFE44C1EA73AB400EA1406 /* LaunchIntroductionView.m in Sources */,
 				DFBC347D1E93A7B9000C7402 /* SHYNavigtionBar.m in Sources */,
 				DFBC34A71E949590000C7402 /* CustomTextField.m in Sources */,

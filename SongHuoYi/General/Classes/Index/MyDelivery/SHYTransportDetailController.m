@@ -78,7 +78,7 @@
     
     label1.titleLabel.text = model.shopName;
     label2.titleLabel.text = [NSString stringWithFormat:@"订单号：%@",model.orderId];
-    label3.titleLabel.text = [NSString stringWithFormat:@"代收：%@",model.collectMoney];
+    label3.titleLabel.text = [NSString stringWithFormat:@"代收：%.2f元",model.collectMoney.floatValue/100.0];
     label4.titleLabel.text = [NSString stringWithFormat:@"姓名：%@",@"张三"];
     label5.titleLabel.text = [NSString stringWithFormat:@"电话：%@",model.shopPhone];
     label6.titleLabel.text = [NSString stringWithFormat:@"地址：%@",model.targetAddr];

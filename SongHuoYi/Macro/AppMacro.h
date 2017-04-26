@@ -36,8 +36,10 @@
 //Using dlog to print while in debug model.        调试状态下打印日志
 #ifdef DEBUG
 #define DLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#define NSLog(...) NSLog(__VA_ARGS__)
 #else
 #define DLog(...)
+#define NSLog(...)  {}
 #endif
 
 

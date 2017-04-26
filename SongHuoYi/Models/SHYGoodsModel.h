@@ -23,6 +23,11 @@
 @property (nonatomic, strong) NSNumber * buyNum;
 
 /**
+ 实际收箱数量
+ */
+@property (nonatomic, strong) NSNumber * actualNum;
+
+/**
  商品名称
  */
 @property (nonatomic, strong) NSString * goodsName;
