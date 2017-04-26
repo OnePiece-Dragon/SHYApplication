@@ -15,4 +15,7 @@
 #define NET_FAIL_TIP    @"请求失败"
 #define NET_ERROR_TIP   @"网络状态不好"
 
+
+#define CHECK_BOX_ONCE_TIP @"确定一键核货？"
+
 #endif /* TipMacro_h */

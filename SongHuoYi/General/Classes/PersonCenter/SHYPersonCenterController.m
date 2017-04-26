@@ -19,6 +19,8 @@
 @property (nonatomic, strong) SHYBaseTableView * personTableView;
 @property (nonatomic, strong) NSArray * dataArray;
 
+@property (nonatomic, strong) UIButton * logoutBtn;
+
 @end
 
 @implementation SHYPersonCenterController
@@ -44,6 +46,7 @@
     switch (index) {
         case 0:
         {
+            //一键反馈
             UIStoryboard * mainSB = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             SHYFeedBackController * VC = [mainSB instantiateViewControllerWithIdentifier:@"FeedBackVC"];
             //SHYFeedBackController * VC = [SHYFeedBackController.alloc init];
@@ -52,12 +55,14 @@
         break;
         case 1:
         {
+            //修改密码
             SHYChangePasswordController * VC = [SHYChangePasswordController.alloc init];
             [self.navigationController pushViewController:VC animated:YES];
         }
         break;
         case 2:
         {
+            //联系客服
             UIWebView * callWebview = [[UIWebView alloc] init];
             [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:String_Combine(@"tel:", SERVE_PHONE)]]];
             [self.view addSubview:callWebview];
@@ -65,10 +70,14 @@
         break;
         case 3:
         {
-            
+            //帮助中心
         }
         break;
-            
+        case 4:
+        {
+            //个人信息
+        }
+            break;
         default:
             break;
     }
@@ -76,6 +85,18 @@
 
 - (void)callNumAction {
     DLog(@"打电话");
+}
+- (void)logOutBtnClick {
+    kWeakSelf(self);
+    [self showAlertVCWithTitle:nil info:@"确认退出当前账户？" CancelTitle:@"取消" okTitle:@"确定" cancelBlock:nil okBlock:^{
+        [weakself logOutToLogin];
+    }];
+}
+
+- (void)logOutToLogin {
+    AppDelegate*app = APP_DELEGATE;
+    [app.loginVC setLoginModel:app.loginModel];
+    [app window].rootViewController = app.loginVC;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -93,20 +114,8 @@
             make.centerY.equalTo(cell.contentLabel);
         }];
     }
-    /*
-    if (indexPath.row == 2) {
-        [cell.contentLabel setLeftStr:self.dataArray[indexPath.row]
-                             rightStr:nil
-                            rightIcon:nil];
-        UIButton * rightBtn = [Factory createBtn:CGRectMake(SCREEN_WIDTH/2.f, 0, SCREEN_WIDTH/2.f-8, 64) title:@"0571-8888888" type:UIButtonTypeCustom target:self action:@selector(callNumAction)];
-        [rightBtn setTitleColor:BUTTON_COLOR forState:UIControlStateNormal];
-        [cell addSubview:rightBtn];
-    }else {
-        [cell.contentLabel setLeftStr:self.dataArray[indexPath.row]
-                             rightStr:nil
-                            rightIcon:@"xialazhanshi"];
-    }*/
     
+    __weak typeof(SHYTwoSideLabel*)weakView = cell.contentLabel;
     if (indexPath.row == 2) {
         //联系客服
         [cell.contentLabel setLeftStr:self.dataArray[indexPath.row]
@@ -115,19 +124,37 @@
         cell.contentLabel.rightLabel.textAlignment = NSTextAlignmentRight;
         UIImageView * callImageView = [UIImageView.alloc initWithImage:ImageNamed(@"dianhua")];
         [cell.contentLabel addSubview:callImageView];
-        __weak typeof(SHYTwoSideLabel*)weakView = cell.contentLabel;
+        
         [callImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(weakView);
             make.right.equalTo(weakView.mas_left).offset(SCREEN_WIDTH*2/3);
             make.size.mas_equalTo(CGSizeMake(24, 24));
         }];
         
+    }else if(indexPath.row == self.dataArray.count - 1){
+        [cell.contentLabel setLeftStr:self.dataArray[indexPath.row]
+                             rightStr:nil
+                            rightIcon:nil];
+        [cell.contentLabel addSubview:self.logoutBtn];
+        [self.logoutBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(weakView);
+            make.right.equalTo(weakView).offset(-20);
+            make.size.mas_equalTo(CGSizeMake(56, 32));
+        }];
+        
     }else {
         [cell.contentLabel setLeftStr:self.dataArray[indexPath.row]
                              rightStr:nil
-                            rightIcon:@"xialazhanshi"];
+                            rightIcon:@"youjinru"];
+        [cell.contentLabel.rightIcon mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(8, 16));
+        }];
     }
-    
+    if (indexPath.row == self.dataArray.count - 1) {
+        cell.contentLabel.rightIcon.hidden = YES;
+    }else {
+        cell.contentLabel.rightIcon.hidden = NO;
+    }
     
     kWeakSelf(self);
     cell.contentLabel.clickBlock = ^(){
@@ -151,7 +178,18 @@
     return _personTableView;
 }
 - (NSArray *)dataArray {
-    return @[@"意见反馈",@"修改密码",@"联系客服",@"帮助中心"];
+    return @[@"意见反馈",@"修改密码",@"联系客服",@"帮助中心",
+             [NSString stringWithFormat:@"当前账户：%@",UserDefaultObjectForKey(USER_PHONE)]];
+}
+- (UIButton *)logoutBtn {
+    if (!_logoutBtn) {
+        _logoutBtn = [Factory createBtn:CGRectZero title:@"退出" type:UIButtonTypeCustom target:self action:@selector(logOutBtnClick)];
+        [_logoutBtn setBackgroundImage:[UIImage imageWithColor:BUTTON_COLOR] forState:UIControlStateNormal];
+        _logoutBtn.titleLabel.font = kFont(14);
+        _logoutBtn.layer.cornerRadius = 8.f;
+        _logoutBtn.clipsToBounds = YES;
+    }
+    return _logoutBtn;
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

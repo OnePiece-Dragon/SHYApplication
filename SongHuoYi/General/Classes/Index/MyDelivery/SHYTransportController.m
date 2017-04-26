@@ -52,6 +52,9 @@
     [self setRightItem:@"ditumoshi" selectedImage:@"daohang" rightBlock:^(UIButton * button) {
         [weakself mapModelSwitch:button];
     }];
+    self.leftBar = ^(){
+        [weakself.navigationController popToRootViewControllerAnimated:YES];
+    };
     [self setUI];
     
     [self requestDeliveryingData];

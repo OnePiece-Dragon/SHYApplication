@@ -45,6 +45,7 @@
     annotation.coordinate = coor;
     
     [_mapView addAnnotation:annotation];
+    _mapView.centerCoordinate = annotation.coordinate;
 }
 
 
@@ -94,17 +95,18 @@
 - (void)didUpdateUserHeading:(BMKUserLocation *)userLocation
 {
     //NSLog(@"heading is %@",userLocation.heading);
-    [_mapView updateLocationData:userLocation];
+    //[_mapView updateLocationData:userLocation];
 }
 //处理位置坐标更新
 - (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
 {
     //NSLog(@"didUpdateUserLocation lat %f,long %f",userLocation.location.coordinate.latitude,userLocation.location.coordinate.longitude);
-    [_mapView updateLocationData:userLocation];
+    //[_mapView updateLocationData:userLocation];
+    /*
     if (!_isUserLocation) {
         _isUserLocation = !_isUserLocation;
         [_mapView setCenterCoordinate:userLocation.location.coordinate animated:NO];
-    }
+    }*/
 }
 
 

@@ -34,10 +34,7 @@
         [weakself mapGuide];
     }];
     self.leftBar=^(){
-        if (weakself.backBlock) {
-            weakself.backBlock();
-        }
-        [weakself.navigationController popViewControllerAnimated:YES];
+        [weakself leftBarAction];
     };
     
     //核货详情
@@ -45,6 +42,19 @@
     //核货详情类别
     [self requestNuclearCategoryData];
     [self setUI];
+    
+    
+    NOTICENTER_Register(self,@selector(checkBoxChangeDone), Noti_CheckBox);
+    
+}
+
+- (void)leftBarAction {
+    if (!_canCheckBtnClick) {
+        if (self.backBlock) {
+            self.backBlock();
+        }
+    }
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)mapGuide {
@@ -68,19 +78,24 @@
     VC.senderId = self.goodsDetailModel.senderId;
     VC.nuclearModel = model;
     
-    kWeakSelf(self);
-    VC.responseBlock=^(){
-        _page = 1;
-        _canCheckBtnClick = NO;
-        [weakself.dataArray removeAllObjects];
-        [weakself requestNuclearCategoryData];
-    };
-    
     [self.navigationController pushViewController:VC animated:YES];
+}
+
+- (void)checkBoxChangeDone {
+    _page = 1;
+    _canCheckBtnClick = NO;
+    [self.dataArray removeAllObjects];
+    [self requestNuclearCategoryData];
 }
 
 - (void)sendGoodsBtnClick {
     DLog(@"一键核货");
+    [self showAlertVCWithTitle:nil info:CHECK_BOX_ONCE_TIP CancelTitle:@"取消" okTitle:@"确定" cancelBlock:nil okBlock:^{
+        [self onceAllGoodsCheck];
+    }];
+}
+
+- (void)onceAllGoodsCheck {
     [self showNetTips:@"处理中..."];
     [NetManager post:URL_TASK_ONCENUCLEAR_UPDATE
                param:@{@"userId":USER_ID,
@@ -92,7 +107,7 @@
                      [self hideNetTips];
                      DLog(@"responseObj核对:%@",responseObj);
                      [self showToast:@"核货成功"];
-
+                     
                      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                          [self.navigationController popViewControllerAnimated:YES];
                      });
@@ -407,7 +422,9 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+- (void)dealloc {
+    NOTICENTER_Remove(self, Noti_CheckBox);
+}
 /*
 #pragma mark - Navigation
 

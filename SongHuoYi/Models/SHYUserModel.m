@@ -14,13 +14,25 @@
     static SHYUserModel * _instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _instance = [SHYUserModel.alloc init];
+        _instance = [[super allocWithZone:NULL] init];
     });
     return _instance;
 }
+
 +(NSDictionary *)mj_replacedKeyFromPropertyName {
     return @{@"operators":@"operator"};
 }
+
++(id) allocWithZone:(struct _NSZone *)zone
+{
+    return [SHYUserModel shareUserMsg] ;
+}
+
+-(id) copyWithZone:(struct _NSZone *)zone
+{
+    return [SHYUserModel shareUserMsg];
+}
+
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.userId forKey:@"userId"];

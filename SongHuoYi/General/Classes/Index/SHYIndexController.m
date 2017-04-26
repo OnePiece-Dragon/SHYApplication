@@ -42,7 +42,7 @@
     [self cancelBackItem];
     self.naviTitle = @"送货易";
     kWeakSelf(self);
-    [self setRightItem:@"ditumoshi" rightBlock:^{
+    [self setRightItem:@"message" rightBlock:^{
         [weakself messageItem];
     }];
     [self setUI];
@@ -65,9 +65,12 @@
     NSArray * highlightArray =
     @[@"dianjiwoderenwu",@"dianjiwodepeisong",@"dianjikaishishangban"];
     NSString * workStatusString = @"";
+    //SHYUserModel * userModel = [SHYUserModel shareUserMsg];
     if ([USER_WORK_STATUS integerValue] != 1) {
+        _canWork = NO;
         workStatusString = @"我要上班";
     }else if ([USER_WORK_STATUS integerValue] != 0){
+        _canWork = YES;
         workStatusString = @"我要下班";
     }
     NSArray * titleArray = @[@"我的任务",@"我的配送",workStatusString];
@@ -118,8 +121,10 @@
                      }
                      if ([USER_WORK_STATUS integerValue] == 1) {
                          //上班状态
+                         _canWork = YES;
                          [self workModelStatus:1 workTime:model.workTime];
                      }else {
+                         _canWork = NO;
                          [self workModelStatus:model.status.integerValue workTime:nil];
                      }
                  }else {
@@ -137,6 +142,7 @@
     //我的工作
     DLog(@"timeString:%@",timeString);
     SHYIndexItemModel * model = _dataArray.lastObject;
+    [TimeManager cancelTimer];
     if (status == 1) {
         model.isClick = 1;
         model.titleName = @"我要下班";
@@ -145,8 +151,6 @@
         }];
         //model.descName= [TimeManager timeWithTimeIntervalString:[NSString stringWithFormat:@"%f",[TimeManager timeSwitchTimeString:timeString format:@"YYYY/MM/DD HH:mm:ss"]] format:@"HH:mm"];
     }else {
-        [TimeManager cancelTimer];
-        
         model.isClick = 0;
         model.titleName = @"我要上班";
         model.descName = @"";
@@ -179,12 +183,18 @@
     switch (row) {
         case 0:
         {
+            if (!_canWork) {
+                return;
+            }
             //我的任务
             [self myTaskItemClick];
         }
         break;
         case 1:
         {
+            if (!_canWork) {
+                return;
+            }
             //我的配送
             [self myTransportClick];
         }

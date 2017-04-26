@@ -38,7 +38,7 @@
 }
 
 - (void)submitAction {
-    NSLog(@"2131231");
+
 }
 
 - (void)didReceiveMemoryWarning {

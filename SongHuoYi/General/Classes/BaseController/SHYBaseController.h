@@ -27,6 +27,15 @@
        selectedImage:(NSString*)selectedImage
            rightBlock:(void (^)(id))rightBlock;
 
+
+- (void)showAlertVCWithTitle:(NSString *)titleStr
+                        info:(NSString *)infoStr
+                 CancelTitle:(NSString *)cancelStr
+                     okTitle:(NSString *)okStr
+                 cancelBlock:(void (^)())cancelBlock
+                     okBlock:(void (^)())okBlock;
+
+
 - (void)showToast:(NSString*)toast;
 - (void)showNetTips:(NSString*)tips;
 - (void)hideNetTips;

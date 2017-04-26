@@ -8,6 +8,7 @@
 
 #import "SHYTaskController.h"
 
+
 @interface SHYTaskController ()<BMKMapViewDelegate,BMKLocationServiceDelegate>
 
 {
@@ -44,6 +45,23 @@
 
 - (void)sendGoodsBtnClick:(SHYTaskModel*)model {
     DLog(@"开始配送:%@",model.lineName);
+    [self showNetTips:@"处理中..."];
+    [NetManager post:URL_TASK_STATUS_UPDATE
+               param:@{@"taskId":model.tasksId,
+                       @"status":@3,
+                       @"userId":USER_ID}
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self hideNetTips];
+                 if (code) {
+                     //
+                     [self jumpToMyTransport];
+                 }else {
+                     [self showToast:failMessag];
+                 }
+             } failure:^(NSString * _Nonnull errorStr) {
+                 [self hideNetTips];
+                 [self showToast:errorStr];
+             }];
 }
 - (void)enterCheckGoodsClick:(SHYTaskModel*)model {
     DLog(@"开始核货:%@",model.lineName);
@@ -54,6 +72,11 @@
     VC.backBlock=^(){
         [weakself resetDataWithRequest];
     };
+    [self.navigationController pushViewController:VC animated:YES];
+}
+
+- (void)jumpToMyTransport {
+    SHYTransportController * VC = [SHYTransportController.alloc init];
     [self.navigationController pushViewController:VC animated:YES];
 }
 

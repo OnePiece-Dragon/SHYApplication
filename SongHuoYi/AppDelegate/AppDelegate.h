@@ -15,6 +15,8 @@
 @property (strong, nonatomic) UIWindow *window;
 
 @property (nonatomic, strong) SHYTabBarController * tabBarVC;
+
+@property (nonatomic, strong) SHYLoginModel * loginModel;
 @property (nonatomic, strong) SHYLoginController * loginVC;
 
 @end

@@ -86,16 +86,13 @@
     }else if(leftString && !rightString){
         //只有left 1 space=8
         self.leftLabel.text = leftString;
-        [self.leftLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(weakself).offset(-8);
-        }];
         self.rightLabel.hidden = YES;
     }else if (!leftString && rightString) {
         //只有right space=8
         self.rightLabel.text = rightString;
-        [self.rightLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(weakself).offset(8);
-        }];
+//        [self.rightLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.left.equalTo(weakself).offset(8);
+//        }];
         self.leftLabel.hidden = YES;
     }
     

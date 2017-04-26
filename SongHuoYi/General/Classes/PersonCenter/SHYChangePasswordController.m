@@ -17,7 +17,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.view.backgroundColor = COLOR_WHITE;
     self.naviTitle = @"修改密码";
     
     [self.view addSubview:self.backView];
@@ -50,27 +49,31 @@
     [_confirmPasswordView setIconSize:CGSizeMake(24, 32) direction:Left];
     
     kWeakSelf(self);
+    [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.top.equalTo(weakself.view);
+    }];
+    
     [self.originalPasswordView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(weakself.view).offset(20);
-        make.centerX.equalTo(weakself.view);
-        make.top.equalTo(weakself.view).offset(80);
+        make.left.equalTo(weakself.backView).offset(20);
+        make.centerX.equalTo(weakself.backView);
+        make.top.equalTo(weakself.backView).offset(80);
         make.height.mas_offset(49);
     }];
     [self.nPasswordView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(weakself.view).offset(20);
-        make.centerX.equalTo(weakself.view);
+        make.left.equalTo(weakself.backView).offset(20);
+        make.centerX.equalTo(weakself.backView);
         make.top.equalTo(weakself.originalPasswordView.mas_bottom).offset(8);
         make.height.mas_offset(49);
     }];
     [self.confirmPasswordView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(weakself.view).offset(20);
-        make.centerX.equalTo(weakself.view);
+        make.left.equalTo(weakself.backView).offset(20);
+        make.centerX.equalTo(weakself.backView);
         make.top.equalTo(weakself.nPasswordView.mas_bottom).offset(8);
         make.height.mas_offset(49);
     }];
     [self.submitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(weakself.view).offset(20);
-        make.centerX.equalTo(weakself.view);
+        make.left.equalTo(weakself.backView).offset(20);
+        make.centerX.equalTo(weakself.backView);
         make.top.equalTo(weakself.confirmPasswordView.mas_bottom).offset(8);
         make.height.mas_offset(49);
     }];
@@ -78,13 +81,50 @@
 
 - (void)submitBtnAction {
     DLog(@"提交");
-    //NSString * originalPassword = _originalPasswordView.inputTextField.text;
+    NSString * originalPassword = _originalPasswordView.inputTextField.text;
+    NSString * newPassword      = _nPasswordView.inputTextField.text;
+    NSString * confirmPassword  = _confirmPasswordView.inputTextField.text;
+    
+    if (!originalPassword.length || !newPassword.length || !confirmPassword.length) {
+        [self showToast:@"请填写完整"];
+        return;
+    }
+    if (![newPassword isEqualToString:confirmPassword]) {
+        [self showToast:@"您两次填写密码不一致"];
+        return;
+    }
+    
+    [self showAlertVCWithTitle:nil info:@"确定修改密码？" CancelTitle:@"取消" okTitle:@"确定" cancelBlock:nil okBlock:^{
+        [self passWordChangeRequest:originalPassword newPassword:newPassword];
+    }];
+}
+
+- (void)passWordChangeRequest:(NSString*)originalPassword
+                  newPassword:(NSString*)newPassword{
+    
+    [self showNetTips:@"处理中..."];
+    [NetManager post:URL_UPDATE_PASSWORD
+               param:@{@"userId":USER_ID,
+                       @"password":originalPassword,
+                       @"newPassword":newPassword}
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self hideNetTips];
+                 if (code) {
+                     [self showToast:@"修改成功"];
+                     [self.navigationController popViewControllerAnimated:YES];
+                 }else {
+                     [self showToast:failMessag];
+                 }
+             } failure:^(NSString * _Nonnull errorStr) {
+                 [self hideNetTips];
+                 [self showToast:errorStr];
+             }];
     
 }
 
-- (UIScrollView *)backView {
+- (UIView *)backView {
     if (!_backView) {
-        _backView = [UIScrollView.alloc init];
+        _backView = [UIView.alloc init];
     }
     return _backView;
 }

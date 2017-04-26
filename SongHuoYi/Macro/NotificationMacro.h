@@ -9,6 +9,8 @@
 #ifndef NotificationMacro_h
 #define NotificationMacro_h
 
+#define Noti_CheckBox   @"receiveBoxChange"
+
 /**
  *  通知中心
  */
@@ -16,10 +18,16 @@
 
 #define NOTICENTER_Post(name,__VALUE__) [NotiCenter postNotificationName:name object:__VALUE__]
 
-#define NOTICENTER_Register(sel, notif_name)                    \
+#define NOTICENTER_Register(obj, sel, notif_name)                    \
 if([obj respondsToSelector:sel])                            \
 [[NSNotificationCenter defaultCenter]    addObserver:obj    \
 selector:sel    \
+name:notif_name    \
+object:nil        \
+];
+
+#define NOTICENTER_Remove(obj,notif_name)   \
+[[NSNotificationCenter defaultCenter]    removeObserver:obj    \
 name:notif_name    \
 object:nil        \
 ];

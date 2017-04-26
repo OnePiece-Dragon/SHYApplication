@@ -88,18 +88,65 @@
 }
 
 
+#pragma mark -show alert-
+/**
+ * @ 弹框提示
+ * @ titleStr：弹框的标题
+ * @ infoStr：弹框信息提示的标题
+ * @ cancelStr：取消按钮的标题，可给nil
+ * @ okStr：确定按钮的标题，可给nil
+ * @ cancelBlock：取消按钮的执行操作，可不写
+ * @ okBlock：确定按钮的执行操作，可不写
+ * @ author：liuli
+ */
+- (void)showAlertVCWithTitle:(NSString *)titleStr info:(NSString *)infoStr CancelTitle:(NSString *)cancelStr okTitle:(NSString *)okStr cancelBlock:(void (^)())cancelBlock okBlock:(void (^)())okBlock {
+    // alertVC 初始化
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:titleStr message:infoStr preferredStyle:UIAlertControllerStyleAlert];
+    
+    // 如果取消按钮标题不为空，就添加
+    if (cancelStr != nil && cancelStr.length > 0) {
+        // cancel Action初始化
+        UIAlertAction *cancelBtn = [UIAlertAction actionWithTitle:cancelStr style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            // 点击取消按钮执行的block
+            if (cancelBlock) {
+                cancelBlock();
+            }
+        }];
+        [alertVC addAction:cancelBtn];
+    }
+    
+    // 如果确定按钮标题不为空，就添加
+    if (okStr != nil && okStr.length > 0) {
+        // ok Action初始化
+        UIAlertAction *okBtn = [UIAlertAction actionWithTitle:okStr style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            // 点击确定按钮执行的block
+            if (okBlock) {
+                okBlock();
+            }
+        }];
+        
+        [alertVC addAction:okBtn];
+    }
+    
+    // 弹出视图
+    [self presentViewController:alertVC animated:YES completion:nil];
+}
+
+
 #pragma mark -show Toast-
 - (void)showToast:(NSString *)toast {
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeText;
     hud.detailsLabel.text = toast;
-    hud.detailsLabel.font = [UIFont systemFontOfSize:14.0];;
+    hud.detailsLabel.font = [UIFont systemFontOfSize:14.0];
+    
+    
     [hud hideAnimated:YES afterDelay:2.f];
 }
 - (void)showNetTips:(NSString *)tips {
-    UIView * view = [[UIApplication sharedApplication].windows lastObject];
+    //UIView * view = [[UIApplication sharedApplication].windows lastObject];
     // 快速显示一个提示信息
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text = tips;
     // 隐藏时候从父控件中移除
     hud.removeFromSuperViewOnHide = YES;
@@ -107,8 +154,8 @@
     //hud.dimBackground = NO;
 }
 - (void)hideNetTips {
-    UIView * view = [[UIApplication sharedApplication].windows lastObject];
-    NSEnumerator *subviewsEnum = [view.subviews reverseObjectEnumerator];
+    //UIView * view = [[UIApplication sharedApplication].windows lastObject];
+    NSEnumerator *subviewsEnum = [self.view.subviews reverseObjectEnumerator];
     for (UIView *subview in subviewsEnum) {
         if ([subview isKindOfClass:NSClassFromString(@"MBProgressHUD")]) {
             [(MBProgressHUD*)subview hideAnimated:YES];

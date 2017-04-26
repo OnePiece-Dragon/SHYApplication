@@ -13,6 +13,8 @@
 
 {
     BOOL _canBtnClick;
+    
+    BOOL _checkBoxChange;
 }
 
 @property (nonatomic, strong) SHYReceiveBoxView * topBoxView;
@@ -20,7 +22,7 @@
 @property (nonatomic, strong) UIView * footerTopView;
 @property (nonatomic, strong) UIButton * receiveDoneBtn;
 
-@property (nonatomic, strong) NSMutableArray * dataArray;
+@property (nonatomic, strong) NSMutableArray<SHYGoodsModel*> * dataArray;
 
 @end
 
@@ -34,12 +36,13 @@
     [self requestData];
     
     _canBtnClick = NO;
+    _checkBoxChange = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    if (self.responseBlock) {
-        self.responseBlock();
+    if (_checkBoxChange) {
+        NOTICENTER_Post(Noti_CheckBox, nil);
     }
 }
 
@@ -55,6 +58,12 @@
  */
 - (void)receiveBoxDone {
     DLog(@"一键核货");
+    [self showAlertVCWithTitle:nil info:CHECK_BOX_ONCE_TIP CancelTitle:@"取消" okTitle:@"确定" cancelBlock:nil okBlock:^{
+        [self checkBoxOnceTime];
+    }];
+}
+
+- (void)checkBoxOnceTime {
     [self showNetTips:@"处理中..."];
     [NetManager post:URL_TASK_ONCENUCLEAR_UPDATE
                param:@{@"userId":USER_ID,
@@ -66,6 +75,7 @@
                  if (code) {
                      DLog(@"responseObj:%@",responseObj);
                      [self showToast:@"操作成功"];
+                     _checkBoxChange = YES;
                      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                          [self.navigationController popViewControllerAnimated:YES];
                      });
@@ -82,7 +92,7 @@
     [NetManager post:URL_TASK_NUCLEAR_CGTUPDATE
                param:@{@"userId":USER_ID,
                        @"taskId":self.taskId,
-                       @"senderId":@"",
+                       @"senderId":self.senderId,
                        @"categoryId":self.nuclearModel.categoryId,
                        @"receivedNum":@(countNum),
                        @"orderItemId":goodsModel.orderItemId}
@@ -90,6 +100,34 @@
                  if (code) {
                      DLog(@"responseObj:%@",responseObj);
                      goodsModel.nuclearStatus = @1;
+                     _canBtnClick = NO;
+                     _checkBoxChange = YES;
+                     [self.checkGoodsListView reloadData];
+                     
+                 }else {
+                     [self showToast:failMessag];
+                 }
+             } failure:^(NSString * _Nonnull errorStr) {
+                 [self hideNetTips];
+                 [self showToast:errorStr];
+             }];
+}
+
+//暂时废弃
+- (void)receiveBoxWithIssue:(NSInteger)countNum goodsModel:(SHYGoodsModel*)goodsModel {
+    [NetManager post:URL_TASK_CREATEPRO
+               param:@{@"userId":USER_ID,
+                       @"taskId":self.taskId,
+                       @"senderId":self.senderId,
+                       @"categoryId":self.nuclearModel.categoryId,
+                       @"receivedNum":@(countNum),
+                       @"orderItemId":goodsModel.orderItemId}
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 if (code) {
+                     DLog(@"responseObj:%@",responseObj);
+                     goodsModel.nuclearStatus = @1;
+                     _canBtnClick = NO;
+                     _checkBoxChange = YES;
                      [self.checkGoodsListView reloadData];
                      
                  }else {
@@ -105,9 +143,12 @@
  每行的核货
  */
 - (void)checkRowGoods:(SHYGoodsModel*)goodsModel cell:(SHYCheckGoodsCell*)cell {
+    if (_canBtnClick == NO) {
+        return;
+    }
     kWeakSelf(self);
     DLog(@"row:%@",goodsModel.mj_keyValues);
-    UIAlertController * alertController = [UIAlertController alertControllerWithTitle:goodsModel.goodsName message:@"请输入核对货物数量" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController * alertController = [UIAlertController alertControllerWithTitle:goodsModel.goodsName message:[NSString stringWithFormat:@"最大收箱数：%@",goodsModel.buyNum] preferredStyle:UIAlertControllerStyleAlert];
     __weak typeof(UIAlertController*) weakAlert = alertController;
     __weak typeof(SHYGoodsModel*) weakModel = goodsModel;
     UIAlertAction * sureAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -120,6 +161,7 @@
     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder = [NSString stringWithFormat:@"最大收箱数：%@",goodsModel.buyNum];
         textField.delegate = weakself;
+        textField.keyboardType = UIKeyboardTypeNumberPad;
     }];
     [self presentViewController:alertController animated:YES completion:nil];
 }
@@ -128,8 +170,14 @@
     UITextField *userNameTextField = alertController.textFields.firstObject;
     //cell.labelView.rightLabel.text= @"已核货";
     //[self.checkGoodsListView reloadData];
-    [self receiveBoxGoodsItem:userNameTextField.text.integerValue
-                   goodsModel:model];
+    NSInteger maxNum    = model.buyNum.integerValue;
+    NSInteger inputNum  = userNameTextField.text.integerValue;
+    if (inputNum>0&&inputNum<=maxNum) {
+        [self receiveBoxGoodsItem:userNameTextField.text.integerValue
+                       goodsModel:model];
+    }else{
+        [self showToast:@"您的输入有误，请重新输入"];
+    }
 }
 
 - (void)requestData {
@@ -208,7 +256,7 @@
     }else {
         cell.labelView.rightLabel.text = @"未核货";
         cell.labelView.rightLabel.textColor = COLOR_PRICE;
-        [self.receiveDoneBtn setTitle:@"未核货" forState:UIControlStateNormal];
+        [self.receiveDoneBtn setTitle:@"一键核货" forState:UIControlStateNormal];
     }
     
     return cell;
