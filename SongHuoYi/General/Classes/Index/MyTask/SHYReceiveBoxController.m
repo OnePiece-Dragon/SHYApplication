@@ -150,6 +150,10 @@
     if (_canBtnClick == NO) {
         return;
     }
+    if (goodsModel.nuclearStatus.integerValue == 1) {
+        return;
+    }
+    
     kWeakSelf(self);
     DLog(@"row:%@",goodsModel.mj_keyValues);
     UIAlertController * alertController = [UIAlertController alertControllerWithTitle:goodsModel.goodsName message:[NSString stringWithFormat:@"最大收箱数：%@",goodsModel.buyNum] preferredStyle:UIAlertControllerStyleAlert];
@@ -259,7 +263,7 @@
         if (model.actualNum.integerValue == model.buyNum.integerValue) {
             string = @"已核货";
         }else if (model.actualNum.integerValue < model.buyNum.integerValue &&
-                  model.actualNum.integerValue>0) {
+                  model.actualNum.integerValue>=0) {
             string = [NSString stringWithFormat:@"%@/%@（%@）",model.actualNum,model.buyNum,model.unit];
             color = COLOR_PRICE;
         }

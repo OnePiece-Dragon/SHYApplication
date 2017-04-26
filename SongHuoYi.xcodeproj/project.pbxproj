@@ -244,7 +244,7 @@
 		DF24E93E1E9F6FB400804E94 /* SHYChangePasswordController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYChangePasswordController.m; sourceTree = "<group>"; };
 		DF24E93F1E9F6FB400804E94 /* SHYPersonCenterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYPersonCenterController.h; sourceTree = "<group>"; };
 		DF24E9401E9F6FB400804E94 /* SHYPersonCenterController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYPersonCenterController.m; sourceTree = "<group>"; };
-		DF24E9411E9F6FB400804E94 /* note */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = note; sourceTree = "<group>"; };
+		DF24E9411E9F6FB400804E94 /* note */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = note; path = ../note; sourceTree = "<group>"; };
 		DF24E9431E9F6FB400804E94 /* SHYNetRequestProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYNetRequestProtocol.h; sourceTree = "<group>"; };
 		DF24E9461E9F6FB400804E94 /* CustomLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomLabel.h; sourceTree = "<group>"; };
 		DF24E9471E9F6FB400804E94 /* CustomLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomLabel.m; sourceTree = "<group>"; };
@@ -462,7 +462,6 @@
 			children = (
 				DF24E9171E9F6FB400804E94 /* Categories */,
 				DF24E91D1E9F6FB400804E94 /* Classes */,
-				DF24E9411E9F6FB400804E94 /* note */,
 				DF24E9421E9F6FB400804E94 /* Protocol */,
 				DF24E9441E9F6FB400804E94 /* Views */,
 			);
@@ -488,6 +487,7 @@
 		DF24E91D1E9F6FB400804E94 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				DF24E9411E9F6FB400804E94 /* note */,
 				DF24E91E1E9F6FB400804E94 /* BaseController */,
 				DF24E9211E9F6FB400804E94 /* HistroryNote */,
 				DF24E9241E9F6FB400804E94 /* Index */,

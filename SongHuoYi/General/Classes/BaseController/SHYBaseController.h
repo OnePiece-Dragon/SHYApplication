@@ -13,6 +13,10 @@
 
 @interface SHYBaseController : UIViewController<UITableViewDelegate,UITableViewDataSource>
 
+{
+    NSInteger _allPage;
+}
+
 @property (nonatomic, strong) UILabel * titleLabel;
 @property (nonatomic, strong) NSString * naviTitle;
 

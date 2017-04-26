@@ -98,6 +98,14 @@
     }];
 }
 
+- (void)categoryFooterRefresh {
+    if (_page<_allPage) {
+        _page++;
+        [self requestNuclearCategoryData];
+    }
+    
+}
+
 - (void)onceAllGoodsCheck {
     [self showNetTips:LOADING_DISPOSE];
     [NetManager post:URL_TASK_ONCENUCLEAR_UPDATE
@@ -155,12 +163,21 @@
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
                  [self hideNetTips];
                  if (code) {
+                     if (responseObj[@"pages"]) {
+                         _allPage = [responseObj[@"pages"] integerValue];
+                     }
                      [self handleResponseObj:responseObj nulClearDetail:NO];
                      [self.checkGoodsDetailView reloadData];
                  }else {
+                     if (_page>1) {
+                         _page--;
+                     }
                      [self showToast:failMessag];
                  }
              } failure:^(NSString * _Nonnull errorStr) {
+                 if (_page>1) {
+                     _page--;
+                 }
                  [self hideNetTips];
                  [self showToast:errorStr];
              }];
@@ -188,8 +205,10 @@
 - (void)setUI {
     kWeakSelf(self);
     [self.view addSubview:self.checkGoodsDetailView];
+    [self.view addSubview:self.startSendGoods];
     [self.checkGoodsDetailView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.bottom.equalTo(weakself.view);
+        make.left.right.top.equalTo(weakself.view);
+        make.bottom.equalTo(weakself.view).offset(-52);
     }];
 }
 
@@ -317,10 +336,14 @@
         return cell;
     }else {
         SHYNuclearCategoryModel * model = self.dataArray[indexPath.row];
+        NSInteger goodsCount = 3;
+        if (model.goods.count<2) {
+            goodsCount = 2;
+        }
         //货物种类
-        SHYGoodsCell * cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"SHYGoodsCell_CAT:%ld",model.goods.count+1]];
+        SHYGoodsCell * cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"SHYGoodsCell_CAT:%ld",goodsCount]];
         if (!cell) {
-            cell = [SHYGoodsCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SHYGoodsCell_CAT" isAll:NO lineCount:model.goods.count+1];
+            cell = [SHYGoodsCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SHYGoodsCell_CAT" isAll:NO lineCount:goodsCount];
         }
         [cell addTopView];
         
@@ -361,21 +384,25 @@
     }
 }
 
-- (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if (section == 1) {
-        UIView * footerView = [UIView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 120)];
-        [footerView addSubview:self.startSendGoods];
-        return footerView;
-    }
-    return nil;
-}
+//- (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+//    if (section == 1) {
+//        UIView * footerView = [UIView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 120)];
+//        [footerView addSubview:self.startSendGoods];
+//        return footerView;
+//    }
+//    return nil;
+//}
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         return 270;
     }
     SHYNuclearCategoryModel * model = self.dataArray[indexPath.row];
-    return (model.goods.count+1)*50;
+    if (model.goods.count<2) {
+        return 2*50;
+    }
+    return 3*50;
+    //return (model.goods.count+1)*50;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -391,6 +418,7 @@
 - (SHYBaseTableView *)checkGoodsDetailView {
     if (!_checkGoodsDetailView) {
         _checkGoodsDetailView = [SHYBaseTableView.alloc initWithFrame:CGRectZero style:UITableViewStyleGrouped target:self];
+        _checkGoodsDetailView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(categoryFooterRefresh)];
         _checkGoodsDetailView.backgroundColor = BACKGROUND_COLOR;
     }
     return _checkGoodsDetailView;
@@ -403,7 +431,7 @@
 }
 - (UIButton *)startSendGoods {
     if (!_startSendGoods) {
-        UIButton * startSendGoods = [Factory createBtn:CGRectMake(40, 20, SCREEN_WIDTH - 80, 44) title:@"一键核货" type:UIButtonTypeCustom target:self action:@selector(sendGoodsBtnClick)];
+        UIButton * startSendGoods = [Factory createBtn:CGRectMake(40, SCREEN_HEIGHT -kStatusBarH - kNavigationBarH- 48, SCREEN_WIDTH - 80, 44) title:@"一键核货" type:UIButtonTypeCustom target:self action:@selector(sendGoodsBtnClick)];
         startSendGoods.layer.cornerRadius = 8.f;
         startSendGoods.clipsToBounds = YES;
         [startSendGoods setTitle:@"已核货" forState:UIControlStateDisabled];

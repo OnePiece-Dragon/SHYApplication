@@ -142,6 +142,14 @@
     [self requestData];
 }
 
+- (void)refreshFooter {
+    if (_page < _allPage) {
+        _page ++;
+        [self requestData];
+    }
+}
+
+
 - (void)requestData {
     [self showNetTips:LOADING_TIPS];
     [NetManager post:URL_TASK_LIST
@@ -149,12 +157,23 @@
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
                  self.taskTableView.emptyBtnString = NET_EMPTY_MSG;
                  if (code) {
+                     if (responseObj[@"pages"]) {
+                         _allPage = [responseObj[@"pages"] integerValue];
+                     }
+                     
+                     
                      [self hideNetTips];
                      [self handleResponseMessage:responseObj];
                  }else{
+                     if (_page>1) {
+                         _page--;
+                     }
                      [self showToast:failMessag];
                  }
              } failure:^(NSString * _Nonnull errorStr) {
+                 if (_page>1) {
+                     _page--;
+                 }
                  self.taskTableView.emptyBtnString = errorStr;
                  [self hideNetTips];
                  [self showToast:errorStr];
@@ -371,6 +390,7 @@
         _taskTableView = [SHYBaseTableView.alloc initWithFrame:CGRectZero style:UITableViewStyleGrouped target:self];
         kWeakSelf(self);
         _taskTableView.backgroundColor = BACKGROUND_COLOR;
+        _taskTableView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(refreshFooter)];
         _taskTableView.emptyRequestAgainBlock = ^(){
             [weakself resetDataWithRequest];
         };

@@ -30,6 +30,7 @@
 #import "Factory.h"
 
 #import "SHYBaseViewModel.h"
+#import <MJRefresh/MJRefresh.h>
 
 #define APP_DELEGATE (AppDelegate*)[UIApplication sharedApplication].delegate
 

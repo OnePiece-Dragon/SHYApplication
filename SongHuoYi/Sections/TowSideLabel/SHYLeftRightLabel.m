@@ -35,7 +35,7 @@
         [self.rightLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.bottom.equalTo(weakSelf);
             make.right.equalTo(weakSelf).offset(-8);
-            make.width.mas_lessThanOrEqualTo(@80);
+            make.width.mas_greaterThanOrEqualTo(@80);
         }];
     }
     return self;
