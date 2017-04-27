@@ -14,6 +14,8 @@
 
 
 #import "SHYMapNaviController.h"
+
+
 /**
  核货详情
  */
@@ -27,6 +29,8 @@
  线路编号
  */
 @property (nonatomic, strong) NSNumber * lineId;
+
+@property (nonatomic, assign) BOOL canCheckBtnClick;
 
 @property (nonatomic, strong) SHYTaskCell * headerDetailView;
 @property (nonatomic, strong) SHYCheckGoodsDetailModel * goodsDetailModel;

@@ -15,6 +15,9 @@
 {
     NSInteger _leftPage;
     NSInteger _rightPage;
+    NSInteger _leftAllPage;
+    NSInteger _rightAllPage;
+    
     BOOL _haveSlide;
     
     NSInteger _isMap;
@@ -62,6 +65,20 @@
     [self requestDeliveryingData];
     //[self requestDeliveryDoneData];
 }
+
+- (void)transportingDataLoadMore {
+    if (_leftPage<_leftAllPage) {
+        _leftPage++;
+        [self requestDeliveryingData];
+    }
+}
+- (void)transportDoneDataLoadMore {
+    if (_rightPage<_rightAllPage) {
+        _rightPage++;
+        [self requestDeliveryDoneData];
+    }
+}
+
 //请求配送中的数据
 - (void)requestDeliveryingData {
     [self showNetTips:LOADING_TIPS];
@@ -74,6 +91,10 @@
                  [self hideNetTips];
                    if (code) {
                        DLog(@"responseObj:%@",responseObj);
+                       if (responseObj[@"pages"]) {
+                           _leftAllPage = [responseObj[@"pages"] integerValue];
+                       }
+                       
                        for (NSDictionary * dic in responseObj[@"rows"]) {
                            SHYDeliveryModel * model = [SHYDeliveryModel mj_objectWithKeyValues:dic];
                            [self.deliveryingArray addObject:model];
@@ -81,9 +102,16 @@
                        [self.deliveryingView reloadData];
                        
                    }else {
+                       if (_leftPage>1) {
+                           _leftPage--;
+                       }
+                       
                        [self showToast:failMessag];
                    }
              } failure:^(NSString * _Nonnull errorStr) {
+                 if (_leftPage>1) {
+                     _leftPage--;
+                 }
                  [self hideNetTips];
                  [self showToast:errorStr];
              }];
@@ -106,15 +134,26 @@
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
                  if (code) {
                      [self hideNetTips];
+                     if (responseObj[@"pages"]) {
+                         _rightAllPage = [responseObj[@"pages"] integerValue];
+                     }
+                     
                      for (NSDictionary * dic in responseObj[@"rows"]) {
                          SHYDeliveryModel * model = [SHYDeliveryModel mj_objectWithKeyValues:dic];
                          [self.deliveryDoneArray addObject:model];
                      }
                      [self.deliveryDoneView reloadData];
                  }else {
+                     
+                     if (_rightPage>1) {
+                         _rightPage--;
+                     }
                      [self showToast:failMessag];
                  }
              } failure:^(NSString * _Nonnull errorStr) {
+                 if (_rightPage>1) {
+                     _rightPage--;
+                 }
                  [self hideNetTips];
                  [self showToast:errorStr];
              }];
@@ -473,12 +512,14 @@
 - (SHYBaseTableView *)deliveryingView {
     if (!_deliveryingView) {
         _deliveryingView=[SHYBaseTableView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.segmentContentView.height) style:UITableViewStyleGrouped target:self];
+        _deliveryingView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(transportingDataLoadMore)];
     }
     return _deliveryingView;
 }
 - (SHYBaseTableView *)deliveryDoneView {
     if (!_deliveryDoneView) {
         _deliveryDoneView = [SHYBaseTableView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.segmentContentView.height) style:UITableViewStyleGrouped target:self];
+        _deliveryDoneView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(transportDoneDataLoadMore)];
     }
     return _deliveryDoneView;
 }

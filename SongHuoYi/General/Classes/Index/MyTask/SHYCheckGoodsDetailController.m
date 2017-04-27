@@ -14,7 +14,6 @@
 {
     NSInteger _page;
     
-    BOOL _canCheckBtnClick;
     BOOL _haveChanged;
 }
 @property (nonatomic, strong) UIButton * startSendGoods;
@@ -28,7 +27,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     _page = 1;
-    _canCheckBtnClick = NO;
     _haveChanged = NO;
     kWeakSelf(self);
     self.naviTitle = @"核货详情";
@@ -42,7 +40,6 @@
     //核货详情
     [self requestNuclearDetailData];
     //核货详情类别
-    [self requestNuclearCategoryData];
     [self setUI];
     
     NOTICENTER_Register(self,@selector(checkBoxChangeDone), Noti_CheckBox);
@@ -86,7 +83,6 @@
     _haveChanged = YES;
     
     _page = 1;
-    _canCheckBtnClick = NO;
     [self.dataArray removeAllObjects];
     [self requestNuclearCategoryData];
 }
@@ -101,6 +97,7 @@
 - (void)categoryFooterRefresh {
     if (_page<_allPage) {
         _page++;
+        DLog(@"page+++++++++++++++++");
         [self requestNuclearCategoryData];
     }
     
@@ -140,12 +137,12 @@
                        @"taskId":self.taskId,
                        @"lineId":self.lineId}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
-                 [self hideNetTips];
                  if (code == YES) {
                      [self handleResponseObj:responseObj nulClearDetail:YES];
                      //请求分类
                      [self requestNuclearCategoryData];
                  }else {
+                     [self hideNetTips];
                      [self showToast:failMessag];
                  }
              } failure:^(NSString * _Nonnull errorStr) {
@@ -210,6 +207,14 @@
         make.left.right.top.equalTo(weakself.view);
         make.bottom.equalTo(weakself.view).offset(-52);
     }];
+    
+    if (_canCheckBtnClick == YES) {
+        self.startSendGoods.enabled = YES;
+        [self.startSendGoods setTitle:@"一键核货" forState:UIControlStateNormal];
+    }else {
+        self.startSendGoods.enabled = NO;
+        [self.startSendGoods setTitle:@"已核货" forState:UIControlStateDisabled];
+    }
 }
 
 - (void)setContentView:(SHYTaskCell*)view model:(SHYCheckGoodsDetailModel*)model {
@@ -277,7 +282,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (self.goodsDetailModel) {
         if (section == 1) {
-            return self.dataArray.count>1?2:1;
+            return self.dataArray.count;
         }
         return 1;
     }
@@ -347,16 +352,8 @@
         }
         [cell addTopView];
         
-        if ([model.nuclearStatus integerValue] == 0) {
-            _canCheckBtnClick = YES;
-        }
-        if (_canCheckBtnClick == YES) {
-            self.startSendGoods.enabled = YES;
-            [self.startSendGoods setTitle:@"一键核货" forState:UIControlStateNormal];
-        }else {
-            self.startSendGoods.enabled = NO;
-            [self.startSendGoods setTitle:@"已核货" forState:UIControlStateDisabled];
-        }
+        
+        
         
         int i = 0;
         for (SHYTwoSideLabel * label in cell.rowArray) {

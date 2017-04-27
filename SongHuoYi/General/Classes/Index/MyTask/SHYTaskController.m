@@ -74,6 +74,7 @@
     SHYCheckGoodsDetailController * VC = [SHYCheckGoodsDetailController.alloc init];
     VC.taskId = model.tasksId;
     VC.lineId = model.lineId;
+    VC.canCheckBtnClick = model.nuclearStatus.integerValue > 0?NO:YES;
     VC.backBlock=^(){
         [weakself resetDataWithRequest];
     };

@@ -17,7 +17,7 @@
     AFHTTPSessionManager * manager = [AFHTTPSessionManager.alloc initWithBaseURL:[NSURL URLWithString:[[NetClient shareClient] getUrl:POST]]];
     //AFHTTPResponseSerializer * responseSerializer = [AFHTTPResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"application/xml",@"text/html",@"text/json",@"text/javascript",@"text/plain",nil];
-    manager.requestSerializer.timeoutInterval = 15.0;
+    manager.requestSerializer.timeoutInterval = 18.0;
     return manager;
 }
 
