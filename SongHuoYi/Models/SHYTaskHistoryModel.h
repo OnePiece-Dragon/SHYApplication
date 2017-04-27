@@ -46,6 +46,6 @@
  */
 @property (nonatomic, strong) NSNumber * currentTime;
 
-@property (nonatomic, strong) NSArray<SHYCategoryModel*> * category;
+@property (nonatomic, strong) NSArray * category;
 
 @end

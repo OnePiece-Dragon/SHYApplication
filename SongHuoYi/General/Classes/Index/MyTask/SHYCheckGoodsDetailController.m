@@ -277,7 +277,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (self.goodsDetailModel) {
         if (section == 1) {
-            return self.dataArray.count;
+            return self.dataArray.count>1?2:1;
         }
         return 1;
     }

@@ -102,7 +102,7 @@
 - (void)passWordChangeRequest:(NSString*)originalPassword
                   newPassword:(NSString*)newPassword{
     
-    [self showNetTips:@"处理中..."];
+    [self showNetTips:LOADING_DISPOSE];
     [NetManager post:URL_UPDATE_PASSWORD
                param:@{@"userId":USER_ID,
                        @"password":originalPassword,
@@ -111,7 +111,9 @@
                  [self hideNetTips];
                  if (code) {
                      [self showToast:@"修改成功"];
-                     [self.navigationController popViewControllerAnimated:YES];
+                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                         [self.navigationController popViewControllerAnimated:YES];
+                     });
                  }else {
                      [self showToast:failMessag];
                  }

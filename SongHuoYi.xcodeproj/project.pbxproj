@@ -133,6 +133,8 @@
 		DFBFE6E91EA7724700EA1406 /* NSObject+SHYExt.m in Sources */ = {isa = PBXBuildFile; fileRef = DFBFE6E71EA7724700EA1406 /* NSObject+SHYExt.m */; };
 		DFBFE6EC1EA7736E00EA1406 /* SHYWorkStatusModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DFBFE6EB1EA7736E00EA1406 /* SHYWorkStatusModel.m */; };
 		DFBFE6ED1EA7736E00EA1406 /* SHYWorkStatusModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DFBFE6EB1EA7736E00EA1406 /* SHYWorkStatusModel.m */; };
+		DFD6EDAA1EB1FEE9003392E6 /* SHYHistoryDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = DFD6EDA91EB1FEE9003392E6 /* SHYHistoryDetailController.m */; };
+		DFD6EDAB1EB1FEE9003392E6 /* SHYHistoryDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = DFD6EDA91EB1FEE9003392E6 /* SHYHistoryDetailController.m */; };
 		DFD925E81E973E4900DFDF32 /* SHYCheckGoodsDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DFD925E71E973E4900DFDF32 /* SHYCheckGoodsDetailModel.m */; };
 		DFD925E91E973E4900DFDF32 /* SHYCheckGoodsDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DFD925E71E973E4900DFDF32 /* SHYCheckGoodsDetailModel.m */; };
 		DFD925EB1E97406600DFDF32 /* nuclear.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFD925EA1E97406600DFDF32 /* nuclear.plist */; };
@@ -352,6 +354,8 @@
 		DFBFE6E71EA7724700EA1406 /* NSObject+SHYExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SHYExt.m"; sourceTree = "<group>"; };
 		DFBFE6EA1EA7736E00EA1406 /* SHYWorkStatusModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYWorkStatusModel.h; sourceTree = "<group>"; };
 		DFBFE6EB1EA7736E00EA1406 /* SHYWorkStatusModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYWorkStatusModel.m; sourceTree = "<group>"; };
+		DFD6EDA81EB1FEE9003392E6 /* SHYHistoryDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYHistoryDetailController.h; sourceTree = "<group>"; };
+		DFD6EDA91EB1FEE9003392E6 /* SHYHistoryDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYHistoryDetailController.m; sourceTree = "<group>"; };
 		DFD925E61E973E4900DFDF32 /* SHYCheckGoodsDetailModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYCheckGoodsDetailModel.h; sourceTree = "<group>"; };
 		DFD925E71E973E4900DFDF32 /* SHYCheckGoodsDetailModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYCheckGoodsDetailModel.m; sourceTree = "<group>"; };
 		DFD925EA1E97406600DFDF32 /* nuclear.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = nuclear.plist; sourceTree = "<group>"; };
@@ -513,6 +517,8 @@
 			children = (
 				DF24E9221E9F6FB400804E94 /* SHYHistoryNoteController.h */,
 				DF24E9231E9F6FB400804E94 /* SHYHistoryNoteController.m */,
+				DFD6EDA81EB1FEE9003392E6 /* SHYHistoryDetailController.h */,
+				DFD6EDA91EB1FEE9003392E6 /* SHYHistoryDetailController.m */,
 			);
 			path = HistroryNote;
 			sourceTree = "<group>";
@@ -1347,6 +1353,7 @@
 				DF24E9681E9F6FB400804E94 /* SHYChangePasswordController.m in Sources */,
 				DFBC349E1E949151000C7402 /* InputTextField.m in Sources */,
 				DFB9CDFA1E98D8B0004A157E /* SHYDeliveryModel.m in Sources */,
+				DFD6EDAA1EB1FEE9003392E6 /* SHYHistoryDetailController.m in Sources */,
 				DFBC34941E948010000C7402 /* SHYNaviConfig.m in Sources */,
 				DF9694CE1EB07ED200EA6C02 /* TPKeyboardAvoidingTableView.m in Sources */,
 				DFBC347E1E93A7B9000C7402 /* SHYTabBar.m in Sources */,
@@ -1440,6 +1447,7 @@
 				DFBC34CC1E9521EA000C7402 /* SHYIndexItemView.m in Sources */,
 				DFBFE3F21EA6050000EA1406 /* UIControl+SHYTargetAction.m in Sources */,
 				DF24E9671E9F6FB400804E94 /* SHYLoginModel.m in Sources */,
+				DFD6EDAB1EB1FEE9003392E6 /* SHYHistoryDetailController.m in Sources */,
 				DFBC34B31E949E1A000C7402 /* Factory.m in Sources */,
 				DFBC349F1E949151000C7402 /* InputTextField.m in Sources */,
 				DFE16DC91E9B7FE300487C6E /* SHYBaseTableView.m in Sources */,

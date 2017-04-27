@@ -14,6 +14,8 @@
 @interface SHYHistoryNoteController ()<DatePickerViewDelegate>
 
 {
+    NSInteger _allPage;
+    NSInteger _page;
     NSTimeInterval _currentTime;
 }
 
@@ -42,22 +44,61 @@
     self.hidesBottomBarWhenPushed = NO;
     [self cancelBackItem];
     self.naviTitle = @"历史运单";
-    
+    _page = 1;
+    _allPage = 1;
     [self setTopTimeUI];
     [self.view addSubview:self.historyNoteView];
     
     [self requestData];
 }
 
+- (void)refreshData {
+    _page = 1;
+    [self.dataArray removeAllObjects];
+    [self requestData];
+}
+
+- (void)loadMoreData {
+    if (_page < _allPage) {
+        _page ++;
+        [self requestData];
+    }
+}
+
 - (void)requestData {
     //SHYTaskHistoryModel
+    [self showNetTips:LOADING_TIPS];
+    [NetManager post:URL_TASK_HISTORY
+               param:@{@"userId":USER_ID,
+                       @"qryTime":self.dateLabel.text,
+                       @"page":@(_page)} success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                           [self hideNetTips];
+                           if (code) {
+                               DLog(@"responseObj:%@",responseObj);
+                               if (responseObj[@"pages"]) {
+                                   _allPage = [responseObj[@"pages"] integerValue];
+                               }
+                               
+                               for (NSDictionary *dic in responseObj[@"rows"]) {
+                                   SHYTaskHistoryModel * model = [SHYTaskHistoryModel mj_objectWithKeyValues:dic];
+                                   [self.dataArray addObject:model];
+                               }
+                               [self.historyNoteView reloadData];
+                           }else {
+                               [self showToast:failMessag];
+                           }
+                       } failure:^(NSString * _Nonnull errorStr) {
+                           [self hideNetTips];
+                           [self showToast:errorStr];
+                       }];
+    /*
     NSDictionary * result=[NSDictionary.alloc initWithContentsOfFile:PLIST_Name(@"history_task")];
     for (NSDictionary *dic in result[@"data"][@"rows"]) {
         SHYTaskHistoryModel * model = [SHYTaskHistoryModel mj_objectWithKeyValues:dic];
         [self.dataArray addObject:model];
     }
     
-    [self.historyNoteView reloadData];
+    [self.historyNoteView reloadData];*/
 }
 
 - (void)setContentView:(SHYTaskCell*)view model:(SHYTaskHistoryModel*)taskModel {
@@ -80,6 +121,12 @@
     label6.titleLabel.text = [NSString stringWithFormat:@"共计：%@",@"12312312421wdawdwadw"];
 }
 
+- (void)enterToDetail:(SHYTaskHistoryModel*)model {
+    SHYHistoryDetailController * VC = [SHYHistoryDetailController.alloc init];
+    VC.historyModel = model;
+    [self.navigationController pushViewController:VC animated:YES];
+}
+
 #pragma mark -tableViewDelegate-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.dataArray.count;
@@ -99,6 +146,12 @@
     }
     SHYTaskHistoryModel * taskModel = [self.dataArray objectAtIndex:indexPath.section];
     [self setContentView:cell model:taskModel];
+    kWeakSelf(self);
+    for (SHYIconLabel *label in cell.labelArray) {
+        label.clickBlock = ^(){
+            [weakself enterToDetail:taskModel];
+        };
+    }
     
     
     return cell;
@@ -146,6 +199,11 @@
     [self.view addSubview:self.topView];
     [_frontBtn setTitleColor:BUTTON_COLOR forState:UIControlStateNormal];
     [_behindBtn setTitleColor:BUTTON_COLOR forState:UIControlStateNormal];
+    [_frontBtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [_behindBtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [_frontBtn setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+    [_behindBtn setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+    
     
     [self setCurrentTime];
 }
@@ -172,6 +230,7 @@
 
 - (void)setDateLabelText {
     NSString * dateString = [TimeManager timeWithTimeIntervalString:[NSString stringWithFormat:@"%lf",_currentTime] format:@"YYY-MM-dd"];
+    _page = 1;
     _dateLabel.text = dateString;
 }
 
@@ -211,7 +270,12 @@
 - (SHYBaseTableView *)historyNoteView {
     if (!_historyNoteView) {
         _historyNoteView = [SHYBaseTableView.alloc initWithFrame:CGRectMake(0, 49, SCREEN_WIDTH, SCREEN_HEIGHT -kStatusBarH - 44 - 49 - 49) style:UITableViewStyleGrouped target:self];
-        
+        _historyNoteView.mj_header = [MJRefreshHeader headerWithRefreshingTarget:self refreshingAction:@selector(refreshData)];
+        _historyNoteView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
+        kWeakSelf(self);
+        _historyNoteView.emptyRequestAgainBlock = ^(){
+            [weakself requestData];
+        };
     }
     return _historyNoteView;
 }

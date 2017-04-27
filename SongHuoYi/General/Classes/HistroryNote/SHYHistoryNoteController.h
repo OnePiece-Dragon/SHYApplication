@@ -7,6 +7,7 @@
 //
 
 #import "SHYBaseController.h"
+#import "SHYHistoryDetailController.h"
 
 @interface SHYHistoryNoteController : SHYBaseController
 

@@ -155,6 +155,7 @@
     [NetManager post:URL_TASK_LIST
                param:@{@"userId":USER_ID,@"page":@(_page)}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self hideNetTips];
                  self.taskTableView.emptyBtnString = NET_EMPTY_MSG;
                  if (code) {
                      if (responseObj[@"pages"]) {

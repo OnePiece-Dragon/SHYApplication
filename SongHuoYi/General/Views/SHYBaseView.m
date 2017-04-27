@@ -28,7 +28,7 @@
 }
 
 - (void)baseTapAction {
-    NSLog(@"baseView__tap");
+    NSLog(@"baseView__tap:%@",self);
     if (self.clickBlock) {
         self.clickBlock();
     }
