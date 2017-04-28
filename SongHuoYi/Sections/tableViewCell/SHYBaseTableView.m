@@ -30,11 +30,11 @@
 
 - (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView
 {
-    return [UIImage imageNamed:@"empty_placeholder"];
+    return [UIImage imageNamed:@"kongzhuangtai"];
 }
 - (NSAttributedString *)buttonTitleForEmptyDataSet:(UIScrollView *)scrollView forState:(UIControlState)state
 {
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:17.0f]};
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0f]};
     
     return [[NSAttributedString alloc] initWithString:self.emptyBtnString attributes:attributes];
 }

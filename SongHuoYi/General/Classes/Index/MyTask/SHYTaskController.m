@@ -110,8 +110,7 @@
                 make.bottom.equalTo(weakself.mapView);
                 make.height.greaterThanOrEqualTo(@250);
             }];
-            [self setContentView:_annotationDetailView model:self.dataArray.firstObject];
-            [_mapView setCenterCoordinate:[(SHYTaskAnnotationModel*)_mapView.annotations.firstObject coordinate] animated:NO];
+            
         }
         
         if (_mapHaveLoad) {
@@ -137,17 +136,20 @@
     }];
 }
 
-- (void)resetDataWithRequest {
-    [self.dataArray removeAllObjects];
-    _page = 1;
-    [self requestData];
+- (void)loadRefreshData:(id)view {
+    
 }
 
-- (void)refreshFooter {
+- (void)loadMoreData:(id)view {
     if (_page < _allPage) {
         _page ++;
         [self requestData];
     }
+}
+- (void)resetDataWithRequest {
+    [self.dataArray removeAllObjects];
+    _page = 1;
+    [self requestData];
 }
 
 
@@ -212,6 +214,9 @@
     [_mapView removeAnnotations:_mapView.annotations];
     [_mapView addAnnotations:annotationArray];
     [_mapView selectAnnotation:annotationArray.firstObject animated:YES];
+    
+    [self setContentView:_annotationDetailView model:self.dataArray.firstObject];
+    [_mapView setCenterCoordinate:[(SHYTaskAnnotationModel*)_mapView.annotations.firstObject coordinate] animated:NO];
 }
 
 - (void)setContentView:(SHYTaskCell*)view model:(SHYTaskModel*)taskModel {
@@ -319,6 +324,7 @@
     if ([annotation isKindOfClass:[BMKPointAnnotation class]]) {
         BMKPinAnnotationView *newAnnotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"myAnnotation"];
         newAnnotationView.pinColor = BMKPinAnnotationColorRed;
+        newAnnotationView.image = ImageNamed(@"dingwei");
         newAnnotationView.animatesDrop = YES;// 设置该标注点动画显示
         return newAnnotationView;
     }
@@ -345,6 +351,7 @@
     DLog(@"当选中annotation view时");
     SHYTaskAnnotationModel *annotation = (SHYTaskAnnotationModel*)view.annotation;
     if ([annotation.title isEqualToString:@"我的位置"]) {
+        _annotationDetailView.hidden = YES;
         [self hideAnnotationView];
     }else {
         [self showAnnotationView];
@@ -392,7 +399,7 @@
         _taskTableView = [SHYBaseTableView.alloc initWithFrame:CGRectZero style:UITableViewStyleGrouped target:self];
         kWeakSelf(self);
         _taskTableView.backgroundColor = BACKGROUND_COLOR;
-        _taskTableView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(refreshFooter)];
+        _taskTableView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData:)];
         _taskTableView.emptyRequestAgainBlock = ^(){
             [weakself resetDataWithRequest];
         };

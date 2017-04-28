@@ -48,6 +48,10 @@
     [_nPasswordView setIconSize:CGSizeMake(24, 32) direction:Left];
     [_confirmPasswordView setIconSize:CGSizeMake(24, 32) direction:Left];
     
+    _originalPasswordView.inputTextField.secureTextEntry = YES;
+    _nPasswordView.inputTextField.secureTextEntry = YES;
+    _confirmPasswordView.inputTextField.secureTextEntry = YES;
+    
     kWeakSelf(self);
     [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.top.equalTo(weakself.view);

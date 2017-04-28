@@ -9,6 +9,8 @@
 #ifndef UserDefaultMacro_h
 #define UserDefaultMacro_h
 
+#import "SHYUserModel.h"
+
 #define USER_MODEL          [SHYUserModel shareUserMsg]
 #define USER_ID             [[SHYUserModel shareUserMsg] userId]
 #define USER_WORK_STATUS    [[SHYUserModel shareUserMsg] status]

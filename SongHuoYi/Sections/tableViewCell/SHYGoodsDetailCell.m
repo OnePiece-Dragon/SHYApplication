@@ -33,6 +33,12 @@
     _rightTopLabel.textAlignment = NSTextAlignmentRight;
     _rightBottomLabel.textAlignment = NSTextAlignmentRight;
     
+    _leftTopLabel.numberOfLines = 0;
+    _leftTopLabel.font = kFont(14);
+    _leftBottomLabel.font = kFont(14);
+    _rightTopLabel.font = kFont(14);
+    _rightBottomLabel.font = kFont(14);
+    
     kWeakSelf(self);
     [self.leftTopLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(weakself).offset(8);
@@ -44,18 +50,18 @@
         make.left.equalTo(weakself.leftTopLabel.mas_left);
         make.bottom.equalTo(weakself).offset(-8);
         make.right.equalTo(weakself.mas_centerX);
-        make.height.mas_equalTo(36);
+        make.height.mas_equalTo(24);
     }];
     [self.rightTopLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(weakself).offset(-8);
         make.top.equalTo(weakself.leftTopLabel.mas_top);
-        make.height.mas_equalTo(36);
-        make.width.mas_equalTo(100);
+        make.left.equalTo(weakself.mas_centerX);
+        make.height.mas_equalTo(24);
     }];
     [self.rightBottomLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(weakself.rightTopLabel.mas_right);
         make.bottom.equalTo(weakself).offset(-8);
-        make.height.mas_equalTo(36);
+        make.height.mas_equalTo(24);
         make.left.equalTo(weakself.mas_centerX);
     }];
     

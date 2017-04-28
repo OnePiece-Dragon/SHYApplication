@@ -43,7 +43,9 @@
 }
 
 - (void)submitAction {
-    if (!self.textView.text.length && !_haveEdited) {
+    [self.textView endEditing:YES];
+    
+    if (!self.textView.text.length || !_haveEdited) {
         [self showToast:@"请填写反馈信息！"];
         return;
     }

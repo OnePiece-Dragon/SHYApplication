@@ -10,16 +10,9 @@
 
 @implementation SHYIndexCell
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
-
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if ([super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        self.backgroundColor = BACKGROUND_COLOR;
         [self addSubview:self.indexView];
         _indexView.titleLabel.font = [UIFont boldSystemFontOfSize:24];
         _indexView.titleLabel.textAlignment = NSTextAlignmentRight;

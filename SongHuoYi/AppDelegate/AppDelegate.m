@@ -76,9 +76,7 @@
         //已经登录
         self.window.rootViewController = self.tabBarVC;
     }else {
-        [self.loginVC setLoginModel:self.loginModel];
-        
-        self.window.rootViewController = self.loginVC;
+        [self switchToLogin];
     }
     
     
@@ -188,7 +186,14 @@
     UserDefaultSetObjectForKey(ArchivedDataWithObject([SHYUserModel shareUserMsg]), USER_MESSAGE);
 }
 
-
+- (void)switchToLogin {
+    UserDefaultSetObjectForKey(@0, USER_LOGIN_STATUS);
+    self.window.rootViewController = self.loginVC;
+}
+- (void)switchToHome {
+    UserDefaultSetObjectForKey(@1, USER_LOGIN_STATUS);
+    self.window.rootViewController = self.tabBarVC;
+}
 
 - (UIWindow *)window {
     if (!_window) {
@@ -220,13 +225,6 @@
         _loginVC = loginVC;
     }
     return _loginVC;
-}
-- (SHYLoginModel *)loginModel {
-    SHYLoginModel * loginModel = [SHYLoginModel.alloc init];
-    loginModel.userPhone = UserDefaultObjectForKey(USER_PHONE);
-    loginModel.userPassword = UserDefaultObjectForKey(USER_PASSWORD);
-    loginModel.isAutoLogin = [UserDefaultObjectForKey(USER_ISAUTO_LOGIN) integerValue] == 1 ? YES : NO;
-    return loginModel;
 }
 /** 注册 APNs */
 - (void)registerRemoteNotification {

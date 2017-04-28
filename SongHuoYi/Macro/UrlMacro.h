@@ -11,6 +11,7 @@
 
 #import "TipMacro.h"
 
+
 //192.168.31.197:8080
 //120.27.238.62
 #define BASE_URL                    @"192.168.31.197"
@@ -38,6 +39,8 @@
 #define URL_DISTRIBUTE_LIST         @"/app/distribute/order/list"
 //我的配送（地图模式）
 #define URL_DISTRIBUTE_MAP          @"/app/distribute/map/list"
+//我的配送->结束配送
+#define URL_DISTRIBUTE_END          @"/app/order/end"
 
 //消息中心
 #define URL_MESSAGE_INFO            @"/app/sys/messInfo/list"

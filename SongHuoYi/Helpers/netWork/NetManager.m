@@ -17,7 +17,7 @@
     AFHTTPSessionManager * manager = [AFHTTPSessionManager.alloc initWithBaseURL:[NSURL URLWithString:[[NetClient shareClient] getUrl:POST]]];
     //AFHTTPResponseSerializer * responseSerializer = [AFHTTPResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"application/xml",@"text/html",@"text/json",@"text/javascript",@"text/plain",nil];
-    manager.requestSerializer.timeoutInterval = 18.0;
+    manager.requestSerializer.timeoutInterval = 15.0;
     return manager;
 }
 
@@ -37,11 +37,11 @@
     [[NetManager manager] POST:method parameters:param progress:uploadProgress success:success failure:failure];
 }
 
-+ (void)post:(NSString *)method
++ (NSURLSessionDataTask*)post:(NSString *)method
        param:(NSDictionary *)param
      success:(nonnull void(^)(NSDictionary*_Nonnull responseObj,NSString * _Nonnull failMessag,BOOL code))success
      failure:(nonnull void(^)(NSString* _Nonnull errorStr))failure {
-    [[NetManager manager] POST:method
+    return [[NetManager manager] POST:method
                     parameters:param
                       progress:nil
                        success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {

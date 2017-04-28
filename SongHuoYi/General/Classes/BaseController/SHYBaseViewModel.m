@@ -18,25 +18,25 @@
 
 - (instancetype)init {
     if ([super init]) {
-        
+        [self initialize];
     }
     return self;
 }
 
-- (void)signalRequestUrl:(NSString*)url params:(NSDictionary*)params {
-    self.requestCommand = [RACCommand.alloc initWithSignalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
-        return [[[NetManager signalRequestUrl:url params:params] map:^id _Nullable(id  _Nullable value) {
-            NSLog(@"command_Value:%@",value);
-            _responseObject = value;
-            return value;
-        }] doError:^(NSError * _Nonnull error) {
-            _responseError = error;
-        }];
-    }];
-    [self.requestCommand.executionSignals.switchToLatest subscribeNext:^(id  _Nullable x) {
-        self.responseObject = x;
-        NSLog(@"x:%@",x);
-    }];
+- (void)fetchResponse {
+    
 }
+
+- (void)fetchResponse:(id)responseObj code:(BOOL)code fail:(NSString *)fail {
+    self.successResult = responseObj;
+}
+
+- (SHYRequestApi *)requestBody{
+    if (!_requestBody) {
+        _requestBody = [SHYRequestApi.alloc init];
+    }
+    return _requestBody;
+}
+
 
 @end

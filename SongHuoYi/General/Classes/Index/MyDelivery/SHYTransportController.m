@@ -49,7 +49,7 @@
     kWeakSelf(self);
     _leftPage   = 1;
     _rightPage  = 1;
-    _haveSlide = NO;
+    _haveSlide  = NO;
     
     _isMap = NO;
     _isUserLocation = NO;
@@ -66,19 +66,33 @@
     //[self requestDeliveryDoneData];
 }
 
-- (void)transportingDataLoadMore {
-    if (_leftPage<_leftAllPage) {
-        _leftPage++;
-        [self requestDeliveryingData];
+- (void)loadMoreData:(id)view {
+    DLog(@"view:%@",view);
+    if (view == self.deliveryingView) {
+        //配送中
+        if (_leftPage<_leftAllPage) {
+            _leftPage++;
+            DLog(@"_leftPage:%ld",_leftPage);
+            [self requestDeliveryingData];
+        }
+    }else if (view == self.deliveryDoneView) {
+        if (_rightPage<_rightAllPage) {
+            _rightPage++;
+            [self requestDeliveryDoneData];
+        }
     }
 }
-- (void)transportDoneDataLoadMore {
-    if (_rightPage<_rightAllPage) {
-        _rightPage++;
+- (void)loadRefreshData:(id)view {
+    if (view == self.deliveryingView) {
+        _leftPage = 1;
+        [self.deliveryingArray removeAllObjects];
+        [self requestDeliveryingData];
+    }else if (view == self.deliveryDoneView) {
+        _rightPage = 1;
+        [self.deliveryDoneArray removeAllObjects];
         [self requestDeliveryDoneData];
     }
 }
-
 //请求配送中的数据
 - (void)requestDeliveryingData {
     [self showNetTips:LOADING_TIPS];
@@ -90,7 +104,7 @@
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
                  [self hideNetTips];
                    if (code) {
-                       DLog(@"responseObj:%@",responseObj);
+                       DLog(@"responseObj_ing:%@",responseObj);
                        if (responseObj[@"pages"]) {
                            _leftAllPage = [responseObj[@"pages"] integerValue];
                        }
@@ -99,6 +113,11 @@
                            SHYDeliveryModel * model = [SHYDeliveryModel mj_objectWithKeyValues:dic];
                            [self.deliveryingArray addObject:model];
                        }
+                       
+                       if (_isMap) {
+                           [self addAnnotationOnMap];
+                       }
+                       
                        [self.deliveryingView reloadData];
                        
                    }else {
@@ -121,10 +140,6 @@
 }
 //请求配送完成数据
 - (void)requestDeliveryDoneData {
-    if (!_haveSlide) {
-        return;
-    }
-    
     [self showNetTips:LOADING_TIPS];
     [NetManager post:URL_DISTRIBUTE_LIST
                param:@{@"userId":USER_ID,
@@ -134,6 +149,7 @@
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
                  if (code) {
                      [self hideNetTips];
+                     DLog(@"responseObj_Done:%@",responseObj);
                      if (responseObj[@"pages"]) {
                          _rightAllPage = [responseObj[@"pages"] integerValue];
                      }
@@ -142,6 +158,7 @@
                          SHYDeliveryModel * model = [SHYDeliveryModel mj_objectWithKeyValues:dic];
                          [self.deliveryDoneArray addObject:model];
                      }
+                     
                      [self.deliveryDoneView reloadData];
                  }else {
                      
@@ -169,11 +186,26 @@
     [self.deliveryDoneView reloadData];
      */
 }
-- (void)endTransportRequest {
-    _leftPage = 1;
-    _rightPage = 1;
-    [self.deliveryingArray removeAllObjects];
-    [self requestDeliveryingData];
+- (void)endTransportRequest:(SHYDeliveryModel*)model {
+    [self showNetTips:LOADING_DISPOSE];
+    NSURLSessionDataTask * task =
+    [NetManager post:URL_DISTRIBUTE_END
+               param:@{@"userId":USER_ID,
+                       @"orderId":model.orderId} success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                   [self hideNetTips];
+                   if (code) {
+                       //
+                       [self showToast:@"操作成功!"];
+                       [self loadRefreshData:self.deliveryingView];
+                       [self loadRefreshData:self.deliveryDoneView];
+                   }else {
+                       [self showToast:failMessag];
+                   }
+               } failure:^(NSString * _Nonnull errorStr) {
+                   [self hideNetTips];
+                   [self showToast:errorStr];
+               }];
+    
 }
 
 //添加大头针
@@ -182,7 +214,7 @@
     for (SHYDeliveryModel *model in self.deliveryingArray) {
         SHYTaskAnnotationModel* annotation = [[SHYTaskAnnotationModel alloc]init];
         CLLocationCoordinate2D coor;
-        coor.latitude = [model.latitude floatValue];
+        coor.latitude = [model.dimension floatValue];
         coor.longitude = [model.longitude floatValue];
         annotation.coordinate = coor;
         annotation.title = model.shopName;
@@ -193,6 +225,9 @@
     [_mapView removeAnnotations:_mapView.annotations];
     [_mapView addAnnotations:annotationArray];
     [_mapView selectAnnotation:annotationArray.firstObject animated:YES];
+    
+    [self setContentView:_annotationDetailView model:self.deliveryingArray.firstObject];
+    [_mapView setCenterCoordinate:[(SHYTaskAnnotationModel*)_mapView.annotations.firstObject coordinate] animated:NO];
 }
 //查看配送详情
 - (void)clickToSeeOrderDetail:(SHYDeliveryModel*)model {
@@ -204,7 +239,7 @@
 - (void)endDeliveryBtn:(SHYDeliveryModel*)model {
     DLog(@"model:%@",model.shopName);
     [self showAlertVCWithTitle:@"确认消息:" info:@"该货物已送达！" CancelTitle:@"取消" okTitle:@"确定" cancelBlock:nil okBlock:^{
-        [self endTransportRequest];
+        [self endTransportRequest:model];
     }];
 }
 
@@ -233,6 +268,7 @@
 
 - (void)mapModelSwitch:(UIButton*)button {
     if (button.selected) {
+        _isMap = YES;
         //地图模式
         self.segmentControl.hidden = YES;
         self.segmentLineView.hidden = YES;
@@ -250,23 +286,26 @@
         
         if (self.deliveryingArray.count) {
             [self addAnnotationOnMap];
-            
-            [self.mapView addSubview:self.annotationDetailView];
+            if (!self.annotationDetailView.superview) {
+                [self.mapView addSubview:self.annotationDetailView];
+            }
             kWeakSelf(self);
             [self.annotationDetailView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(weakself.mapView).offset(10);
                 make.right.equalTo(weakself.mapView).offset(-10);
                 make.bottom.equalTo(weakself.mapView);
-                make.height.greaterThanOrEqualTo(@250);
+                make.height.greaterThanOrEqualTo(@200);
             }];
+            
+            
             if (_mapHaveLoad) {
                 _annotationDetailView.hidden = NO;
             }else {
                 _annotationDetailView.hidden = YES;
             }
-            [self setContentView:_annotationDetailView model:self.deliveryingArray.firstObject];
         }
     }else {
+        _isMap = NO;
         //列表模式
         self.segmentControl.hidden = NO;
         self.segmentLineView.hidden = NO;
@@ -313,9 +352,10 @@
 }
 
 - (void)slideAndSegItemSelectedIndex:(NSInteger)index {
-    if (index == 1) {
+    if (index == 1 && !_haveSlide) {
         //
         _haveSlide = YES;
+        [self requestDeliveryDoneData];
     }
     
     [_segmentContentView setPageIndex:index];
@@ -397,6 +437,7 @@
     if ([annotation isKindOfClass:[BMKPointAnnotation class]]) {
         BMKPinAnnotationView *newAnnotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"myAnnotation"];
         newAnnotationView.pinColor = BMKPinAnnotationColorRed;
+        newAnnotationView.image = ImageNamed(@"dingwei");
         newAnnotationView.animatesDrop = YES;// 设置该标注点动画显示
         return newAnnotationView;
     }
@@ -409,8 +450,8 @@
  */
 - (void)mapView:(BMKMapView *)mapView annotationViewForBubble:(BMKAnnotationView *)view {
     DLog(@"当点击annotation view弹出的泡泡时，调用此接口");
-    [self updateAnnotationDetailViewLocation];
-    [self showAnnotationView];
+    //[self updateAnnotationDetailViewLocation];
+    //[self showAnnotationView];
 }
 /**
  *当选中一个annotation views时，调用此接口
@@ -420,8 +461,11 @@
     [self updateAnnotationDetailViewLocation];
     SHYTaskAnnotationModel *annotation = (SHYTaskAnnotationModel*)view.annotation;
     if ([annotation.title isEqualToString:@"我的位置"]) {
+        _annotationDetailView.hidden = YES;
         [self hideAnnotationView];
     }else {
+        [self showAnnotationView];
+        [self updateAnnotationDetailViewLocation];
         [self setContentView:_annotationDetailView model:annotation.deliveryModel];
     }
 }
@@ -512,14 +556,20 @@
 - (SHYBaseTableView *)deliveryingView {
     if (!_deliveryingView) {
         _deliveryingView=[SHYBaseTableView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.segmentContentView.height) style:UITableViewStyleGrouped target:self];
-        _deliveryingView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(transportingDataLoadMore)];
+        kWeakSelf(self);
+        _deliveryingView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingBlock:^{
+            [weakself loadMoreData:weakself.deliveryDoneView];
+        }];
     }
     return _deliveryingView;
 }
 - (SHYBaseTableView *)deliveryDoneView {
     if (!_deliveryDoneView) {
         _deliveryDoneView = [SHYBaseTableView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.segmentContentView.height) style:UITableViewStyleGrouped target:self];
-        _deliveryDoneView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(transportDoneDataLoadMore)];
+        kWeakSelf(self);
+        _deliveryDoneView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingBlock:^{
+            [weakself loadMoreData:weakself.deliveryDoneView];
+        }];
     }
     return _deliveryDoneView;
 }

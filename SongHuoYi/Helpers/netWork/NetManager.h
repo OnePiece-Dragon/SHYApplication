@@ -30,7 +30,7 @@
      success:(nonnull void(^)(NSURLSessionDataTask* _Nonnull task,id _Nullable responseObject))success
      failure:(nonnull void(^)(NSURLSessionDataTask*_Nullable task,NSError*_Nonnull error))failure;
 
-+ (void)post:(nonnull NSString *)method
++ (NSURLSessionDataTask*_Nonnull)post:(nonnull NSString *)method
        param:(nonnull NSDictionary *)param
      success:(nonnull void(^)(NSDictionary*_Nonnull responseObj,NSString * _Nonnull failMessag,BOOL code))success
      failure:(nonnull void(^)(NSString* _Nonnull errorStr))failure;

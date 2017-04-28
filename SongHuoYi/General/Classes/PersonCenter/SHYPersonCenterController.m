@@ -97,9 +97,7 @@
 }
 
 - (void)logOutToLogin {
-    AppDelegate*app = APP_DELEGATE;
-    [app.loginVC setLoginModel:app.loginModel];
-    [app window].rootViewController = app.loginVC;
+    [APP_DELEGATE switchToLogin];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -125,7 +123,7 @@
                              rightStr:SERVE_PHONE
                             rightIcon:nil];
         cell.contentLabel.rightLabel.textAlignment = NSTextAlignmentRight;
-        UIImageView * callImageView = [UIImageView.alloc initWithImage:ImageNamed(@"dianhua")];
+        UIImageView * callImageView = [UIImageView.alloc initWithImage:ImageNamed(@"calldianhua")];
         [cell.contentLabel addSubview:callImageView];
         
         [callImageView mas_makeConstraints:^(MASConstraintMaker *make) {

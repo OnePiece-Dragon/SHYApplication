@@ -35,19 +35,45 @@
     [self messageListRequest];
 }
 
+- (void)loadMoreData:(id)view {
+    if (_page<_allPages) {
+        _page++;
+        [self messageListRequest];
+    }
+}
+- (void)loadRefreshData:(id)view {
+    _page = 1;
+    if (self.messageList.count) {
+        [self.messageList removeAllObjects];
+    }
+    [self messageListRequest];
+}
+
 - (void)messageListRequest {
+    [self showNetTips:LOADING_TIPS];
     [NetManager post:URL_MESSAGE_INFO
                param:@{@"userId":USER_ID,
                        @"page":@(_page)}
-            progress:nil
-             success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                 NSDictionary* result = responseObject[@"data"];
-                 _allPages = [result[@"pages"] integerValue];
-                 NSArray * dataArray = [SHYMessageModel mj_objectArrayWithKeyValuesArray:result[@"rows"]];
-                 [self.messageList addObjectsFromArray:dataArray];
-                 
-             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                 [self showToast:NET_ERROR_TIP];
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self hideNetTips];
+                 if (code) {
+                     if (responseObj[@"pages"]) {
+                         _allPages = [responseObj[@"pages"] integerValue];
+                     }
+                     NSArray * dataArray = [SHYMessageModel mj_objectArrayWithKeyValuesArray:responseObj[@"rows"]];
+                     [self.messageList addObjectsFromArray:dataArray];
+                 }else {
+                     if (_page>1) {
+                         _page--;
+                     }
+                     [self showToast:failMessag];
+                 }
+             } failure:^(NSString * _Nonnull errorStr) {
+                 if (_page>1) {
+                     _page--;
+                 }
+                 [self hideNetTips];
+                 [self showToast:errorStr];
              }];
 }
 
@@ -78,6 +104,11 @@
 - (SHYBaseTableView *)messageView {
     if (!_messageView) {
         _messageView = [SHYBaseTableView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - kNavigationBarH - kStatusBarH) style:UITableViewStyleGrouped target:self];
+        kWeakSelf(self);
+        _messageView.emptyRequestAgainBlock = ^(){
+            [weakself loadRefreshData:nil];
+        };
+        _messageView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadRefreshData:)];
     }
     return _messageView;
 }

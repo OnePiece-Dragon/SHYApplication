@@ -51,20 +51,23 @@
     
     [self requestData];
 }
-
-- (void)refreshData {
+- (void)loadRefreshData:(id)view {
     _page = 1;
     [self.dataArray removeAllObjects];
     [self requestData];
 }
-
-- (void)loadMoreData {
+- (void)loadMoreData:(id)view {
     if (_page < _allPage) {
         _page ++;
         [self requestData];
     }
 }
-
+- (void)dateChangeRequest {
+    _page = 1;
+    _allPage = 1;
+    [self.dataArray removeAllObjects];
+    [self requestData];
+}
 - (void)requestData {
     //SHYTaskHistoryModel
     [self showNetTips:LOADING_TIPS];
@@ -189,7 +192,8 @@
 {
     _dateLabel.text = dateString;
     //格式: 2017-01-23
-    [self requestData];
+    _currentTime = [TimeManager timeSwitchTimeString:dateString format:@"yyyy-MM-dd"] + 86400;
+    [self dateChangeRequest];
 }
 
 - (void)setTopTimeUI {
@@ -212,15 +216,13 @@
     _currentTime -= 86400;
     [self setDateLabelText];
     
-    [_dataArray removeAllObjects];
-    [self requestData];
+    [self dateChangeRequest];
 }
 - (void)behindBtnAction {
     _currentTime += 86400;
     [self setDateLabelText];
     
-    [_dataArray removeAllObjects];
-    [self requestData];
+    [self dateChangeRequest];
 }
 
 - (void)setCurrentTime {
@@ -238,19 +240,22 @@
 #pragma mark -Lazing-
 - (UIButton *)frontBtn {
     if (!_frontBtn) {
-        _frontBtn = [Factory createBtn:CGRectMake(0, 0, 120, 49) title:@"前一天" type:UIButtonTypeCustom target:self action:@selector(frontBtnAction)];
+        _frontBtn = [Factory createBtn:CGRectMake(0, 0, 80, 49) title:@"前一天" type:UIButtonTypeCustom target:self action:@selector(frontBtnAction)];
+        _frontBtn.titleLabel.font = kFont(14);
     }
     return _frontBtn;
 }
 - (UIButton *)behindBtn {
     if (!_behindBtn) {
-        _behindBtn = [Factory createBtn:CGRectMake(SCREEN_WIDTH - 120, 0, 120, 49) title:@"后一天" type:UIButtonTypeCustom target:self action:@selector(behindBtnAction)];
+        _behindBtn = [Factory createBtn:CGRectMake(SCREEN_WIDTH - 80, 0, 80, 49) title:@"后一天" type:UIButtonTypeCustom target:self action:@selector(behindBtnAction)];
+        _behindBtn.titleLabel.font = kFont(14);
     }
     return _behindBtn;
 }
 - (UILabel *)dateLabel {
     if (!_dateLabel) {
-        _dateLabel = [UILabel.alloc initWithFrame:CGRectMake(120, 0, SCREEN_WIDTH - 240, 49)];
+        _dateLabel = [UILabel.alloc initWithFrame:CGRectMake(80, 0, SCREEN_WIDTH - 160, 49)];
+        _dateLabel.font = kFont(14);
         _dateLabel.userInteractionEnabled = YES;
         _dateLabel.textAlignment = NSTextAlignmentCenter;
         [_dateLabel addGestureRecognizer:[UITapGestureRecognizer.alloc initWithTarget:self action:@selector(showPickViewerAction)]];
@@ -266,12 +271,11 @@
     return _topView;
 }
 
-
 - (SHYBaseTableView *)historyNoteView {
     if (!_historyNoteView) {
         _historyNoteView = [SHYBaseTableView.alloc initWithFrame:CGRectMake(0, 49, SCREEN_WIDTH, SCREEN_HEIGHT -kStatusBarH - 44 - 49 - 49) style:UITableViewStyleGrouped target:self];
-        _historyNoteView.mj_header = [MJRefreshHeader headerWithRefreshingTarget:self refreshingAction:@selector(refreshData)];
-        _historyNoteView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
+        _historyNoteView.mj_header = [MJRefreshHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadRefreshData:)];
+        _historyNoteView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData:)];
         kWeakSelf(self);
         _historyNoteView.emptyRequestAgainBlock = ^(){
             [weakself requestData];

@@ -80,17 +80,24 @@
     
     RAC(self.bigLogin,enabled) = viewModel.validSignal;
     
+    self.autoLogin.selected = viewModel.isAutoLogin;
     [[self.autoLogin rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIButton * _Nullable x) {
         x.selected = !x.selected;
         viewModel.isAutoLogin = x.selected;
     }];
     [[self.bigLogin rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
+        
+        [self showNetTips:LOADING_WAIT];
         [viewModel fetchResponse];
+        [self endEdit];
     }];
     [viewModel.responseSignal subscribeNext:^(id  _Nullable x) {
+        [self hideNetTips];
+        if ([[x objectForKey:@"code"] intValue] == 0) {
+            [self showToast:[x objectForKey:@"error"]];
+            return ;
+        }
         [APP_DELEGATE switchToHome];
-    } error:^(NSError * _Nullable error) {
-        [self showToast:ERROR_MESSAGE(error)];
     }];
 }
 
@@ -132,7 +139,10 @@
     }];
 }
 
-
+- (void)endEdit {
+    [self.phoneField.inputTextField endEditing:YES];
+    [self.passWordField.inputTextField endEditing:YES];
+}
 
 #pragma mark -lazing-
 - (UIImageView *)iconImage {

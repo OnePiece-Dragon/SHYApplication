@@ -66,9 +66,9 @@
 }
 
 - (void)goodsList:(BOOL)isAll model:(SHYNuclearCategoryModel*)model {
-    if (!_canCheckBtnClick) {
-        return;
-    }
+//    if (!_canCheckBtnClick) {
+//        return;
+//    }
     
     SHYReceiveBoxController * VC = [SHYReceiveBoxController.alloc init];
     VC.taskId = self.taskId;
@@ -94,13 +94,11 @@
     }];
 }
 
-- (void)categoryFooterRefresh {
+- (void)loadMoreData:(id)view {
     if (_page<_allPage) {
         _page++;
-        DLog(@"page+++++++++++++++++");
         [self requestNuclearCategoryData];
     }
-    
 }
 
 - (void)onceAllGoodsCheck {
@@ -415,7 +413,7 @@
 - (SHYBaseTableView *)checkGoodsDetailView {
     if (!_checkGoodsDetailView) {
         _checkGoodsDetailView = [SHYBaseTableView.alloc initWithFrame:CGRectZero style:UITableViewStyleGrouped target:self];
-        _checkGoodsDetailView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(categoryFooterRefresh)];
+        _checkGoodsDetailView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData:)];
         _checkGoodsDetailView.backgroundColor = BACKGROUND_COLOR;
     }
     return _checkGoodsDetailView;

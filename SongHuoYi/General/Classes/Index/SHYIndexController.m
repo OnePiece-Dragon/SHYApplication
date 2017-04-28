@@ -25,6 +25,8 @@
 @property (nonatomic, strong) SHYBaseTableView * indexListView;
 @property (nonatomic, strong) NSMutableArray * dataArray;
 
+@property (nonatomic, strong) NSIndexPath * currentPath;
+
 @end
 
 @implementation SHYIndexController
@@ -55,7 +57,7 @@
     kWeakSelf(self);
     [self.indexListView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.equalTo(weakself.view);
-        make.bottom.equalTo(weakself.view).offset(kTabBarH);
+        make.bottom.equalTo(weakself.view);
     }];
 }
 -(void)setContent {
@@ -155,7 +157,8 @@
         model.titleName = @"我要上班";
         model.descName = @"";
     }
-    [self.indexListView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+//    SHYIndexCell * cell = [self.indexListView cellForRowAtIndexPath:[NSIndexPath indexPathWithIndex:2]];
+//    [cell setModel:model];
 }
 
 - (void)setWorkTime:(NSString*)timeString {
@@ -176,7 +179,10 @@
     //NSString * timeStr = [TimeManager timeWithTimeIntervalString:[NSString stringWithFormat:@"%ld",timeSecd] format:formatStr];
     model.descName = formatStr;
     
-    [self.indexListView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    //[self.indexListView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:2 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    //SHYIndexCell * cell = [self.indexListView cellForRowAtIndexPath:self.currentPath];
+    //[cell setModel:model];
+    [self.indexListView reloadData];
 }
 
 - (void)clickItemAt:(NSInteger)row {
@@ -201,12 +207,18 @@
         break;
         case 2:
         {
-            if (((SHYUserModel*)USER_MODEL).status.integerValue != 1) {
-                //我要上班
-                [self workStatusSet:1];
-            }else {
-                [self workStatusSet:2];
-            }
+            
+            [self showAlertVCWithTitle:nil info:@"确定执行此操作？" CancelTitle:@"点错了" okTitle:@"确定" cancelBlock:nil okBlock:^{
+                self.currentPath = [NSIndexPath indexPathWithIndex:2];
+                
+                if (((SHYUserModel*)USER_MODEL).status.integerValue != 1) {
+                    //我要上班
+                    [self workStatusSet:1];
+                }else {
+                    [self workStatusSet:2];
+                }
+            }];
+            
         }
         break;
         default:

@@ -37,7 +37,7 @@
         coor.longitude = [_model.longitude floatValue];
         annotation.title = _model.lineName;
     }else if(_deliverModel){
-        coor.latitude = [_deliverModel.latitude floatValue];
+        coor.latitude = [_deliverModel.dimension floatValue];
         coor.longitude = [_deliverModel.longitude floatValue];
         annotation.title = _deliverModel.shopName;
     }
@@ -61,6 +61,7 @@
     if ([annotation isKindOfClass:[BMKPointAnnotation class]]) {
         BMKPinAnnotationView *newAnnotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"myAnnotation"];
         newAnnotationView.pinColor = BMKPinAnnotationColorRed;
+        newAnnotationView.image = ImageNamed(@"dingwei");
         newAnnotationView.animatesDrop = YES;// 设置该标注点动画显示
         return newAnnotationView;
     }

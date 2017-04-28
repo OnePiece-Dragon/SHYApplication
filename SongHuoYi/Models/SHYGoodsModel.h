@@ -16,7 +16,6 @@
  商品ID
  */
 @property (nonatomic, strong) NSNumber * goodsId;
-
 /**
  商品数量
  */
@@ -26,12 +25,11 @@
  实际收箱数量
  */
 @property (nonatomic, strong) NSNumber * actualNum;
-
+@property (nonatomic, strong) NSNumber * goodsNum;
 /**
  商品名称
  */
 @property (nonatomic, strong) NSString * goodsName;
-
 /**
  商品描述
  */
@@ -52,7 +50,7 @@
  商品价格（分）
  */
 @property (nonatomic, strong) NSNumber * goodsPrice;
-
+@property (nonatomic, strong) NSNumber * price;
 
 /**
  核货状态

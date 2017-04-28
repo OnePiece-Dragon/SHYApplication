@@ -46,4 +46,7 @@
 - (void)hideNetTips;
 
 
+- (void)loadRefreshData:(id)view;
+- (void)loadMoreData:(id)view;
+
 @end

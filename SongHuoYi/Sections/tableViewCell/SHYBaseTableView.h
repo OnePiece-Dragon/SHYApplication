@@ -14,9 +14,9 @@
 
 @interface SHYBaseTableView : UITableView<DZNEmptyDataSetSource,DZNEmptyDataSetDelegate>
 
-@property (nonatomic, strong) NSString * emptyBtnString;
+@property (nonatomic, strong, nonnull) NSString * emptyBtnString;
 
-@property (nonatomic, copy) void (^emptyRequestAgainBlock)();
+@property (nonatomic, copy, nonnull) void (^emptyRequestAgainBlock)();
 
 - (instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style target:(nullable id)target;
 

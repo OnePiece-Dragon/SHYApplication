@@ -7,14 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SHYRequestApi.h"
 
-@interface SHYBaseViewModel : NSObject
+typedef void(^RequestStatus)(BOOL status);
 
-@property (nonatomic, strong) RACCommand * requestCommand;
-@property (nonatomic, strong) NSDictionary * responseObject;
-@property (nonatomic, strong) NSError * responseError;
+@interface SHYBaseViewModel : NSObject<RequestResultProtocol>
 
 
-- (void)signalRequestUrl:(NSString*)url params:(NSDictionary*)params;
+@property (nonatomic, strong) SHYRequestApi<RequestProtocol> * requestBody;
+
+@property (nonatomic, strong) NSDictionary * successResult;
+@property (nonatomic, strong) NSDictionary * failResult;
+
+- (void)initialize;
+- (void)fetchResponse;
 
 @end

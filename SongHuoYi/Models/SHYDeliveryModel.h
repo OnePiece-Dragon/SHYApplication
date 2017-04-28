@@ -55,7 +55,7 @@
  */
 @property (nonatomic, strong) NSArray<SHYGoodsModel*> * goods;
 
-@property (nonatomic, strong) NSNumber * latitude;
+@property (nonatomic, strong) NSNumber * dimension;
 @property (nonatomic, strong) NSNumber * longitude;
 
 @end

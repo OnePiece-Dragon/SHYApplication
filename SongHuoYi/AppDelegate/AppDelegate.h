@@ -16,8 +16,10 @@
 
 @property (nonatomic, strong) SHYTabBarController * tabBarVC;
 
-@property (nonatomic, strong) SHYLoginModel * loginModel;
 @property (nonatomic, strong) SHYLoginController * loginVC;
+
+- (void)switchToLogin;
+- (void)switchToHome;
 
 @end
 

@@ -54,12 +54,14 @@
 - (void)fetchResponse:(id)responseObj code:(BOOL)code fail:(NSString *)fail {
     [super fetchResponse:responseObj code:code fail:fail];
     if (code) {
-        [self.responseSignal sendNext:responseObj];
+        [self.responseSignal sendNext:@{@"code":@1,
+                                        @"error":fail}];
         [self saveAccount];
     }else {
-        [self.responseSignal sendError:[NSError errorWithDomain:NSCocoaErrorDomain code:0 userInfo:@{@"error":fail}]];
+        [self.responseSignal sendNext:@{@"code":@0,
+                                        @"error":fail}];
     }
-    [self.responseSignal sendCompleted];
+    //[self.responseSignal sendCompleted];
 }
 
 - (void)saveAccount {
@@ -71,7 +73,7 @@
         UserDefaultSetObjectForKey(@0, USER_ISAUTO_LOGIN);
     }
     
-    UserDefaultSetObjectForKey(@1, USER_LOGIN_STATUS);
+    //UserDefaultSetObjectForKey(@1, USER_LOGIN_STATUS);
     
     //NSString *plistPath = PLIST_Name(@"userMessage");
     //NSDictionary * dic = [NSDictionary dictionaryWithContentsOfFile:plistPath];

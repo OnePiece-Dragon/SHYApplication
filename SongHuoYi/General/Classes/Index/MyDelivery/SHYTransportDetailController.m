@@ -23,7 +23,7 @@
     // Do any additional setup after loading the view.
     kWeakSelf(self);
     
-    self.naviTitle = @"核货详情";
+    self.naviTitle = @"配送详情";
     [self setRightItem:@"daohang" rightBlock:^{
         [weakself mapGuide];
     }];
@@ -79,7 +79,7 @@
     label1.titleLabel.text = model.shopName;
     label2.titleLabel.text = [NSString stringWithFormat:@"订单号：%@",model.orderId];
     label3.titleLabel.text = [NSString stringWithFormat:@"代收：%.2f元",model.collectMoney.floatValue/100.0];
-    label4.titleLabel.text = [NSString stringWithFormat:@"姓名：%@",@"张三"];
+    label4.titleLabel.text = [NSString stringWithFormat:@"收货方：%@",model.shopName];
     label5.titleLabel.text = [NSString stringWithFormat:@"电话：%@",model.shopPhone];
     label6.titleLabel.text = [NSString stringWithFormat:@"地址：%@",model.targetAddr];
     if ([model.collectMoney floatValue] == 0) {
@@ -115,7 +115,7 @@
     return self.dataArray.count;
 }
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    kWeakSelf(self);
+    
     if (indexPath.section == 0) {
         SHYTaskCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
         if (!cell) {
@@ -138,11 +138,11 @@
         if (indexPath.row == 0) {
             [cell setTopLineHiden:NO bottomLineHiden:NO];
         }
-        
-        [cell setLeftTopStr:@"油菜"
-              leftBottomStr:@"下单数：2.0（斤）"
-                rightTopStr:@"单价：2.8元"
-             rightBottomStr:@"总价：200元"];
+        SHYGoodsModel * model = self.dataArray[indexPath.row];
+        [cell setLeftTopStr:model.goodsName
+              leftBottomStr:[NSString stringWithFormat:@"单价：%.2f元",model.price.floatValue/100.f]
+                rightTopStr:[NSString stringWithFormat:@"实际配送:%@(%@)",model.actualNum,model.unit]
+             rightBottomStr:[NSString stringWithFormat:@"总价：%.2f元",model.price.floatValue*model.actualNum.floatValue/100.f]];
         
         return cell;
     }
@@ -178,7 +178,7 @@
     if (section == 0) {
         return 0.1f;
     }
-    return 52.f;
+    return 56.f;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     if (section == 1) {
