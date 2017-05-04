@@ -26,7 +26,6 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = BACKGROUND_COLOR;
     _allPage = 1;
-    
     self.navigationItem.titleView = self.titleLabel;
     [self setBackItem:@"back"];
 }

@@ -76,7 +76,7 @@
     VC.lineId = model.lineId;
     VC.canCheckBtnClick = model.nuclearStatus.integerValue > 0?NO:YES;
     VC.backBlock=^(){
-        [weakself resetDataWithRequest];
+        [weakself loadRefreshData:nil];
     };
     [self.navigationController pushViewController:VC animated:YES];
 }
@@ -89,6 +89,7 @@
 - (void)mapModelSwitch:(UIButton*)button {
     if (button.selected) {
         //地图模式
+        _isMap = YES;
         self.taskTableView.hidden = YES;
         self.mapView.hidden = NO;
         self.view = self.mapView;
@@ -120,6 +121,7 @@
         }
     }else {
         //列表模式
+        _isMap = NO;
         self.taskTableView.hidden = NO;
         self.mapView.hidden = YES;
         self.view = self.orginView;
@@ -137,37 +139,39 @@
 }
 
 - (void)loadRefreshData:(id)view {
-    
+    _page = 1;
+    [self.dataArray removeAllObjects];
+    [self requestData];
 }
 
 - (void)loadMoreData:(id)view {
     if (_page < _allPage) {
         _page ++;
         [self requestData];
+    }else {
+        [self.taskTableView noMoreData];
     }
 }
-- (void)resetDataWithRequest {
-    [self.dataArray removeAllObjects];
-    _page = 1;
-    [self requestData];
-}
-
 
 - (void)requestData {
     [self showNetTips:LOADING_TIPS];
     [NetManager post:URL_TASK_LIST
                param:@{@"userId":USER_ID,@"page":@(_page)}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self.taskTableView endRefresh];
                  [self hideNetTips];
-                 self.taskTableView.emptyBtnString = NET_EMPTY_MSG;
+                 
                  if (code) {
                      if (responseObj[@"pages"]) {
                          _allPage = [responseObj[@"pages"] integerValue];
                      }
                      
-                     
-                     [self hideNetTips];
                      [self handleResponseMessage:responseObj];
+                     
+                     if (_isMap) {
+                         [self addAnnotationOnMap];
+                     }
+                     
                  }else{
                      if (_page>1) {
                          _page--;
@@ -178,8 +182,8 @@
                  if (_page>1) {
                      _page--;
                  }
-                 self.taskTableView.emptyBtnString = errorStr;
                  [self hideNetTips];
+                 [self.taskTableView endRefresh];
                  [self showToast:errorStr];
              }];
 }
@@ -195,7 +199,6 @@
         [self.dataArray addObject:model];
     }
     [self.taskTableView reloadData];
-    
 }
 
 - (void)addAnnotationOnMap {
@@ -234,8 +237,8 @@
     label1.titleLabel.text = taskModel.lineName;
     label2.titleLabel.text = [NSString stringWithFormat:@"任务单号：%@",taskModel.tasksId];
     label3.titleLabel.text = [NSString stringWithFormat:@"地址：%@",taskModel.startAddr];
-    label4.titleLabel.text = [NSString stringWithFormat:@"取件任务数：%@",taskModel.orderNum];
-    label5.titleLabel.text = [NSString stringWithFormat:@"商户数量：%@",taskModel.merchantNum];
+    label4.titleLabel.text = [NSString stringWithFormat:@"商品数：%@",taskModel.totalNum];
+    label5.titleLabel.text = [NSString stringWithFormat:@"门店数：%@",taskModel.merchantNum];
     label6.titleLabel.text = [NSString stringWithFormat:@"共计：%@",taskModel.taskDetail];
     
     
@@ -399,9 +402,10 @@
         _taskTableView = [SHYBaseTableView.alloc initWithFrame:CGRectZero style:UITableViewStyleGrouped target:self];
         kWeakSelf(self);
         _taskTableView.backgroundColor = BACKGROUND_COLOR;
-        _taskTableView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData:)];
+        [_taskTableView addRefreshHeader:self action:@selector(loadRefreshData:)];
+        [_taskTableView addRefreshFooter:self action:@selector(loadMoreData:)];
         _taskTableView.emptyRequestAgainBlock = ^(){
-            [weakself resetDataWithRequest];
+            [weakself loadRefreshData:nil];
         };
     }
     return _taskTableView;

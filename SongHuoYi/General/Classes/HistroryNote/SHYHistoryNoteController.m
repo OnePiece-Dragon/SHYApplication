@@ -45,7 +45,6 @@
     [self cancelBackItem];
     self.naviTitle = @"历史运单";
     _page = 1;
-    _allPage = 1;
     [self setTopTimeUI];
     [self.view addSubview:self.historyNoteView];
     
@@ -60,6 +59,8 @@
     if (_page < _allPage) {
         _page ++;
         [self requestData];
+    }else {
+        [self.historyNoteView noMoreData];
     }
 }
 - (void)dateChangeRequest {
@@ -67,6 +68,10 @@
     _allPage = 1;
     [self.dataArray removeAllObjects];
     [self requestData];
+}
+- (void)endRefresh{
+    [self.historyNoteView.mj_header endRefreshing];
+    [self.historyNoteView.mj_footer endRefreshing];
 }
 - (void)requestData {
     //SHYTaskHistoryModel
@@ -76,6 +81,7 @@
                        @"qryTime":self.dateLabel.text,
                        @"page":@(_page)} success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
                            [self hideNetTips];
+                           [self.historyNoteView endRefresh];
                            if (code) {
                                DLog(@"responseObj:%@",responseObj);
                                if (responseObj[@"pages"]) {
@@ -86,13 +92,18 @@
                                    SHYTaskHistoryModel * model = [SHYTaskHistoryModel mj_objectWithKeyValues:dic];
                                    [self.dataArray addObject:model];
                                }
+                               
                                [self.historyNoteView reloadData];
                            }else {
                                [self showToast:failMessag];
                            }
+                           
+                           [self endRefresh];
                        } failure:^(NSString * _Nonnull errorStr) {
                            [self hideNetTips];
                            [self showToast:errorStr];
+                           
+                           [self endRefresh];
                        }];
     /*
     NSDictionary * result=[NSDictionary.alloc initWithContentsOfFile:PLIST_Name(@"history_task")];
@@ -118,15 +129,19 @@
     
     label1.titleLabel.text = taskModel.lineName;
     label2.titleLabel.text = [NSString stringWithFormat:@"任务单号：%@",taskModel.taskId];
-    label3.titleLabel.text = [NSString stringWithFormat:@"地址：%@",taskModel.targetAddr];
-    label4.titleLabel.text = [NSString stringWithFormat:@"取件任务数：%@",@"15个"];
-    label5.titleLabel.text = [NSString stringWithFormat:@"商户数量：%@",@"15个"];
-    label6.titleLabel.text = [NSString stringWithFormat:@"共计：%@",@"12312312421wdawdwadw"];
+    label3.titleLabel.text = [NSString stringWithFormat:@"地址：%@",taskModel.startAddr];
+    label4.titleLabel.text = [NSString stringWithFormat:@"订单数：%@",taskModel.orderNum];
+    label5.titleLabel.text = [NSString stringWithFormat:@"供应商数：%@",taskModel.merchantNum];
+    label6.titleLabel.text = [NSString stringWithFormat:@"共计：%@",taskModel.taskDetail];
 }
 
 - (void)enterToDetail:(SHYTaskHistoryModel*)model {
     SHYHistoryDetailController * VC = [SHYHistoryDetailController.alloc init];
-    VC.historyModel = model;
+    VC.taskId = model.taskId;
+    VC.lineId = model.lineId;
+    
+    VC.shopId = model.shopId;
+    VC.taskCode = model.taskCode;
     [self.navigationController pushViewController:VC animated:YES];
 }
 
@@ -163,7 +178,7 @@
     UILabel * label = [UILabel.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 44)];
     label.textAlignment = NSTextAlignmentCenter;
     
-    label.text = [TimeManager timeWithTimeIntervalString:[[(SHYTaskHistoryModel*)self.dataArray[section] currentTime] stringValue] format:@"HH:mm:ss"];
+    label.text = [TimeManager timeWithTimeIntervalString:[(SHYTaskHistoryModel*)self.dataArray[section] gmtModifly] format:@"HH:mm:ss"];
     
     return label;
 }
@@ -274,11 +289,11 @@
 - (SHYBaseTableView *)historyNoteView {
     if (!_historyNoteView) {
         _historyNoteView = [SHYBaseTableView.alloc initWithFrame:CGRectMake(0, 49, SCREEN_WIDTH, SCREEN_HEIGHT -kStatusBarH - 44 - 49 - 49) style:UITableViewStyleGrouped target:self];
-        _historyNoteView.mj_header = [MJRefreshHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadRefreshData:)];
-        _historyNoteView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData:)];
+        [_historyNoteView addRefreshHeader:self action:@selector(loadRefreshData:)];
+        [_historyNoteView addRefreshFooter:self action:@selector(loadMoreData:)];
         kWeakSelf(self);
         _historyNoteView.emptyRequestAgainBlock = ^(){
-            [weakself requestData];
+            [weakself loadRefreshData:nil];
         };
     }
     return _historyNoteView;

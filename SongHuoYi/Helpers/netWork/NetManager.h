@@ -10,12 +10,18 @@
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "NetClient.h"
 #import "UrlMacro.h"
-//@"http://127.0.0.1"
+#import "SHYBaseTableView.h"
+#import <AFNetworking/AFNetworking.h>
+
 #define BaseUrl BASE_URL
 
 #define FAIL_REQUEST    @"fail"
 
-@interface NetManager : NSObject
+@interface NetManager : AFHTTPSessionManager
+
++ (nonnull AFHTTPSessionManager*)manager;
+//emptyState
+@property (nonatomic, weak) id<EmptyRequestDelegate> emptyTableDelegate;
 
 + (nonnull RACSignal *)signalRequestUrl:(nonnull NSString *)url params:(nonnull NSDictionary *)params;
 

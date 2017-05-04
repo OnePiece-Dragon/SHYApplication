@@ -200,12 +200,12 @@
 //        make.left.right.top.equalTo(weakself.view);
 //        make.height.mas_equalTo(@56);
 //    }];
-    
+    [self.view addSubview:self.receiveDoneBtn];
     [self.view addSubview:self.checkGoodsListView];
     [self.checkGoodsListView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(weakself.view);
         make.top.equalTo(weakself.view).offset(8);
-        make.bottom.equalTo(weakself.view);
+        make.bottom.equalTo(weakself.view).offset(-(52+20));
     }];
 }
 
@@ -281,6 +281,7 @@
     view.backgroundColor = COLOR_WHITE;
     return view;
 }
+/*
 - (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     UIView * view = [UIView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 110)];
     view.backgroundColor = BACKGROUND_COLOR;
@@ -290,7 +291,7 @@
     [view addSubview:self.receiveDoneBtn];
     
     return view;
-}
+}*/
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 60.f;
@@ -334,7 +335,7 @@
 }
 - (UIButton *)receiveDoneBtn {
     if (!_receiveDoneBtn) {
-        _receiveDoneBtn = [Factory createBtn:CGRectMake(20, 60, SCREEN_WIDTH - 40, 44) title:@"一键核货" type:UIButtonTypeCustom target:self action:@selector(receiveBoxDone)];
+        _receiveDoneBtn = [Factory createBtn:CGRectMake(40, SCREEN_HEIGHT -kStatusBarH - kNavigationBarH- 48 - 20, SCREEN_WIDTH - 80, 44) title:@"一键核货" type:UIButtonTypeCustom target:self action:@selector(receiveBoxDone)];
         [_receiveDoneBtn setTitle:@"已核货" forState:UIControlStateDisabled];
         [_receiveDoneBtn setBackgroundImage:[UIImage imageWithColor:[UIColor grayColor]] forState:UIControlStateDisabled];
         [_receiveDoneBtn setBackgroundImage:[UIImage imageWithColor:BUTTON_COLOR] forState:UIControlStateNormal];

@@ -124,11 +124,12 @@
                             rightIcon:nil];
         cell.contentLabel.rightLabel.textAlignment = NSTextAlignmentRight;
         UIImageView * callImageView = [UIImageView.alloc initWithImage:ImageNamed(@"calldianhua")];
+        callImageView.userInteractionEnabled = YES;
         [cell.contentLabel addSubview:callImageView];
         
         [callImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(weakView);
-            make.right.equalTo(weakView.mas_right).offset(-SCREEN_WIDTH/3);
+            make.right.equalTo(weakView.mas_right).offset(-120);
             make.size.mas_equalTo(CGSizeMake(24, 24));
         }];
         

@@ -19,8 +19,6 @@
 
 @property (nonatomic, strong) RACSignal * validSignal;
 
-@property (nonatomic, strong) RACSubject * responseSignal;
-
 - (void)saveAccount;
 
 @end

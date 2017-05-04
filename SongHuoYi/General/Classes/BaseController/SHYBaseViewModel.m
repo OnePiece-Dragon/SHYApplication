@@ -22,13 +22,26 @@
     }
     return self;
 }
-
+- (instancetype)initWithTarget:(id)target {
+    self.target = target;
+    return [self init];
+}
+- (instancetype)initWithTarget:(id)target view:(id)view model:(id)model {
+    return [self initWithTarget:target];
+}
+- (void)initialize{
+    self.responseSignal = [RACSubject subject];
+}
 - (void)fetchResponse {
     
 }
 
 - (void)fetchResponse:(id)responseObj code:(BOOL)code fail:(NSString *)fail {
-    self.successResult = responseObj;
+    if (code) {
+        self.successResult = responseObj;
+    }else {
+        self.failResult = @{@"error":fail};
+    }
 }
 
 - (SHYRequestApi *)requestBody{

@@ -25,6 +25,7 @@
 }
 
 - (void)initialize {
+    [super initialize];
     self.username = self.model.userPhone;
     self.password = self.model.userPassword;
     self.isAutoLogin = self.model.isAutoLogin;
@@ -40,7 +41,6 @@
         return @(userNum.integerValue>10 && passwordNum.integerValue>5);
     }];
     
-    self.responseSignal = [RACSubject subject];
 }
 
 - (void)fetchResponse {
@@ -54,12 +54,10 @@
 - (void)fetchResponse:(id)responseObj code:(BOOL)code fail:(NSString *)fail {
     [super fetchResponse:responseObj code:code fail:fail];
     if (code) {
-        [self.responseSignal sendNext:@{@"code":@1,
-                                        @"error":fail}];
+        [self.responseSignal sendNext:@YES];
         [self saveAccount];
     }else {
-        [self.responseSignal sendNext:@{@"code":@0,
-                                        @"error":fail}];
+        [self.responseSignal sendNext:@NO];
     }
     //[self.responseSignal sendCompleted];
 }

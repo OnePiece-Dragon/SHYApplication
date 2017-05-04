@@ -41,7 +41,8 @@
        param:(NSDictionary *)param
      success:(nonnull void(^)(NSDictionary*_Nonnull responseObj,NSString * _Nonnull failMessag,BOOL code))success
      failure:(nonnull void(^)(NSString* _Nonnull errorStr))failure {
-    return [[NetManager manager] POST:method
+    NetManager * manager = [NetManager manager];
+    return [manager POST:method
                     parameters:param
                       progress:nil
                        success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
@@ -60,21 +61,9 @@
                            if (![responseObject[@"data"] isEqual:[NSNull null]]){
                                response = responseObject[@"data"];
                            }
+                           
+                           
                            success(response,faileString,s_code);
-                           /*
-                           if ([responseObject[@"errcode"] integerValue] == 0) {
-                               if ([responseObject[@"data"] isEqual:[NSNull null]]) {
-                                   success(nil,nil,YES);
-                               }else {
-                                   success(responseObject[@"data"],nil,YES);
-                               }
-                           }else {
-                               NSString * errMsg = nil;
-                               if (responseObject[@"errmsg"] && ![responseObject[@"errmsg"] isEqual:[NSNull null]]) {
-                                   errMsg = responseObject[@"errmsg"];
-                               }
-                               success(@{FAIL_REQUEST:errMsg},NO);
-                           }*/
                        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                            if ([error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"The request timed out."]) {
                                failure(@"服务器连接超时");

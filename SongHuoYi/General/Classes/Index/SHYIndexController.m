@@ -15,6 +15,8 @@
 #import "SHYReceiveBoxController.h"
 #import "SHYWorkStatusModel.h"
 
+#import "SHYNewTaskController.h"
+
 @interface SHYIndexController ()
 
 {

@@ -47,6 +47,14 @@
 		DF3B75301EAA2E3E00DE9D96 /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = DF3B752F1EAA2E3E00DE9D96 /* UIScrollView+EmptyDataSet.m */; };
 		DF611E841EAE2CE000534AC4 /* SHYFeedBackController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF611E821EAE2CE000534AC4 /* SHYFeedBackController.m */; };
 		DF611E851EAE2CE000534AC4 /* SHYFeedBackController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF611E821EAE2CE000534AC4 /* SHYFeedBackController.m */; };
+		DF8460131EB87A930068E61E /* SHYNewTaskController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF84600C1EB87A930068E61E /* SHYNewTaskController.m */; };
+		DF8460141EB87A930068E61E /* SHYNewTaskController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF84600C1EB87A930068E61E /* SHYNewTaskController.m */; };
+		DF8460151EB87A930068E61E /* SHYTaskListViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DF84600E1EB87A930068E61E /* SHYTaskListViewModel.m */; };
+		DF8460161EB87A930068E61E /* SHYTaskListViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DF84600E1EB87A930068E61E /* SHYTaskListViewModel.m */; };
+		DF8460171EB87A930068E61E /* SHYTaskMapViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8460101EB87A930068E61E /* SHYTaskMapViewModel.m */; };
+		DF8460181EB87A930068E61E /* SHYTaskMapViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8460101EB87A930068E61E /* SHYTaskMapViewModel.m */; };
+		DF8460191EB87A930068E61E /* SHYTaskViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8460121EB87A930068E61E /* SHYTaskViewModel.m */; };
+		DF84601A1EB87A930068E61E /* SHYTaskViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8460121EB87A930068E61E /* SHYTaskViewModel.m */; };
 		DF9677F51E8E343600D80644 /* SongHuoYiTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9677F41E8E343600D80644 /* SongHuoYiTests.m */; };
 		DF9678001E8E343600D80644 /* SongHuoYiUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9677FF1E8E343600D80644 /* SongHuoYiUITests.m */; };
 		DF9694CC1EB07ED200EA6C02 /* TPKeyboardAvoidingCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9694C51EB07ED200EA6C02 /* TPKeyboardAvoidingCollectionView.m */; };
@@ -262,6 +270,14 @@
 		DF611E811EAE2CE000534AC4 /* SHYFeedBackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYFeedBackController.h; sourceTree = "<group>"; };
 		DF611E821EAE2CE000534AC4 /* SHYFeedBackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYFeedBackController.m; sourceTree = "<group>"; };
 		DF7B9C3D1E9C7AA500FC2669 /* VendorsHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VendorsHeader.h; sourceTree = "<group>"; };
+		DF84600B1EB87A930068E61E /* SHYNewTaskController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYNewTaskController.h; sourceTree = "<group>"; };
+		DF84600C1EB87A930068E61E /* SHYNewTaskController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYNewTaskController.m; sourceTree = "<group>"; };
+		DF84600D1EB87A930068E61E /* SHYTaskListViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYTaskListViewModel.h; sourceTree = "<group>"; };
+		DF84600E1EB87A930068E61E /* SHYTaskListViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYTaskListViewModel.m; sourceTree = "<group>"; };
+		DF84600F1EB87A930068E61E /* SHYTaskMapViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYTaskMapViewModel.h; sourceTree = "<group>"; };
+		DF8460101EB87A930068E61E /* SHYTaskMapViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYTaskMapViewModel.m; sourceTree = "<group>"; };
+		DF8460111EB87A930068E61E /* SHYTaskViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYTaskViewModel.h; sourceTree = "<group>"; };
+		DF8460121EB87A930068E61E /* SHYTaskViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYTaskViewModel.m; sourceTree = "<group>"; };
 		DF9677D71E8E343500D80644 /* SongHuoYi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SongHuoYi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF9677F01E8E343600D80644 /* SongHuoYiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SongHuoYiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF9677F41E8E343600D80644 /* SongHuoYiTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SongHuoYiTests.m; sourceTree = "<group>"; };
@@ -567,6 +583,7 @@
 			children = (
 				DF24E92F1E9F6FB400804E94 /* SHYTaskController.h */,
 				DF24E9301E9F6FB400804E94 /* SHYTaskController.m */,
+				DF84600A1EB87A690068E61E /* newTask */,
 				DF24E92B1E9F6FB400804E94 /* SHYCheckGoodsDetailController.h */,
 				DF24E92C1E9F6FB400804E94 /* SHYCheckGoodsDetailController.m */,
 				DF24E92D1E9F6FB400804E94 /* SHYReceiveBoxController.h */,
@@ -630,6 +647,21 @@
 			children = (
 			);
 			path = Toast;
+			sourceTree = "<group>";
+		};
+		DF84600A1EB87A690068E61E /* newTask */ = {
+			isa = PBXGroup;
+			children = (
+				DF84600B1EB87A930068E61E /* SHYNewTaskController.h */,
+				DF84600C1EB87A930068E61E /* SHYNewTaskController.m */,
+				DF84600D1EB87A930068E61E /* SHYTaskListViewModel.h */,
+				DF84600E1EB87A930068E61E /* SHYTaskListViewModel.m */,
+				DF84600F1EB87A930068E61E /* SHYTaskMapViewModel.h */,
+				DF8460101EB87A930068E61E /* SHYTaskMapViewModel.m */,
+				DF8460111EB87A930068E61E /* SHYTaskViewModel.h */,
+				DF8460121EB87A930068E61E /* SHYTaskViewModel.m */,
+			);
+			path = newTask;
 			sourceTree = "<group>";
 		};
 		DF9677CE1E8E343500D80644 = {
@@ -1345,6 +1377,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF8460191EB87A930068E61E /* SHYTaskViewModel.m in Sources */,
 				DF9694DE1EB0A19F00EA6C02 /* SHYHelpCenterModel.m in Sources */,
 				DFBC34B21E949E1A000C7402 /* Factory.m in Sources */,
 				DFBC34801E93A7B9000C7402 /* SHYTabBarController.m in Sources */,
@@ -1375,6 +1408,7 @@
 				DFBC34B61E949E1A000C7402 /* TimeManager.m in Sources */,
 				DFD6EDBB1EB32646003392E6 /* SHYLoginModel.m in Sources */,
 				DF24E9541E9F6FB400804E94 /* SHYTransportController.m in Sources */,
+				DF8460131EB87A930068E61E /* SHYNewTaskController.m in Sources */,
 				DFE16DCC1E9B7FE300487C6E /* SHYDeliveryCell.m in Sources */,
 				DFE16D821E9B315000487C6E /* SHYTaskHistoryModel.m in Sources */,
 				DFBC34B81E949E1A000C7402 /* NetManager.m in Sources */,
@@ -1382,6 +1416,7 @@
 				DFD6EDBD1EB32646003392E6 /* SHYLoginViewModel.m in Sources */,
 				DFE16DCE1E9B7FE300487C6E /* SHYGoodsCell.m in Sources */,
 				DFD6EDB01EB325E5003392E6 /* SHYActionManager.m in Sources */,
+				DF8460151EB87A930068E61E /* SHYTaskListViewModel.m in Sources */,
 				DFD925E81E973E4900DFDF32 /* SHYCheckGoodsDetailModel.m in Sources */,
 				DFBC34A61E949590000C7402 /* CustomTextField.m in Sources */,
 				DF24E9681E9F6FB400804E94 /* SHYChangePasswordController.m in Sources */,
@@ -1395,6 +1430,7 @@
 				DFAE44411E967622002C20F6 /* SHYTaskAnnotationModel.m in Sources */,
 				DFE16DD21E9B7FE300487C6E /* SHYIndexCell.m in Sources */,
 				DF3B75301EAA2E3E00DE9D96 /* UIScrollView+EmptyDataSet.m in Sources */,
+				DF8460171EB87A930068E61E /* SHYTaskMapViewModel.m in Sources */,
 				DFB9CDF21E98C4CD004A157E /* SHYSegmentView.m in Sources */,
 				DFE16D861E9B326200487C6E /* SHYCategoryModel.m in Sources */,
 				DFE16DC81E9B7FE300487C6E /* SHYBaseTableView.m in Sources */,
@@ -1433,6 +1469,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DFE16D871E9B326200487C6E /* SHYCategoryModel.m in Sources */,
+				DF8460181EB87A930068E61E /* SHYTaskMapViewModel.m in Sources */,
 				DFE16D831E9B315000487C6E /* SHYTaskHistoryModel.m in Sources */,
 				DFE16D7F1E9B1DB800487C6E /* DatePickerView.m in Sources */,
 				DF9694DB1EB0A18400EA6C02 /* SHYHelpCenterCell.m in Sources */,
@@ -1450,6 +1487,7 @@
 				DFD925FC1E9762EA00DFDF32 /* SHYTwoSideLabel.m in Sources */,
 				DF24E9611E9F6FB400804E94 /* SHYMapNaviController.m in Sources */,
 				DF9694E41EB0A93A00EA6C02 /* UIView+Toast.m in Sources */,
+				DF8460141EB87A930068E61E /* SHYNewTaskController.m in Sources */,
 				DFBFE44C1EA73AB400EA1406 /* LaunchIntroductionView.m in Sources */,
 				DFBC347D1E93A7B9000C7402 /* SHYNavigtionBar.m in Sources */,
 				DFBC34A71E949590000C7402 /* CustomTextField.m in Sources */,
@@ -1483,6 +1521,7 @@
 				DFD6EDAB1EB1FEE9003392E6 /* SHYHistoryDetailController.m in Sources */,
 				DFBC34B31E949E1A000C7402 /* Factory.m in Sources */,
 				DFBC349F1E949151000C7402 /* InputTextField.m in Sources */,
+				DF8460161EB87A930068E61E /* SHYTaskListViewModel.m in Sources */,
 				DFE16DC91E9B7FE300487C6E /* SHYBaseTableView.m in Sources */,
 				DFBFE3E41EA470F700EA1406 /* NetClient.m in Sources */,
 				DFD925F31E974C2000DFDF32 /* SHYNuclearCategoryModel.m in Sources */,
@@ -1495,6 +1534,7 @@
 				DFBC347F1E93A7B9000C7402 /* SHYTabBar.m in Sources */,
 				DF24E94D1E9F6FB400804E94 /* UIImage+Ext.m in Sources */,
 				DFBC34851E93A7D4000C7402 /* SHYTabBarItem.m in Sources */,
+				DF84601A1EB87A930068E61E /* SHYTaskViewModel.m in Sources */,
 				DFD6EDBA1EB32646003392E6 /* SHYLoginController.m in Sources */,
 				DFBC34341E93702E000C7402 /* SHYBaseModel.m in Sources */,
 				DFD6EDBE1EB32646003392E6 /* SHYLoginViewModel.m in Sources */,

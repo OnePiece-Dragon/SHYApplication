@@ -15,12 +15,12 @@
  任务单号
  */
 @property (nonatomic, strong) NSNumber * taskId;
-
+@property (nonatomic, strong) NSString * taskCode;
 /**
  线路名称
  */
 @property (nonatomic, strong) NSString * lineName;
-
+@property (nonatomic, strong) NSNumber * lineId;
 /**
  商品名称
  */
@@ -35,17 +35,29 @@
  收件人名
  */
 @property (nonatomic, strong) NSString * shopName;
+@property (nonatomic, strong) NSNumber * shopId;
 
 /**
  目标地址
  */
 @property (nonatomic, strong) NSString * targetAddr;
+@property (nonatomic, strong) NSString * startAddr;
+@property (nonatomic, strong) NSString * senderAddr;
 
 /**
  当前时间
  */
 @property (nonatomic, strong) NSNumber * currentTime;
-
+@property (nonatomic, strong) NSString * exceptTime;
+@property (nonatomic, strong) NSString * gmtModifly;
 @property (nonatomic, strong) NSArray * category;
+
+//取件任务数
+@property (nonatomic, strong) NSNumber * orderNum;
+//商户数量
+@property (nonatomic, strong) NSNumber * merchantNum;
+
+
+@property (nonatomic, strong) NSString * taskDetail;
 
 @end

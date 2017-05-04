@@ -38,7 +38,9 @@
 /**
  商品描述
  */
-@property (nonatomic, strong) NSString * orderNum;
+@property (nonatomic, strong) NSNumber * orderNum;
+//商品数
+@property (nonatomic, strong) NSNumber * totalNum;
 
 /**
  商品数量

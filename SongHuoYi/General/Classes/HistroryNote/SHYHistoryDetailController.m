@@ -12,6 +12,10 @@
 
 @interface SHYHistoryDetailController ()
 
+{
+    NSInteger _page;
+}
+
 @end
 
 @implementation SHYHistoryDetailController
@@ -20,16 +24,80 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.naviTitle = @"运单详情";
-    [self handleData];
-    //[self setUI];
+    _page = 1;
+    [self historyDetailRequest];
+    [self setUI];
 }
-- (void)handleData{
-    for (NSDictionary * dic in self.historyModel.category) {
+- (void)loadMoreData:(id)view {
+    if (_page<_allPage) {
+        _page++;
+        [self historyGoodsCategoryRequest];
+    }else {
+        [self.checkGoodsDetailView noMoreData];
+    }
+}
+- (void)historyDetailRequest{
+    [self showNetTips:LOADING_TIPS];
+    [NetManager post:URL_TASK_HISTORY_DETAIL
+               param:@{@"userId":USER_ID,
+                       @"taskId":self.taskId,
+                       @"lineId":self.lineId,
+                       @"shopId":self.shopId}
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self hideNetTips];
+                 if (code) {
+                     //
+                     DLog(@"detail_responseObj:%@",responseObj);
+                     self.historyModel = [SHYTaskHistoryModel mj_objectWithKeyValues:responseObj];
+                     [self historyGoodsCategoryRequest];
+                 }else {
+                     [self showToast:failMessag];
+                 }
+             } failure:^(NSString * _Nonnull errorStr) {
+                 [self hideNetTips];
+                 [self showToast:errorStr];
+             }];
+}
+- (void)historyGoodsCategoryRequest {
+    [self showNetTips:LOADING_TIPS];
+    [NetManager post:URL_TASK_HISTORY_GOODS_INFO
+               param:@{@"shopId":self.shopId,
+                       @"taskCode":self.taskCode,
+                       @"page":@(_page)}
+             success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self.checkGoodsDetailView endRefresh];
+                 [self hideNetTips];
+                 if (code) {
+                     //
+                     if (responseObj[@"pages"]) {
+                         _allPage = [responseObj[@"pages"] integerValue];
+                     }
+                     [self handleData:responseObj];
+                 }else {
+                     if (_page>1) {
+                         _page--;
+                     }
+                     [self showToast:failMessag];
+                 }
+             } failure:^(NSString * _Nonnull errorStr) {
+                 if (_page>1) {
+                     _page--;
+                 }
+                 [self.checkGoodsDetailView endRefresh];
+                 [self hideNetTips];
+                 [self showToast:errorStr];
+             }];
+}
+- (void)handleData:(NSDictionary*)responseObj{
+    DLog(@"detialResponseObj:%@",responseObj);
+    if (responseObj[@"pages"]) {
+        _allPage = [responseObj[@"pages"] integerValue];
+    }
+    for (NSDictionary * dic in responseObj[@"rows"]) {
         SHYNuclearCategoryModel * category_model = [SHYNuclearCategoryModel mj_objectWithKeyValues:dic];
         [self.dataArray addObject:category_model];
     }
-    [self setUI];
-    //[self.checkGoodsDetailView reloadData];
+    [self.checkGoodsDetailView reloadData];
 }
 - (void)setUI {
     kWeakSelf(self);
@@ -59,17 +127,27 @@
     
     label1.titleLabel.text = model.lineName;
     label2.titleLabel.text = [NSString stringWithFormat:@"任务单号：%@",model.taskId];
-    label3.titleLabel.text = [NSString stringWithFormat:@"地址：%@",model.targetAddr];
-    label4.titleLabel.text = [NSString stringWithFormat:@"取件任务数：%@",@"15个"];
-    label5.titleLabel.text = [NSString stringWithFormat:@"商户数量：%@",@"15个"];
-    label6.titleLabel.text = [NSString stringWithFormat:@"共计：%@",@"12312312421wdawdwadw"];
+    label3.titleLabel.text = [NSString stringWithFormat:@"地址：%@",model.senderAddr];
+    label4.titleLabel.text = [NSString stringWithFormat:@"订单数：%@",model.orderNum];
+    label5.titleLabel.text = [NSString stringWithFormat:@"供应商数：%@",model.merchantNum];
+    label6.titleLabel.text = [NSString stringWithFormat:@"共计：%@",model.taskDetail];
 }
 #pragma mark -tableViewDataSource-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    NSInteger section = 0;
+    if (self.historyModel) {
+        section ++;
+    }
+    if (self.dataArray.count) {
+        section ++;
+    }
+    return section;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 0) {
+    if (self.historyModel) {
+        if (section == 1) {
+            return self.dataArray.count;
+        }
         return 1;
     }
     return self.dataArray.count;
@@ -99,7 +177,7 @@
         return nil;
     }else {
         SHYNuclearCategoryModel * model = self.dataArray[indexPath.row];
-        NSInteger goodsCount = model.goods.count;
+        NSInteger goodsCount = model.goods.count+1;
         //货物种类
         SHYGoodsCell * cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"SHYGoodsCell_CAT:%ld",goodsCount]];
         if (!cell) {
@@ -150,9 +228,16 @@
     if (!_checkGoodsDetailView) {
         _checkGoodsDetailView = [SHYBaseTableView.alloc initWithFrame:CGRectZero style:UITableViewStyleGrouped target:self];
         _checkGoodsDetailView.backgroundColor = BACKGROUND_COLOR;
+        [_checkGoodsDetailView addRefreshFooter:self action:@selector(loadMoreData:)];
     }
     return _checkGoodsDetailView;
 }
+//- (SHYTaskHistoryModel *)historyModel{
+//    if (!_historyModel) {
+//        _historyModel = [SHYTaskHistoryModel.alloc init];
+//    }
+//    return _historyModel;
+//}
 - (NSMutableArray<SHYNuclearCategoryModel *> *)dataArray {
     if (!_dataArray) {
         _dataArray = [NSMutableArray array];

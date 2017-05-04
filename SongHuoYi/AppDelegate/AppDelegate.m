@@ -188,6 +188,7 @@
 
 - (void)switchToLogin {
     UserDefaultSetObjectForKey(@0, USER_LOGIN_STATUS);
+    [SHYUserModel shareUserMsg].status = @0;
     self.window.rootViewController = self.loginVC;
 }
 - (void)switchToHome {

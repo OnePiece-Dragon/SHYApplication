@@ -98,6 +98,8 @@
     if (_page<_allPage) {
         _page++;
         [self requestNuclearCategoryData];
+    }else {
+        [self.checkGoodsDetailView noMoreData];
     }
 }
 
@@ -156,6 +158,7 @@
                        @"lineId":self.lineId,
                        @"page":@(_page)}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self.checkGoodsDetailView endRefresh];
                  [self hideNetTips];
                  if (code) {
                      if (responseObj[@"pages"]) {
@@ -173,6 +176,7 @@
                  if (_page>1) {
                      _page--;
                  }
+                 [self.checkGoodsDetailView endRefresh];
                  [self hideNetTips];
                  [self showToast:errorStr];
              }];
@@ -203,7 +207,7 @@
     [self.view addSubview:self.startSendGoods];
     [self.checkGoodsDetailView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.equalTo(weakself.view);
-        make.bottom.equalTo(weakself.view).offset(-52);
+        make.bottom.equalTo(weakself.view).offset(-(52+20));
     }];
     
     if (_canCheckBtnClick == YES) {
@@ -413,7 +417,7 @@
 - (SHYBaseTableView *)checkGoodsDetailView {
     if (!_checkGoodsDetailView) {
         _checkGoodsDetailView = [SHYBaseTableView.alloc initWithFrame:CGRectZero style:UITableViewStyleGrouped target:self];
-        _checkGoodsDetailView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData:)];
+        [_checkGoodsDetailView addRefreshFooter:self action:@selector(loadMoreData:)];
         _checkGoodsDetailView.backgroundColor = BACKGROUND_COLOR;
     }
     return _checkGoodsDetailView;
@@ -426,7 +430,7 @@
 }
 - (UIButton *)startSendGoods {
     if (!_startSendGoods) {
-        UIButton * startSendGoods = [Factory createBtn:CGRectMake(40, SCREEN_HEIGHT -kStatusBarH - kNavigationBarH- 48, SCREEN_WIDTH - 80, 44) title:@"一键核货" type:UIButtonTypeCustom target:self action:@selector(sendGoodsBtnClick)];
+        UIButton * startSendGoods = [Factory createBtn:CGRectMake(40, SCREEN_HEIGHT -kStatusBarH - kNavigationBarH- 48 - 20, SCREEN_WIDTH - 80, 44) title:@"一键核货" type:UIButtonTypeCustom target:self action:@selector(sendGoodsBtnClick)];
         startSendGoods.layer.cornerRadius = 8.f;
         startSendGoods.clipsToBounds = YES;
         [startSendGoods setTitle:@"已核货" forState:UIControlStateDisabled];

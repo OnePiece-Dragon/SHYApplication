@@ -39,6 +39,8 @@
     if (_page<_allPages) {
         _page++;
         [self messageListRequest];
+    }else{
+        [self.messageView noMoreData];
     }
 }
 - (void)loadRefreshData:(id)view {
@@ -90,7 +92,7 @@
     }
     SHYMessageModel * model = self.messageList[indexPath.row];
     cell.titleLabel.text = model.messTitle;
-    
+    cell.infoLabel.text = model.messInfo;
     return cell;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -99,7 +101,9 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     return 0.1f;
 }
-
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 90.f;
+}
 #pragma mark -Lazing-
 - (SHYBaseTableView *)messageView {
     if (!_messageView) {
@@ -108,7 +112,7 @@
         _messageView.emptyRequestAgainBlock = ^(){
             [weakself loadRefreshData:nil];
         };
-        _messageView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadRefreshData:)];
+        [_messageView addRefreshFooter:self action:@selector(loadMoreData:)];
     }
     return _messageView;
 }

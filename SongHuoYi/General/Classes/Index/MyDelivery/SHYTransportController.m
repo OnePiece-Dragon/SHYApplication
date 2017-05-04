@@ -74,11 +74,15 @@
             _leftPage++;
             DLog(@"_leftPage:%ld",_leftPage);
             [self requestDeliveryingData];
+        }else{
+            [self.deliveryingView noMoreData];
         }
     }else if (view == self.deliveryDoneView) {
         if (_rightPage<_rightAllPage) {
             _rightPage++;
             [self requestDeliveryDoneData];
+        }else {
+            [self.deliveryDoneView noMoreData];
         }
     }
 }
@@ -102,6 +106,7 @@
                        @"curAddr":@"",
                        @"page":@(_leftPage)}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self.deliveryingView endRefresh];
                  [self hideNetTips];
                    if (code) {
                        DLog(@"responseObj_ing:%@",responseObj);
@@ -118,6 +123,7 @@
                            [self addAnnotationOnMap];
                        }
                        
+                       
                        [self.deliveryingView reloadData];
                        
                    }else {
@@ -131,6 +137,7 @@
                  if (_leftPage>1) {
                      _leftPage--;
                  }
+                 [self.deliveryingView endRefresh];
                  [self hideNetTips];
                  [self showToast:errorStr];
              }];
@@ -147,6 +154,7 @@
                        @"curAddr":@"",
                        @"page":@(_rightPage)}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self.deliveryDoneView endRefresh];
                  if (code) {
                      [self hideNetTips];
                      DLog(@"responseObj_Done:%@",responseObj);
@@ -171,6 +179,7 @@
                  if (_rightPage>1) {
                      _rightPage--;
                  }
+                 [self.deliveryDoneView endRefresh];
                  [self hideNetTips];
                  [self showToast:errorStr];
              }];
@@ -557,9 +566,15 @@
     if (!_deliveryingView) {
         _deliveryingView=[SHYBaseTableView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.segmentContentView.height) style:UITableViewStyleGrouped target:self];
         kWeakSelf(self);
-        _deliveryingView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingBlock:^{
-            [weakself loadMoreData:weakself.deliveryDoneView];
+        [_deliveryingView addRefreshHeader:^{
+            [weakself loadRefreshData:weakself.deliveryingView];
         }];
+        [_deliveryingView addRefreshFooter:^{
+            [weakself loadMoreData:weakself.deliveryingView];
+        }];
+        _deliveryingView.emptyRequestAgainBlock=^{
+            [weakself loadRefreshData:weakself.deliveryingView];
+        };
     }
     return _deliveryingView;
 }
@@ -567,9 +582,15 @@
     if (!_deliveryDoneView) {
         _deliveryDoneView = [SHYBaseTableView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, self.segmentContentView.height) style:UITableViewStyleGrouped target:self];
         kWeakSelf(self);
-        _deliveryDoneView.mj_footer = [MJRefreshAutoFooter footerWithRefreshingBlock:^{
+        [_deliveryDoneView addRefreshHeader:^{
+            [weakself loadRefreshData:weakself.deliveryDoneView];
+        }];
+        [_deliveryDoneView addRefreshFooter:^{
             [weakself loadMoreData:weakself.deliveryDoneView];
         }];
+        _deliveryDoneView.emptyRequestAgainBlock=^{
+            [weakself loadRefreshData:weakself.deliveryDoneView];
+        };
     }
     return _deliveryDoneView;
 }

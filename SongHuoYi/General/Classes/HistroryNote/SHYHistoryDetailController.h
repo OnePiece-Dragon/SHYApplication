@@ -12,9 +12,18 @@
 
 @interface SHYHistoryDetailController : SHYBaseController
 
-@property (nonatomic, strong) SHYTaskHistoryModel * historyModel;
+@property (nonatomic, strong) NSNumber * taskId;
+@property (nonatomic, strong) NSNumber * lineId;
+
+@property (nonatomic, strong) NSNumber * shopId;
+@property (nonatomic, strong) NSString * taskCode;
+
 
 @property (nonatomic, strong) SHYBaseTableView * checkGoodsDetailView;
+
+
+@property (nonatomic, strong) SHYTaskHistoryModel * historyModel;
 @property (nonatomic, strong) NSMutableArray<SHYNuclearCategoryModel*> * dataArray;
+
 
 @end

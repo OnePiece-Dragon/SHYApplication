@@ -11,5 +11,6 @@
 @interface SHYMessageCell : SHYBaseCell
 
 @property (nonatomic, strong) UILabel * titleLabel;
+@property (nonatomic, strong) UILabel * infoLabel;
 
 @end

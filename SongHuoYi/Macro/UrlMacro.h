@@ -48,6 +48,8 @@
 #define URL_TASK_HISTORY            @"/app/task/history/list"
 //历史运单详情
 #define URL_TASK_HISTORY_DETAIL     @"/app/task/wayorder/list"
+//历史运单详情获取商品信息
+#define URL_TASK_HISTORY_GOODS_INFO @"/app/history/ship/goodsInfo"
 
 //帮助中心
 #define URL_HELPER_CENTER           @"/app/personal/helper/list"

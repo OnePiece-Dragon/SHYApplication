@@ -12,12 +12,26 @@
 
 #define cellID @"baseCell"
 
-@interface SHYBaseTableView : UITableView<DZNEmptyDataSetSource,DZNEmptyDataSetDelegate>
+@protocol EmptyRequestDelegate <NSObject>
+
+-(void)emptyRequestAgainWithState:(nonnull NSString*)state;
+
+@end
+
+@interface SHYBaseTableView : UITableView<DZNEmptyDataSetSource,DZNEmptyDataSetDelegate,EmptyRequestDelegate>
 
 @property (nonatomic, strong, nonnull) NSString * emptyBtnString;
 
 @property (nonatomic, copy, nonnull) void (^emptyRequestAgainBlock)();
 
-- (instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style target:(nullable id)target;
+- (_Nonnull instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style target:(_Nonnull id)target;
+
+- (void)addRefreshHeader:(_Nonnull id)target action:(_Nonnull SEL)action;
+- (void)addRefreshFooter:(_Nonnull id)target action:(_Nonnull SEL)action;
+- (void)addRefreshHeader:( void(^ _Nonnull )())block;
+- (void)addRefreshFooter:( void(^ _Nonnull )())block;
+
+- (void)endRefresh;
+- (void)noMoreData;
 
 @end

@@ -93,11 +93,11 @@
     }];
     [viewModel.responseSignal subscribeNext:^(id  _Nullable x) {
         [self hideNetTips];
-        if ([[x objectForKey:@"code"] intValue] == 0) {
-            [self showToast:[x objectForKey:@"error"]];
-            return ;
+        if (x) {
+            [APP_DELEGATE switchToHome];
+        }else {
+            [self showToast:viewModel.failResult[@"error"]];
         }
-        [APP_DELEGATE switchToHome];
     }];
 }
 

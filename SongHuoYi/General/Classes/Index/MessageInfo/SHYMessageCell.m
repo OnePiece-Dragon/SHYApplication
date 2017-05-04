@@ -12,11 +12,21 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if ([super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        self.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+        self.infoLabel.font = kFont(14);
+        
+        self.infoLabel.textColor = [UIColor grayColor];
         [self addSubview:self.titleLabel];
-        __weak typeof(self) weakSelf = self;
+        kWeakSelf(self);
         [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.top.equalTo(weakSelf).offset(8);
-            make.right.bottom.equalTo(weakSelf).offset(-8);
+            make.left.top.equalTo(weakself).offset(8);
+            make.right.equalTo(weakself).offset(-8);
+            make.height.mas_equalTo(@26);
+        }];
+        [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.equalTo(weakself.titleLabel);
+            make.bottom.equalTo(weakself).offset(-8);
+            make.top.equalTo(weakself.titleLabel.mas_bottom).offset(8);
         }];
     }
     return self;
@@ -26,5 +36,12 @@
         _titleLabel = [UILabel.alloc init];
     }
     return _titleLabel;
+}
+- (UILabel *)infoLabel {
+    if (!_infoLabel) {
+        _infoLabel = [UILabel.alloc init];
+        _infoLabel.numberOfLines = 0;
+    }
+    return _infoLabel;
 }
 @end

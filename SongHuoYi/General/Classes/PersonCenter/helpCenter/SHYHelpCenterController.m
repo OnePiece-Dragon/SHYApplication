@@ -39,6 +39,20 @@
     [self requestData];
 }
 
+- (void)loadRefreshData:(id)view{
+    _page = 1;
+    [self.dataArray removeAllObjects];
+    [self requestData];
+}
+- (void)loadMoreData:(id)view{
+    if (_page<_allPage) {
+        _page ++;
+        [self requestData];
+    }else{
+        [self.tableView noMoreData];
+    }
+}
+
 - (void)requestData {
     [self showNetTips:LOADING_TIPS];
     [NetManager post:URL_HELPER_CENTER
@@ -47,13 +61,22 @@
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
                  [self hideNetTips];
                  if (code) {
-                     NSArray * sourceArray = [SHYHelpCenterModel mj_objectArrayWithKeyValuesArray:responseObj];
+                     if (responseObj[@"pages"]) {
+                         _allPage = [responseObj[@"pages"] integerValue];
+                     }
+                     NSArray * sourceArray = [SHYHelpCenterModel mj_objectArrayWithKeyValuesArray:responseObj[@"rows"]];
                      [self.dataArray addObjectsFromArray:sourceArray];
                      [self.tableView reloadData];
                  }else {
+                     if (_page>1) {
+                         _page--;
+                     }
                      [self showToast:failMessag];
                  }
              } failure:^(NSString * _Nonnull errorStr) {
+                 if (_page>1) {
+                     _page--;
+                 }
                  [self hideNetTips];
                  [self showToast:errorStr];
              }];
@@ -66,15 +89,27 @@
     SHYHelpCenterCell * cell = [tableView dequeueReusableCellWithIdentifier:cellReuseId];
     
     SHYHelpCenterModel * model = self.dataArray[indexPath.row];
-    cell.titleLabel.text = model.proInfo;
+    cell.titleLabel.text = model.proTitle;
+    cell.infoLabel.text = model.proInfo;
     
     return cell;
+}
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 90.f;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 0.1f;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 0.1f;
 }
 
 - (SHYBaseTableView *)tableView {
     if (!_tableView) {
         _tableView = [SHYBaseTableView.alloc initWithFrame:CGRectZero style:UITableViewStyleGrouped target:self];
         [_tableView registerClass:[SHYHelpCenterCell class] forCellReuseIdentifier:cellReuseId];
+        [_tableView addRefreshHeader:self action:@selector(loadRefreshData:)];
+        [_tableView addRefreshFooter:self action:@selector(loadMoreData:)];
     }
     return _tableView;
 }
