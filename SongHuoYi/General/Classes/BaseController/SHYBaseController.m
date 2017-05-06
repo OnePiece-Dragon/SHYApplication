@@ -7,6 +7,7 @@
 //
 
 #import "SHYBaseController.h"
+#import "SHYMessageController.h"
 
 @interface SHYBaseController ()
 
@@ -26,6 +27,8 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = BACKGROUND_COLOR;
     _allPage = 1;
+    self.loadMore = NO;
+    
     self.navigationItem.titleView = self.titleLabel;
     [self setBackItem:@"back"];
 }
@@ -64,6 +67,13 @@
     self.rightBarClick = rightBlock;
 }
 
+    
+    //消息列表
+- (void)messageItem {
+    SHYMessageController * VC = [SHYMessageController.alloc init];
+    [self.navigationController pushViewController:VC animated:YES];
+}
+    
 #pragma mark -navi_action-
 - (void)leftBackItemAction {
     if (self.leftBar) {
@@ -166,8 +176,12 @@
 
 
 
-
-
+- (void)loadRefreshData:(SHYBaseTableView*)view{
+    self.loadMore = NO;
+}
+- (void)loadMoreData:(SHYBaseTableView*)view{
+    self.loadMore = YES;
+}
 
 
 

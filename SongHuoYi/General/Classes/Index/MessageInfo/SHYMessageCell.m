@@ -17,6 +17,8 @@
         
         self.infoLabel.textColor = [UIColor grayColor];
         [self addSubview:self.titleLabel];
+        [self addSubview:self.infoLabel];
+        [self addSubview:self.bottomLine];
         kWeakSelf(self);
         [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.top.equalTo(weakself).offset(8);
@@ -27,6 +29,12 @@
             make.left.right.equalTo(weakself.titleLabel);
             make.bottom.equalTo(weakself).offset(-8);
             make.top.equalTo(weakself.titleLabel.mas_bottom).offset(8);
+        }];
+        [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(weakself).offset(8);
+            make.right.equalTo(weakself).offset(-8);
+            make.bottom.equalTo(weakself);
+            make.height.mas_equalTo(@1);
         }];
     }
     return self;
@@ -43,5 +51,12 @@
         _infoLabel.numberOfLines = 0;
     }
     return _infoLabel;
+}
+- (UIView *)bottomLine{
+    if (!_bottomLine) {
+        _bottomLine = [UIView.alloc init];
+        _bottomLine.backgroundColor = LINE_COLOR;
+    }
+    return _bottomLine;
 }
 @end

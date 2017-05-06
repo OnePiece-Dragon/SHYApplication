@@ -10,6 +10,8 @@
 
 @interface SHYMessageCell : SHYBaseCell
 
+@property (nonatomic, strong) UIView * bottomLine;
+
 @property (nonatomic, strong) UILabel * titleLabel;
 @property (nonatomic, strong) UILabel * infoLabel;
 

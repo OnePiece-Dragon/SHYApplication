@@ -22,6 +22,7 @@
 #define SCREEN_WIDTH ([UIScreen mainScreen].bounds.size.width)
 #define SCREEN_HEIGHT ([UIScreen mainScreen].bounds.size.height)
 
+#define LINE_VER_SPACE  6
 
 //Get the OS version.       判断操作系统版本
 #define IOS_VERSION [[[UIDevice currentDevice] systemVersion] floatValue]

@@ -18,6 +18,9 @@
     NSInteger _leftAllPage;
     NSInteger _rightAllPage;
     
+    BOOL _leftLoadMore;
+    BOOL _rightLoadMore;
+    
     BOOL _haveSlide;
     
     NSInteger _isMap;
@@ -51,6 +54,9 @@
     _rightPage  = 1;
     _haveSlide  = NO;
     
+    _leftLoadMore = NO;
+    _rightLoadMore = NO;
+    
     _isMap = NO;
     _isUserLocation = NO;
     _mapHaveLoad = NO;
@@ -62,6 +68,7 @@
     };
     [self setUI];
     
+    [self showNetTips:LOADING_TIPS];
     [self requestDeliveryingData];
     //[self requestDeliveryDoneData];
 }
@@ -70,6 +77,7 @@
     DLog(@"view:%@",view);
     if (view == self.deliveryingView) {
         //配送中
+        _leftLoadMore = YES;
         if (_leftPage<_leftAllPage) {
             _leftPage++;
             DLog(@"_leftPage:%ld",_leftPage);
@@ -78,6 +86,7 @@
             [self.deliveryingView noMoreData];
         }
     }else if (view == self.deliveryDoneView) {
+        _rightLoadMore = YES;
         if (_rightPage<_rightAllPage) {
             _rightPage++;
             [self requestDeliveryDoneData];
@@ -88,18 +97,17 @@
 }
 - (void)loadRefreshData:(id)view {
     if (view == self.deliveryingView) {
+        _leftLoadMore = NO;
         _leftPage = 1;
-        [self.deliveryingArray removeAllObjects];
         [self requestDeliveryingData];
     }else if (view == self.deliveryDoneView) {
+        _rightLoadMore = NO;
         _rightPage = 1;
-        [self.deliveryDoneArray removeAllObjects];
         [self requestDeliveryDoneData];
     }
 }
 //请求配送中的数据
 - (void)requestDeliveryingData {
-    [self showNetTips:LOADING_TIPS];
     [NetManager post:URL_DISTRIBUTE_LIST
                param:@{@"userId":USER_ID,
                        @"distrStatus":@1,
@@ -112,6 +120,9 @@
                        DLog(@"responseObj_ing:%@",responseObj);
                        if (responseObj[@"pages"]) {
                            _leftAllPage = [responseObj[@"pages"] integerValue];
+                       }
+                       if (!_leftLoadMore) {
+                           [self.deliveryingArray removeAllObjects];
                        }
                        
                        for (NSDictionary * dic in responseObj[@"rows"]) {
@@ -147,7 +158,6 @@
 }
 //请求配送完成数据
 - (void)requestDeliveryDoneData {
-    [self showNetTips:LOADING_TIPS];
     [NetManager post:URL_DISTRIBUTE_LIST
                param:@{@"userId":USER_ID,
                        @"distrStatus":@2,
@@ -161,7 +171,9 @@
                      if (responseObj[@"pages"]) {
                          _rightAllPage = [responseObj[@"pages"] integerValue];
                      }
-                     
+                     if (!_rightLoadMore) {
+                         [self.deliveryDoneArray removeAllObjects];
+                     }
                      for (NSDictionary * dic in responseObj[@"rows"]) {
                          SHYDeliveryModel * model = [SHYDeliveryModel mj_objectWithKeyValues:dic];
                          [self.deliveryDoneArray addObject:model];
@@ -197,7 +209,6 @@
 }
 - (void)endTransportRequest:(SHYDeliveryModel*)model {
     [self showNetTips:LOADING_DISPOSE];
-    NSURLSessionDataTask * task =
     [NetManager post:URL_DISTRIBUTE_END
                param:@{@"userId":USER_ID,
                        @"orderId":model.orderId} success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
@@ -205,6 +216,15 @@
                    if (code) {
                        //
                        [self showToast:@"操作成功!"];
+                       
+                       if (self.deliveryingArray.count == 1) {
+                           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                               [self.navigationController popViewControllerAnimated:YES];
+                           });
+                           
+                           return ;
+                       }
+                       [self showNetTips:LOADING_TIPS];
                        [self loadRefreshData:self.deliveryingView];
                        [self loadRefreshData:self.deliveryDoneView];
                    }else {
@@ -266,7 +286,7 @@
     
     label1.titleLabel.text = model.shopName;
     label2.titleLabel.text = [NSString stringWithFormat:@"订单号：%@",model.orderId];
-    label3.titleLabel.text = [NSString stringWithFormat:@"代收：%.2f元",model.collectMoney.floatValue/100.0];
+    label3.titleLabel.text = [NSString stringWithFormat:@"代收款：%.2f元",model.collectMoney.floatValue/100.0];
     label4.titleLabel.text = [NSString stringWithFormat:@"地址：%@",model.targetAddr];
     
     [label3.titleLabel setAttributedText:[Factory setText:label3.titleLabel.text

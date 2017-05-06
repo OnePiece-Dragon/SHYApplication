@@ -38,6 +38,7 @@
     };
     
     //核货详情
+    [self showNetTips:LOADING_TIPS];
     [self requestNuclearDetailData];
     //核货详情类别
     [self setUI];
@@ -95,6 +96,7 @@
 }
 
 - (void)loadMoreData:(id)view {
+    [super loadMoreData:view];
     if (_page<_allPage) {
         _page++;
         [self requestNuclearCategoryData];
@@ -114,10 +116,12 @@
                  if (code) {
                      [self hideNetTips];
                      DLog(@"responseObj核对:%@",responseObj);
+                     
                      [self showToast:@"核货成功"];
                      
                      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                         [self.navigationController popViewControllerAnimated:YES];
+                         _haveChanged = YES;
+                         [self leftBarAction];
                      });
                      
                  }else {
@@ -130,8 +134,6 @@
 }
 
 - (void)requestNuclearDetailData {
-    [self showNetTips:LOADING_TIPS];
-    
     [NetManager post:URL_TASK_NUCLEAR_LIST
                param:@{@"userId":USER_ID,
                        @"taskId":self.taskId,
@@ -232,33 +234,24 @@
     SHYIconLabel*label4 = view.labelArray[3];
     SHYIconLabel*label5 = view.labelArray[4];
     SHYIconLabel*label6 = view.labelArray[5];
-    SHYIconLabel*label7 = view.labelArray[6];
     
     [label2 setIcon:@"renwudan" size:CGSizeMake(24, 24)];
+    [label3 setIcon:@"daishoukuan" size:CGSizeMake(24, 24)];
+    [label4 setIcon:@"xingming" size:CGSizeMake(24, 24)];
+    [label5 setIcon:@"calldianhua" size:CGSizeMake(24, 24)];
     [label3 setIcon:@"dizhi" size:CGSizeMake(24, 28)];
     
     label1.titleLabel.text = model.lineName;
     label2.titleLabel.text = [NSString stringWithFormat:@"任务单号：%@",model.taskId];
-    label3.titleLabel.text = [NSString stringWithFormat:@"地址：%@",model.startAddr];
+    label3.titleLabel.text = [NSString stringWithFormat:@"代收款：%.2f元",model.collectMoney.floatValue];
     label4.titleLabel.text = [NSString stringWithFormat:@"姓名：%@",model.senderName];
-    label5.titleLabel.text = [NSString stringWithFormat:@"电话：%@",model.senderPhone];
+    label5.titleLabel.text = [NSString stringWithFormat:@"手机：%@",model.senderPhone];
     label6.titleLabel.text = [NSString stringWithFormat:@"地址：%@",model.senderAddr];
-    if ([model.collectMoney floatValue] == 0) {
-        //
-        [label6 mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(view.backView.mas_bottom);
-        }];
-    }else {
-        label7.titleLabel.text = [NSString stringWithFormat:@"代收款：%@",model.collectMoney];
-        [label7 mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(view.backView.mas_bottom);
-        }];
-        [label7.titleLabel setAttributedText:[Factory setText:label7.titleLabel.text
-                                                    attribute:@{NSForegroundColorAttributeName:COLOR_PRICE}
-                                                        range:NSMakeRange(4, label7.titleLabel.text.length - 4)]];
-    }
     
     //字体颜色
+    [label3.titleLabel setAttributedText:[Factory setText:label3.titleLabel.text
+                                                attribute:@{NSForegroundColorAttributeName:COLOR_PRICE}
+                                                    range:NSMakeRange(4, label3.titleLabel.text.length - 4)]];
     [label5.titleLabel setAttributedText:[Factory setText:label5.titleLabel.text
                                                 attribute:@{NSForegroundColorAttributeName:COLOR_ADRESS}
                                                     range:NSMakeRange(3, label5.titleLabel.text.length - 3)]];
@@ -298,7 +291,7 @@
         if (indexPath.section == 0) {
             SHYTaskCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
             if (!cell) {
-                cell = [SHYTaskCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID labelCount:7 enterBtnIndex:0 bottomBtn:YES];
+                cell = [SHYTaskCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID labelCount:6 enterBtnIndex:0 bottomBtn:YES];
             }
             [cell.backView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.left.right.equalTo(cell);
@@ -350,11 +343,9 @@
         //货物种类
         SHYGoodsCell * cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"SHYGoodsCell_CAT:%ld",goodsCount]];
         if (!cell) {
-            cell = [SHYGoodsCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SHYGoodsCell_CAT" isAll:NO lineCount:goodsCount];
+            cell = [SHYGoodsCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[NSString stringWithFormat:@"SHYGoodsCell_CAT:%ld",goodsCount] isAll:NO lineCount:goodsCount];
         }
         [cell addTopView];
-        
-        
         
         
         int i = 0;
@@ -362,7 +353,7 @@
             label.rightLabel.textAlignment = NSTextAlignmentRight;
             if (i == 0) {
                 [label setLeftStr:[NSString stringWithFormat:@"%@（%@）",model.categoryName,model.goodsTotal]
-                         rightStr:nil rightIcon:@"xialazhanshi"];
+                         rightStr:nil rightIcon:nil];
             }else {
                 [label setLeftStr:[(SHYGoodsModel*)model.goods[i-1] goodsName]
                          rightStr:[NSString stringWithFormat:@"%@：",

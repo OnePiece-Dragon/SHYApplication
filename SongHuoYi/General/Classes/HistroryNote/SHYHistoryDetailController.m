@@ -7,7 +7,6 @@
 //
 
 #import "SHYHistoryDetailController.h"
-#import "SHYTaskCell.h"
 #import "SHYGoodsCell.h"
 
 @interface SHYHistoryDetailController ()
@@ -49,6 +48,9 @@
                      //
                      DLog(@"detail_responseObj:%@",responseObj);
                      self.historyModel = [SHYTaskHistoryModel mj_objectWithKeyValues:responseObj];
+                     [self setContentView:self.tableHeaderView model:self.historyModel];
+                     self.checkGoodsDetailView.tableHeaderView = self.tableHeaderView;
+                     
                      [self historyGoodsCategoryRequest];
                  }else {
                      [self showToast:failMessag];
@@ -123,52 +125,33 @@
     SHYIconLabel*label6 = view.labelArray[5];
     
     [label2 setIcon:@"renwudan" size:CGSizeMake(24, 24)];
-    [label3 setIcon:@"dizhi" size:CGSizeMake(24, 28)];
+    [label3 setIcon:@"daishoukuan" size:CGSizeMake(24, 24)];
+    [label4 setIcon:@"xingming" size:CGSizeMake(24, 24)];
+    [label5 setIcon:@"calldianhua" size:CGSizeMake(24, 24)];
+    [label6 setIcon:@"dizhi" size:CGSizeMake(24, 28)];
+    
     
     label1.titleLabel.text = model.lineName;
     label2.titleLabel.text = [NSString stringWithFormat:@"任务单号：%@",model.taskId];
-    label3.titleLabel.text = [NSString stringWithFormat:@"地址：%@",model.senderAddr];
-    label4.titleLabel.text = [NSString stringWithFormat:@"订单数：%@",model.orderNum];
-    label5.titleLabel.text = [NSString stringWithFormat:@"供应商数：%@",model.merchantNum];
-    label6.titleLabel.text = [NSString stringWithFormat:@"共计：%@",model.taskDetail];
+    label3.titleLabel.text = [NSString stringWithFormat:@"代收款：%.2f元",model.collectMoney.floatValue];
+    label4.titleLabel.text = [NSString stringWithFormat:@"姓名：%@",model.senderName];
+    label5.titleLabel.text = [NSString stringWithFormat:@"手机：%@",model.senderPhone];
+    label6.titleLabel.text = [NSString stringWithFormat:@"地址：%@",model.senderAddr];
+    
+    [label3.titleLabel setAttributedText:[Factory setText:label3.titleLabel.text
+                                                attribute:@{NSForegroundColorAttributeName:COLOR_PRICE}
+                                                    range:NSMakeRange(3, label3.titleLabel.text.length - 3)]];
 }
 #pragma mark -tableViewDataSource-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    NSInteger section = 0;
-    if (self.historyModel) {
-        section ++;
-    }
-    if (self.dataArray.count) {
-        section ++;
-    }
-    return section;
+    return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.historyModel) {
-        if (section == 1) {
-            return self.dataArray.count;
-        }
-        return 1;
-    }
     return self.dataArray.count;
 }
 #pragma mark -tableViewDelegate-
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 0) {
-        SHYTaskCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
-        if (!cell) {
-            cell = [SHYTaskCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID labelCount:7 enterBtnIndex:0 bottomBtn:YES];
-        }
-        [cell.backView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.right.equalTo(cell);
-        }];
-        
-        [self setContentView:cell model:self.historyModel];
-        
-        return cell;
-    }else {
-        return [self goodsCategoryAndAll:NO tableView:tableView indexPath:indexPath];
-    }
+    return [self goodsCategoryAndAll:NO tableView:tableView indexPath:indexPath];
 }
 - (UITableViewCell*)goodsCategoryAndAll:(BOOL)isAll
                               tableView:(UITableView*)tableView
@@ -181,7 +164,7 @@
         //货物种类
         SHYGoodsCell * cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"SHYGoodsCell_CAT:%ld",goodsCount]];
         if (!cell) {
-            cell = [SHYGoodsCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SHYGoodsCell_CAT" isAll:NO lineCount:goodsCount];
+            cell = [SHYGoodsCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[NSString stringWithFormat:@"SHYGoodsCell_CAT:%ld",goodsCount] isAll:NO lineCount:goodsCount];
         }
         [cell addTopView];
         
@@ -191,7 +174,7 @@
             label.rightLabel.textAlignment = NSTextAlignmentRight;
             if (i == 0) {
                 [label setLeftStr:[NSString stringWithFormat:@"%@（%@）",model.categoryName,model.goodsTotal]
-                         rightStr:nil rightIcon:@"xialazhanshi"];
+                         rightStr:nil rightIcon:nil];
             }else {
                 [label setLeftStr:[(SHYGoodsModel*)model.goods[i-1] goodsName]
                          rightStr:[NSString stringWithFormat:@"%@：",
@@ -209,19 +192,13 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 0) {
-        return 270;
-    }
     SHYNuclearCategoryModel * model = self.dataArray[indexPath.row];
     return (model.goods.count+1)*50;
 }
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 0.1f;
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section{
+    return 270.f;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    if (section == 1) {
-        return 120;
-    }
     return 0.1f;
 }
 - (SHYBaseTableView *)checkGoodsDetailView {
@@ -231,6 +208,20 @@
         [_checkGoodsDetailView addRefreshFooter:self action:@selector(loadMoreData:)];
     }
     return _checkGoodsDetailView;
+}
+- (SHYTaskCell *)tableHeaderView{
+    if (!_tableHeaderView) {
+        _tableHeaderView = [SHYTaskCell.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 270) labelCount:6 enterBtnIndex:0 bottomBtn:YES];
+        [_tableHeaderView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(@(SCREEN_WIDTH));
+            make.height.mas_greaterThanOrEqualTo(@100);
+        }];
+        
+        [_tableHeaderView.backView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.right.equalTo(_tableHeaderView);
+        }];
+    }
+    return _tableHeaderView;
 }
 //- (SHYTaskHistoryModel *)historyModel{
 //    if (!_historyModel) {

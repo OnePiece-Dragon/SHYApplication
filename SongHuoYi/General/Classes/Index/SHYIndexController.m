@@ -94,11 +94,7 @@
     [self.indexListView reloadData];
 }
 
-//消息列表
-- (void)messageItem {
-    SHYMessageController * VC = [SHYMessageController.alloc init];
-    [self.navigationController pushViewController:VC animated:YES];
-}
+
 //我的任务
 - (void)myTaskItemClick {
     SHYTaskController * VC = [SHYTaskController.alloc init];
@@ -120,9 +116,6 @@
                  if (code) {
                      SHYWorkStatusModel * model = [SHYWorkStatusModel mj_objectWithKeyValues:responseObj];
                      ((SHYUserModel*)USER_MODEL).status = model.status;
-                     if (model.valStatusMsg) {
-                         [self showToast:model.valStatusMsg];
-                     }
                      if ([USER_WORK_STATUS integerValue] == 1) {
                          //上班状态
                          _canWork = YES;

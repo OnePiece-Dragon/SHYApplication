@@ -24,6 +24,8 @@
 @property (nonatomic, copy) void (^rightBar)();
 @property (nonatomic, copy) void (^rightBarClick)(id);
 
+@property (nonatomic, assign) BOOL loadMore;
+    
 - (void)setBackItem:(NSString*)backImage;
 - (void)cancelBackItem;
 - (void)setRightItem:(NSString*)imageName;
@@ -32,7 +34,8 @@
        selectedImage:(NSString*)selectedImage
            rightBlock:(void (^)(id))rightBlock;
 
-
+    //消息列表
+- (void)messageItem;
 
 
 - (void)showAlertVCWithTitle:(NSString *)titleStr
@@ -48,7 +51,7 @@
 - (void)hideNetTips;
 
 
-- (void)loadRefreshData:(id)view;
-- (void)loadMoreData:(id)view;
+- (void)loadRefreshData:(SHYBaseTableView*)view;
+- (void)loadMoreData:(SHYBaseTableView*)view;
 
 @end

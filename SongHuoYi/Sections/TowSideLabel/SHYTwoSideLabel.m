@@ -51,7 +51,6 @@
             make.width.equalTo(@0);
         }];
         [self.rightIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(weakself);
             make.right.equalTo(weakself).offset(-8);
             make.size.mas_equalTo(CGSizeZero);
         }];

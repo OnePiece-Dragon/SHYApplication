@@ -55,6 +55,12 @@
 		DF8460181EB87A930068E61E /* SHYTaskMapViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8460101EB87A930068E61E /* SHYTaskMapViewModel.m */; };
 		DF8460191EB87A930068E61E /* SHYTaskViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8460121EB87A930068E61E /* SHYTaskViewModel.m */; };
 		DF84601A1EB87A930068E61E /* SHYTaskViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8460121EB87A930068E61E /* SHYTaskViewModel.m */; };
+		DF84601D1EBACB500068E61E /* SHYSectionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DF84601C1EBACB500068E61E /* SHYSectionModel.m */; };
+		DF84601E1EBACB500068E61E /* SHYSectionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = DF84601C1EBACB500068E61E /* SHYSectionModel.m */; };
+		DF8460211EBACC8B0068E61E /* SHYHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8460201EBACC8B0068E61E /* SHYHeaderView.m */; };
+		DF8460221EBACC8B0068E61E /* SHYHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8460201EBACC8B0068E61E /* SHYHeaderView.m */; };
+		DF8604BC1EBDD0FE005BB6DC /* NSArray+ArrayBounds.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8604BB1EBDD0FE005BB6DC /* NSArray+ArrayBounds.m */; };
+		DF8604BD1EBDD0FE005BB6DC /* NSArray+ArrayBounds.m in Sources */ = {isa = PBXBuildFile; fileRef = DF8604BB1EBDD0FE005BB6DC /* NSArray+ArrayBounds.m */; };
 		DF9677F51E8E343600D80644 /* SongHuoYiTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9677F41E8E343600D80644 /* SongHuoYiTests.m */; };
 		DF9678001E8E343600D80644 /* SongHuoYiUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9677FF1E8E343600D80644 /* SongHuoYiUITests.m */; };
 		DF9694CC1EB07ED200EA6C02 /* TPKeyboardAvoidingCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = DF9694C51EB07ED200EA6C02 /* TPKeyboardAvoidingCollectionView.m */; };
@@ -278,6 +284,12 @@
 		DF8460101EB87A930068E61E /* SHYTaskMapViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYTaskMapViewModel.m; sourceTree = "<group>"; };
 		DF8460111EB87A930068E61E /* SHYTaskViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYTaskViewModel.h; sourceTree = "<group>"; };
 		DF8460121EB87A930068E61E /* SHYTaskViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYTaskViewModel.m; sourceTree = "<group>"; };
+		DF84601B1EBACB500068E61E /* SHYSectionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYSectionModel.h; sourceTree = "<group>"; };
+		DF84601C1EBACB500068E61E /* SHYSectionModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYSectionModel.m; sourceTree = "<group>"; };
+		DF84601F1EBACC8B0068E61E /* SHYHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHYHeaderView.h; sourceTree = "<group>"; };
+		DF8460201EBACC8B0068E61E /* SHYHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHYHeaderView.m; sourceTree = "<group>"; };
+		DF8604BA1EBDD0FE005BB6DC /* NSArray+ArrayBounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+ArrayBounds.h"; sourceTree = "<group>"; };
+		DF8604BB1EBDD0FE005BB6DC /* NSArray+ArrayBounds.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+ArrayBounds.m"; sourceTree = "<group>"; };
 		DF9677D71E8E343500D80644 /* SongHuoYi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SongHuoYi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF9677F01E8E343600D80644 /* SongHuoYiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SongHuoYiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF9677F41E8E343600D80644 /* SongHuoYiTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SongHuoYiTests.m; sourceTree = "<group>"; };
@@ -514,6 +526,8 @@
 				DF24E91A1E9F6FB400804E94 /* UIImage+Ext.m */,
 				DF24E91B1E9F6FB400804E94 /* UIView+Ext.h */,
 				DF24E91C1E9F6FB400804E94 /* UIView+Ext.m */,
+				DF8604BA1EBDD0FE005BB6DC /* NSArray+ArrayBounds.h */,
+				DF8604BB1EBDD0FE005BB6DC /* NSArray+ArrayBounds.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -549,6 +563,10 @@
 				DF24E9231E9F6FB400804E94 /* SHYHistoryNoteController.m */,
 				DFD6EDA81EB1FEE9003392E6 /* SHYHistoryDetailController.h */,
 				DFD6EDA91EB1FEE9003392E6 /* SHYHistoryDetailController.m */,
+				DF84601F1EBACC8B0068E61E /* SHYHeaderView.h */,
+				DF8460201EBACC8B0068E61E /* SHYHeaderView.m */,
+				DF84601B1EBACB500068E61E /* SHYSectionModel.h */,
+				DF84601C1EBACB500068E61E /* SHYSectionModel.m */,
 			);
 			path = HistroryNote;
 			sourceTree = "<group>";
@@ -1399,6 +1417,7 @@
 				DFE16DD41E9B7FE300487C6E /* SHYPersonCenterCell.m in Sources */,
 				DF24E9601E9F6FB400804E94 /* SHYMapNaviController.m in Sources */,
 				DFE16DC61E9B7FE300487C6E /* SHYBaseCell.m in Sources */,
+				DF8460211EBACC8B0068E61E /* SHYHeaderView.m in Sources */,
 				DFBC34841E93A7D4000C7402 /* SHYTabBarItem.m in Sources */,
 				DFAE443A1E961067002C20F6 /* SHYTaskModel.m in Sources */,
 				DFEB51071E8E47F1006A133D /* main.m in Sources */,
@@ -1450,7 +1469,9 @@
 				DFBFE6E81EA7724700EA1406 /* NSObject+SHYExt.m in Sources */,
 				DF24E96A1E9F6FB400804E94 /* SHYPersonCenterController.m in Sources */,
 				DF9694E31EB0A93A00EA6C02 /* UIView+Toast.m in Sources */,
+				DF84601D1EBACB500068E61E /* SHYSectionModel.m in Sources */,
 				DFBFE4461EA7068200EA1406 /* SHYMessageCell.m in Sources */,
+				DF8604BC1EBDD0FE005BB6DC /* NSArray+ArrayBounds.m in Sources */,
 				DF24E96E1E9F6FB400804E94 /* CustomLabel.m in Sources */,
 				DFD925F21E974C2000DFDF32 /* SHYNuclearCategoryModel.m in Sources */,
 				DFBC347C1E93A7B9000C7402 /* SHYNavigtionBar.m in Sources */,
@@ -1505,7 +1526,9 @@
 				DFD9261B1E979ABB00DFDF32 /* SHYReceiveBoxView.m in Sources */,
 				DFAE443B1E961067002C20F6 /* SHYTaskModel.m in Sources */,
 				DFAE44371E95F4A5002C20F6 /* SHYIconLabel.m in Sources */,
+				DF8604BD1EBDD0FE005BB6DC /* NSArray+ArrayBounds.m in Sources */,
 				DFBC34B91E949E1A000C7402 /* NetManager.m in Sources */,
+				DF84601E1EBACB500068E61E /* SHYSectionModel.m in Sources */,
 				DFAE44221E95E077002C20F6 /* SHYIndexItemModel.m in Sources */,
 				DFBFE43F1EA7044E00EA1406 /* SHYMessageController.m in Sources */,
 				DFE16DCB1E9B7FE300487C6E /* SHYCheckGoodsCell.m in Sources */,
@@ -1517,6 +1540,7 @@
 				DF24E96B1E9F6FB400804E94 /* SHYPersonCenterController.m in Sources */,
 				DFBC347B1E93A7B9000C7402 /* SHYNaviController.m in Sources */,
 				DFBC34CC1E9521EA000C7402 /* SHYIndexItemView.m in Sources */,
+				DF8460221EBACC8B0068E61E /* SHYHeaderView.m in Sources */,
 				DFBFE3F21EA6050000EA1406 /* UIControl+SHYTargetAction.m in Sources */,
 				DFD6EDAB1EB1FEE9003392E6 /* SHYHistoryDetailController.m in Sources */,
 				DFBC34B31E949E1A000C7402 /* Factory.m in Sources */,

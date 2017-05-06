@@ -37,12 +37,13 @@
 @property (nonatomic, strong) NSString * shopName;
 @property (nonatomic, strong) NSNumber * shopId;
 
+
 /**
  目标地址
  */
 @property (nonatomic, strong) NSString * targetAddr;
 @property (nonatomic, strong) NSString * startAddr;
-@property (nonatomic, strong) NSString * senderAddr;
+
 
 /**
  当前时间
@@ -59,5 +60,11 @@
 
 
 @property (nonatomic, strong) NSString * taskDetail;
+
+@property (nonatomic, strong) NSString * senderName;
+@property (nonatomic, strong) NSNumber * senderPhone;
+@property (nonatomic, strong) NSString * senderAddr;
+
+@property (nonatomic, strong) NSNumber * collectMoney;
 
 @end

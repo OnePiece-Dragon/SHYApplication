@@ -178,9 +178,9 @@
     UITextField *userNameTextField = alertController.textFields.firstObject;
     //cell.labelView.rightLabel.text= @"已核货";
     //[self.checkGoodsListView reloadData];
-    NSInteger maxNum    = model.buyNum.integerValue;
+    //NSInteger maxNum    = model.buyNum.integerValue;
     NSInteger inputNum  = userNameTextField.text.integerValue;
-    if (inputNum>=0&&inputNum<=maxNum) {
+    if (inputNum>=0) {
         [self receiveBoxGoodsItem:userNameTextField.text.integerValue
                        goodsModel:model];
     }else{

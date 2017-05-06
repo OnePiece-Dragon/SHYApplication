@@ -41,6 +41,11 @@
     }
     return self;
 }
+- (instancetype)initWithFrame:(CGRect)frame labelCount:(NSInteger)count enterBtnIndex:(NSInteger)enterBtnIndex bottomBtn:(BOOL)hidenBottomBtn{
+    _isBottomBtn = hidenBottomBtn;
+    return [self initWithFrame:frame labelCount:count enterBtnIndex:enterBtnIndex];
+}
+
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
               reuseIdentifier:(NSString *)reuseIdentifier
                    labelCount:(NSInteger)count
@@ -105,7 +110,8 @@
         }];
         if (i == 0) {
             [iconLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(weakself).offset(8);
+                make.top.equalTo(weakself).offset(LINE_VER_SPACE);
+                make.height.mas_greaterThanOrEqualTo(36);
             }];
         }else if(i == count - 1){
             SHYIconLabel * forwardLabel = self.labelArray.lastObject;

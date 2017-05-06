@@ -44,18 +44,25 @@
     self.hidesBottomBarWhenPushed = NO;
     [self cancelBackItem];
     self.naviTitle = @"历史运单";
+    kWeakSelf(self);
+    [self setRightItem:@"message" rightBlock:^{
+        [weakself messageItem];
+    }];
+    
     _page = 1;
     [self setTopTimeUI];
     [self.view addSubview:self.historyNoteView];
     
+    [self showNetTips:LOADING_TIPS];
     [self requestData];
 }
 - (void)loadRefreshData:(id)view {
+    [super loadRefreshData:view];
     _page = 1;
-    [self.dataArray removeAllObjects];
     [self requestData];
 }
 - (void)loadMoreData:(id)view {
+    [super loadMoreData:view];
     if (_page < _allPage) {
         _page ++;
         [self requestData];
@@ -75,7 +82,6 @@
 }
 - (void)requestData {
     //SHYTaskHistoryModel
-    [self showNetTips:LOADING_TIPS];
     [NetManager post:URL_TASK_HISTORY
                param:@{@"userId":USER_ID,
                        @"qryTime":self.dateLabel.text,
@@ -86,6 +92,10 @@
                                DLog(@"responseObj:%@",responseObj);
                                if (responseObj[@"pages"]) {
                                    _allPage = [responseObj[@"pages"] integerValue];
+                               }
+                               
+                               if (!self.loadMore) {
+                                   [self.dataArray removeAllObjects];
                                }
                                
                                for (NSDictionary *dic in responseObj[@"rows"]) {
@@ -131,7 +141,7 @@
     label2.titleLabel.text = [NSString stringWithFormat:@"任务单号：%@",taskModel.taskId];
     label3.titleLabel.text = [NSString stringWithFormat:@"地址：%@",taskModel.startAddr];
     label4.titleLabel.text = [NSString stringWithFormat:@"订单数：%@",taskModel.orderNum];
-    label5.titleLabel.text = [NSString stringWithFormat:@"供应商数：%@",taskModel.merchantNum];
+    label5.titleLabel.text = [NSString stringWithFormat:@"门店数：%@",taskModel.merchantNum];
     label6.titleLabel.text = [NSString stringWithFormat:@"共计：%@",taskModel.taskDetail];
 }
 
@@ -159,8 +169,8 @@
     SHYTaskCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
         cell = [SHYTaskCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID labelCount:6 enterBtnIndex:4 bottomBtn:YES];
-        cell.backgroundColor = COLOR_WHITE;
         cell.enterBtn.hidden = YES;
+        cell.rightIconView.hidden = NO;
     }
     SHYTaskHistoryModel * taskModel = [self.dataArray objectAtIndex:indexPath.section];
     [self setContentView:cell model:taskModel];
@@ -178,7 +188,8 @@
     UILabel * label = [UILabel.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 44)];
     label.textAlignment = NSTextAlignmentCenter;
     
-    label.text = [TimeManager timeWithTimeIntervalString:[(SHYTaskHistoryModel*)self.dataArray[section] gmtModifly] format:@"HH:mm:ss"];
+//    label.text = [TimeManager timeWithTimeIntervalString:[(SHYTaskHistoryModel*)self.dataArray[section] gmtModifly] format:@"HH:mm:ss"];
+    label.text = [self.dataArray[section] gmtModifly];
     
     return label;
 }

@@ -39,6 +39,10 @@
     self.hidesBottomBarWhenPushed = NO;;
     [self cancelBackItem];
     self.naviTitle = @"个人中心";
+    kWeakSelf(self);
+    [self setRightItem:@"message" rightBlock:^{
+        [weakself messageItem];
+    }];
     
     [self.view addSubview:self.personTableView];
 }

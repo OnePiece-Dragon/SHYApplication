@@ -34,21 +34,21 @@
             SHYTwoSideLabel * label = [_rowArray objectAtIndex:i];
             [label mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.right.equalTo(weakself);
-                make.height.mas_equalTo(50-8);
+                make.height.mas_equalTo(60-LINE_VER_SPACE*2);
             }];
             if (i == 0) {
                 [label mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.top.equalTo(weakself).offset(4);
+                    make.top.equalTo(weakself).offset(LINE_VER_SPACE);
                 }];
             }else {
                 SHYTwoSideLabel * forLabel = [_rowArray objectAtIndex:i-1];
                 [label mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.top.equalTo(forLabel.mas_bottom).offset(8);
+                    make.top.equalTo(forLabel.mas_bottom).offset(LINE_VER_SPACE);
                 }];
             }
             if (i == _rowArray.count - 1) {
                 [label mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.bottom.equalTo(weakself).offset(-4);
+                    make.bottom.equalTo(weakself).offset(-LINE_VER_SPACE);
                 }];
             }
         }

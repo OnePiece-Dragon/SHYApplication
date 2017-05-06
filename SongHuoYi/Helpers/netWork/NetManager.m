@@ -46,6 +46,8 @@
                     parameters:param
                       progress:nil
                        success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                           DLog(@"request_Data");
+                           
                            BOOL s_code = NO;
                            NSString * faileString = nil;
                            NSDictionary * response = nil;

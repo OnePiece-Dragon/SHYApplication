@@ -32,10 +32,12 @@
     _allPages = 1;
     [self.view addSubview:self.messageView];
     
+    [self showNetTips:LOADING_TIPS];
     [self messageListRequest];
 }
 
 - (void)loadMoreData:(id)view {
+    [super loadMoreData:view];
     if (_page<_allPages) {
         _page++;
         [self messageListRequest];
@@ -44,26 +46,29 @@
     }
 }
 - (void)loadRefreshData:(id)view {
+    [super loadRefreshData:view];
     _page = 1;
-    if (self.messageList.count) {
-        [self.messageList removeAllObjects];
-    }
     [self messageListRequest];
 }
 
 - (void)messageListRequest {
-    [self showNetTips:LOADING_TIPS];
     [NetManager post:URL_MESSAGE_INFO
                param:@{@"userId":USER_ID,
                        @"page":@(_page)}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
+                 [self.messageView endRefresh];
                  [self hideNetTips];
                  if (code) {
                      if (responseObj[@"pages"]) {
                          _allPages = [responseObj[@"pages"] integerValue];
                      }
+                     if (!self.loadMore) {
+                         [self.messageList removeAllObjects];
+                     }
+                     
                      NSArray * dataArray = [SHYMessageModel mj_objectArrayWithKeyValuesArray:responseObj[@"rows"]];
                      [self.messageList addObjectsFromArray:dataArray];
+                     [self.messageView reloadData];
                  }else {
                      if (_page>1) {
                          _page--;
@@ -74,6 +79,7 @@
                  if (_page>1) {
                      _page--;
                  }
+                 [self.messageView endRefresh];
                  [self hideNetTips];
                  [self showToast:errorStr];
              }];
@@ -89,6 +95,7 @@
     SHYMessageCell * cell = [tableView dequeueReusableCellWithIdentifier:cellId];
     if (!cell) {
         cell = [SHYMessageCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellId];
+        cell.backgroundColor = COLOR_WHITE;
     }
     SHYMessageModel * model = self.messageList[indexPath.row];
     cell.titleLabel.text = model.messTitle;

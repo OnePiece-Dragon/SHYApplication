@@ -9,6 +9,7 @@
 #import "SHYBaseCell.h"
 #import "SHYTwoSideLabel.h"
 
+
 @interface SHYGoodsCell : SHYBaseCell
 
 @property (nonatomic, strong) UIView * topView;

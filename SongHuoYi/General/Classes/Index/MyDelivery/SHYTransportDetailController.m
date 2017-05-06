@@ -190,7 +190,6 @@
 - (SHYBaseTableView *)deliveryDetailView {
     if (!_deliveryDetailView) {
         _deliveryDetailView = [SHYBaseTableView.alloc initWithFrame:CGRectZero style:UITableViewStyleGrouped target:self];
-        _deliveryDetailView.backgroundColor = LINE_COLOR;
     }
     return _deliveryDetailView;
 }
@@ -208,7 +207,7 @@
         titleLabel.text = @"商品信息";
         [_goodsHeaderView addSubview:titleLabel];
         
-        
+        /*
         UIImageView * icon = [UIImageView.alloc initWithFrame:CGRectZero];
         icon.userInteractionEnabled = YES;
         icon.image = ImageNamed(@"xialazhanshi");
@@ -219,7 +218,7 @@
             make.right.equalTo(weakself.goodsHeaderView).offset(-8);
             make.centerY.equalTo(weakself.goodsHeaderView);
             make.size.mas_equalTo(CGSizeMake(24, 24));
-        }];
+        }];*/
     }
     return _goodsHeaderView;
 }

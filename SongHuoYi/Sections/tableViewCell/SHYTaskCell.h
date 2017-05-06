@@ -40,6 +40,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame labelCount:(NSInteger)count;
 - (instancetype)initWithFrame:(CGRect)frame labelCount:(NSInteger)count enterBtnIndex:(NSInteger)enterBtnIndex;
+- (instancetype)initWithFrame:(CGRect)frame labelCount:(NSInteger)count enterBtnIndex:(NSInteger)enterBtnIndex bottomBtn:(BOOL)hidenBottomBtn;
 
 - (void)setCellModel:(SHYBaseModel *)model;
 

@@ -40,11 +40,12 @@
 }
 
 - (void)loadRefreshData:(id)view{
+    [super loadRefreshData:view];
     _page = 1;
-    [self.dataArray removeAllObjects];
     [self requestData];
 }
 - (void)loadMoreData:(id)view{
+    [super loadMoreData:view];
     if (_page<_allPage) {
         _page ++;
         [self requestData];
@@ -63,6 +64,10 @@
                  if (code) {
                      if (responseObj[@"pages"]) {
                          _allPage = [responseObj[@"pages"] integerValue];
+                     }
+                     
+                     if (!self.loadMore) {
+                         [self.dataArray removeAllObjects];
                      }
                      NSArray * sourceArray = [SHYHelpCenterModel mj_objectArrayWithKeyValuesArray:responseObj[@"rows"]];
                      [self.dataArray addObjectsFromArray:sourceArray];

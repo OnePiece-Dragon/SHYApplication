@@ -21,7 +21,7 @@
         if (icon) {
             //有图
             [self.iconImage mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(weakSelf);
+                make.top.equalTo(weakSelf).offset(LINE_VER_SPACE/2.f);
                 make.left.equalTo(weakSelf).offset(8);
                 make.size.mas_equalTo(CGSizeMake(32, 32));
             }];
@@ -33,16 +33,16 @@
             }];
         }else {
             [self.iconImage mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(weakSelf);
+                make.top.equalTo(weakSelf).offset(LINE_VER_SPACE/2.f);
                 make.left.equalTo(weakSelf).offset(8);
                 make.size.mas_equalTo(CGSizeZero);
             }];
             //没图
             [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(weakSelf);
+                make.top.equalTo(weakSelf).offset(LINE_VER_SPACE);
                 make.left.equalTo(weakSelf).offset(8);
                 make.right.equalTo(weakSelf).offset(-8);
-                make.bottom.equalTo(weakSelf).offset(-8);
+                make.bottom.equalTo(weakSelf).offset(-LINE_VER_SPACE);
             }];
         }
     }

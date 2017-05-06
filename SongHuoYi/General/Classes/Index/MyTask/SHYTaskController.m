@@ -40,6 +40,7 @@
         [weakself mapModelSwitch:button];
     }];
     [self setUI];
+    [self showNetTips:LOADING_TIPS];
     [self requestData];
 }
 
@@ -76,6 +77,7 @@
     VC.lineId = model.lineId;
     VC.canCheckBtnClick = model.nuclearStatus.integerValue > 0?NO:YES;
     VC.backBlock=^(){
+        [weakself showNetTips:LOADING_TIPS];
         [weakself loadRefreshData:nil];
     };
     [self.navigationController pushViewController:VC animated:YES];
@@ -138,23 +140,25 @@
     }];
 }
 
-- (void)loadRefreshData:(id)view {
+- (void)loadRefreshData:(SHYBaseTableView*)view {
+    [super loadRefreshData:view];
     _page = 1;
-    [self.dataArray removeAllObjects];
+    
     [self requestData];
 }
 
-- (void)loadMoreData:(id)view {
+- (void)loadMoreData:(SHYBaseTableView*)view {
+    [super loadMoreData:view];
     if (_page < _allPage) {
         _page ++;
         [self requestData];
     }else {
+        
         [self.taskTableView noMoreData];
     }
 }
 
 - (void)requestData {
-    [self showNetTips:LOADING_TIPS];
     [NetManager post:URL_TASK_LIST
                param:@{@"userId":USER_ID,@"page":@(_page)}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
@@ -193,7 +197,9 @@
     
     //NSString *plistPath = PLIST_Name(@"taskList");
     //NSDictionary * result = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-    
+    if (!self.loadMore) {
+        [self.dataArray removeAllObjects];
+    }
     for (NSDictionary * dic in responseObject[@"rows"]) {
         SHYTaskModel * model = [SHYTaskModel mj_objectWithKeyValues:dic];
         [self.dataArray addObject:model];
@@ -344,6 +350,9 @@
     if (![annotation.title isEqualToString:@"我的位置"]) {
         //进入
         //[self enterCheckGoodsClick:annotation.taskModel];
+        [self showAnnotationView];
+        [self updateAnnotationDetailViewLocation];
+        [self setContentView:_annotationDetailView model:annotation.taskModel];
     }
 }
 /**
@@ -362,6 +371,10 @@
         [self setContentView:_annotationDetailView model:annotation.taskModel];
     }
 }
+- (void)mapView:(BMKMapView *)mapView didDeselectAnnotationView:(BMKAnnotationView *)view{
+    
+}
+    
 /**
  *点中底图空白处会回调此接口
  *@param coordinate 空白处坐标点的经纬度

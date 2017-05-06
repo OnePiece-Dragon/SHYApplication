@@ -9,6 +9,7 @@
 #import "SHYBaseController.h"
 #import "SHYTaskHistoryModel.h"
 #import "SHYNuclearCategoryModel.h"
+#import "SHYTaskCell.h"
 
 @interface SHYHistoryDetailController : SHYBaseController
 
@@ -18,7 +19,7 @@
 @property (nonatomic, strong) NSNumber * shopId;
 @property (nonatomic, strong) NSString * taskCode;
 
-
+@property (nonatomic, strong) SHYTaskCell * tableHeaderView;
 @property (nonatomic, strong) SHYBaseTableView * checkGoodsDetailView;
 
 

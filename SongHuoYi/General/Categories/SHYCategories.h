@@ -11,7 +11,8 @@
 
 #import "UIView+Ext.h"
 #import "UIImage+Ext.h"
-#import "UIControl+SHYTargetAction.h"
 #import "NSObject+SHYExt.h"
+#import "UIControl+SHYTargetAction.h"
+#import "NSArray+ArrayBounds.h"
 
 #endif /* SHYCategories_h */
