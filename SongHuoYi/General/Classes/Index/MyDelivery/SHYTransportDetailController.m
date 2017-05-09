@@ -206,19 +206,6 @@
         UILabel * titleLabel = [UILabel.alloc initWithFrame:CGRectMake(8, 8, 100, 36)];
         titleLabel.text = @"商品信息";
         [_goodsHeaderView addSubview:titleLabel];
-        
-        /*
-        UIImageView * icon = [UIImageView.alloc initWithFrame:CGRectZero];
-        icon.userInteractionEnabled = YES;
-        icon.image = ImageNamed(@"xialazhanshi");
-        [_goodsHeaderView addSubview:icon];
-        
-        kWeakSelf(self);
-        [icon mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(weakself.goodsHeaderView).offset(-8);
-            make.centerY.equalTo(weakself.goodsHeaderView);
-            make.size.mas_equalTo(CGSizeMake(24, 24));
-        }];*/
     }
     return _goodsHeaderView;
 }

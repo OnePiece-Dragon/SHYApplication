@@ -11,12 +11,11 @@
 
 #import "TipMacro.h"
 
-
 //192.168.31.197:8080
 //120.27.238.62
-#define BASE_URL                    @"192.168.31.197"
+#define BASE_URL                    @"139.199.227.29"
 //8080
-#define IP_PORT                     @"8080"
+#define IP_PORT                     @"8090"
 //登录
 #define URL_Login                   @"/app/user/login"
 //开始上班

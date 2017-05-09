@@ -74,6 +74,7 @@
         _scrollView.pagingEnabled = YES;
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.showsVerticalScrollIndicator = NO;
+        _scrollView.scrollEnabled = NO;
     }
     return _scrollView;
 }

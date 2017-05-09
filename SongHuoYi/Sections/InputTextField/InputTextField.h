@@ -20,7 +20,7 @@ typedef NS_ENUM(NSInteger,Direction) {
 
 @property (nonatomic, strong) CustomTextField * inputTextField;
 @property (nonatomic, strong) UIImageView * leftIcon;
-@property (nonatomic, strong) UIImageView * rightIcon;
+@property (nonatomic, strong) UIButton * rightIcon;
 
 @property (nonatomic, copy) NSString * placeHolder;
 

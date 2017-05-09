@@ -81,6 +81,15 @@
     RAC(self.bigLogin,enabled) = viewModel.validSignal;
     
     self.autoLogin.selected = viewModel.isAutoLogin;
+    
+    [[self.passWordField.rightIcon rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
+        x.selected = !x.selected;
+        if (x.selected) {
+            _passWordField.inputTextField.secureTextEntry = NO;
+        }else {
+            _passWordField.inputTextField.secureTextEntry = YES;
+        }
+    }];
     [[self.autoLogin rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIButton * _Nullable x) {
         x.selected = !x.selected;
         viewModel.isAutoLogin = x.selected;
@@ -170,7 +179,8 @@
         _passWordField = [InputTextField.alloc initWithFrame:CGRectZero
                                                  placeHolder:@"请输入您的密码"
                                                     leftIcon:@"mima"
-                                                   rightIcon:@"zhengyan"];
+                                                   rightIcon:@"biyan"];
+        [_passWordField.rightIcon setBackgroundImage:ImageNamed(@"zhengyan") forState:UIControlStateSelected];
         [_passWordField setIconSize:CGSizeMake(24, 32) direction:Left];
         [_passWordField setIconSize:CGSizeMake(28, 15) direction:Right];
         [_passWordField setFieldMode:UITextFieldViewModeAlways direction:Left];

@@ -152,6 +152,7 @@
         model.titleName = @"我要上班";
         model.descName = @"";
     }
+    [self.indexListView reloadData];
 //    SHYIndexCell * cell = [self.indexListView cellForRowAtIndexPath:[NSIndexPath indexPathWithIndex:2]];
 //    [cell setModel:model];
 }
@@ -169,7 +170,7 @@
     if (timeSecd/3600 >= 1) {
         formatStr = [NSString stringWithFormat:@"%ld小时%ld分",timeSecd/3600,(timeSecd%3600)/60];
     }else {
-        formatStr = [NSString stringWithFormat:@"%ld分钟",timeSecd/60];
+        formatStr = [NSString stringWithFormat:@"0小时%ld分",timeSecd/60];
     }
     //NSString * timeStr = [TimeManager timeWithTimeIntervalString:[NSString stringWithFormat:@"%ld",timeSecd] format:formatStr];
     model.descName = formatStr;

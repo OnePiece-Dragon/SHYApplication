@@ -15,19 +15,10 @@
                         isAll:(BOOL)isAll
                     lineCount:(NSInteger)count{
     if ([super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        if (isAll) {
-            //货物清单
-            for (int i = 0; i < 3; i++) {
-                SHYTwoSideLabel * label = [SHYTwoSideLabel.alloc initWithFrame:CGRectZero];
-                [self addSubview:label];
-                [self.rowArray addObject:label];
-            }
-        }else {
-            for (int i = 0; i < count; i++) {
-                SHYTwoSideLabel * label = [SHYTwoSideLabel.alloc initWithFrame:CGRectZero];
-                [self addSubview:label];
-                [self.rowArray addObject:label];
-            }
+        for (int i = 0; i < count; i++) {
+            SHYTwoSideLabel * label = [SHYTwoSideLabel.alloc initWithFrame:CGRectZero];
+            [self addSubview:label];
+            [self.rowArray addObject:label];
         }
         kWeakSelf(self);
         for (int i = 0; i < _rowArray.count; i++) {

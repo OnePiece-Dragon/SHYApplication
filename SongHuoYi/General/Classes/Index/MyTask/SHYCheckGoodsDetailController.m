@@ -30,6 +30,7 @@
     _haveChanged = NO;
     kWeakSelf(self);
     self.naviTitle = @"核货详情";
+    NOTICENTER_Register(self,@selector(checkBoxChangeDone), Noti_CheckBox);
     [self setRightItem:@"daohang" rightBlock:^{
         [weakself mapGuide];
     }];
@@ -37,14 +38,11 @@
         [weakself leftBarAction];
     };
     
+    //核货详情类别
+    [self setUI];
     //核货详情
     [self showNetTips:LOADING_TIPS];
     [self requestNuclearDetailData];
-    //核货详情类别
-    [self setUI];
-    
-    NOTICENTER_Register(self,@selector(checkBoxChangeDone), Noti_CheckBox);
-    
 }
 
 - (void)leftBarAction {
@@ -143,6 +141,7 @@
                      [self handleResponseObj:responseObj nulClearDetail:YES];
                      //请求分类
                      [self requestNuclearCategoryData];
+                     
                  }else {
                      [self hideNetTips];
                      [self showToast:failMessag];
@@ -193,6 +192,7 @@
         _goodsDetailModel = model;
     }else {
         DLog(@"responseObj_category:%@",responseObj);
+        self.startSendGoods.hidden = NO;
         //nuclear_category
         //NSString *category_plistPath = PLIST_Name(@"nuclear_category");
         //NSDictionary * category_result = [NSDictionary dictionaryWithContentsOfFile:category_plistPath];
@@ -212,6 +212,7 @@
         make.bottom.equalTo(weakself.view).offset(-(52+20));
     }];
     
+    self.startSendGoods.hidden = YES;
     if (_canCheckBtnClick == YES) {
         self.startSendGoods.enabled = YES;
         [self.startSendGoods setTitle:@"一键核货" forState:UIControlStateNormal];
@@ -340,6 +341,9 @@
         if (model.goods.count<2) {
             goodsCount = 2;
         }
+        if (indexPath.row == 0) {
+            goodsCount++;
+        }
         //货物种类
         SHYGoodsCell * cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"SHYGoodsCell_CAT:%ld",goodsCount]];
         if (!cell) {
@@ -349,6 +353,14 @@
         
         
         int i = 0;
+        
+        if (indexPath.row == 0) {
+            SHYTwoSideLabel * label = (SHYTwoSideLabel*)cell.rowArray.firstObject;
+            [label setLeftStr:@"货物清单" rightStr:nil rightIcon:nil];
+            label.leftLabel.font = [UIFont boldSystemFontOfSize:16];
+            [cell.rowArray removeObjectAtIndex:0];
+        }
+        
         for (SHYTwoSideLabel * label in cell.rowArray) {
             label.rightLabel.textAlignment = NSTextAlignmentRight;
             if (i == 0) {

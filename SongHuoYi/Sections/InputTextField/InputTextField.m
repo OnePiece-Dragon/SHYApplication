@@ -21,7 +21,8 @@
             self.leftIcon.image = [UIImage imageNamed:leftIcon];
         }
         if (rightIcon) {
-            self.rightIcon.image = [UIImage imageNamed:rightIcon];
+            [self.rightIcon setBackgroundImage:ImageNamed(rightIcon) forState:UIControlStateNormal];
+            //self.rightIcon.image = [UIImage imageNamed:rightIcon];
         }
         
         self.inputTextField.leftView = self.leftIcon;
@@ -91,9 +92,9 @@
     return _leftIcon;
 }
 
-- (UIImageView *)rightIcon {
+- (UIButton *)rightIcon {
     if (!_rightIcon) {
-        _rightIcon = [UIImageView.alloc initWithFrame:CGRectMake(0, 0, 32, 32)];
+        _rightIcon = [UIButton.alloc initWithFrame:CGRectMake(0, 0, 32, 32)];
     }
     return _rightIcon;
 }

@@ -68,12 +68,15 @@
 
 
 - (void)endRefresh {
-    [self.mj_footer endRefreshing];
-    [self.mj_header endRefreshing];
+    if ([self.mj_header isRefreshing]) {
+        [self.mj_header endRefreshing];
+    }
+    if ([self.mj_footer isRefreshing]) {
+        [self.mj_footer endRefreshing];
+    }
 }
 - (void)noMoreData {
     [self.mj_footer endRefreshingWithNoMoreData];
-   
 }
 
 
