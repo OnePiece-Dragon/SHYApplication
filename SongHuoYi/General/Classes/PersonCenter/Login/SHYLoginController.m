@@ -32,6 +32,8 @@
     [self.backView addSubview:self.autoLogin];
     [self.backView addSubview:self.bigLogin];
     
+    _phoneField.inputTextField.keyboardType = UIKeyboardTypePhonePad;
+    
     _phoneField.inputTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _phoneField.inputTextField.layer.borderWidth = 1.f;
     _phoneField.inputTextField.layer.borderColor = COLOR_RGB(255, 255, 255).CGColor;
@@ -100,9 +102,9 @@
         [viewModel fetchResponse];
         [self endEdit];
     }];
-    [viewModel.responseSignal subscribeNext:^(id  _Nullable x) {
+    [viewModel.responseSignal subscribeNext:^(NSNumber* x) {
         [self hideNetTips];
-        if (x) {
+        if (x.boolValue) {
             [APP_DELEGATE switchToHome];
         }else {
             [self showToast:viewModel.failResult[@"error"]];

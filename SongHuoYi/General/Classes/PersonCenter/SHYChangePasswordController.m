@@ -53,7 +53,7 @@
 //    _confirmPasswordView.layer.borderWidth = 1.f;
 //    _confirmPasswordView.layer.cornerRadius = 8.f;
     
-    
+    [_originalPasswordView setIconSize:CGSizeMake(24, 24) direction:Left];
     [_nPasswordView setIconSize:CGSizeMake(24, 32) direction:Left];
     [_confirmPasswordView setIconSize:CGSizeMake(24, 32) direction:Left];
     

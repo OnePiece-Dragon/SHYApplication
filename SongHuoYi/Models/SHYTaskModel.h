@@ -32,6 +32,7 @@
  始发地
  */
 @property (nonatomic, strong) NSString * startAddr;
+@property (nonatomic, strong) NSString * targetAddr;
 @property (nonatomic, strong) NSNumber * dimension;
 @property (nonatomic, strong) NSNumber * longitude;
 

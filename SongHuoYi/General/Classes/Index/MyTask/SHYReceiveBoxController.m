@@ -269,7 +269,7 @@
         cell.labelView.rightLabel.textColor = BUTTON_COLOR;
         [self.receiveDoneBtn setTitle:@"已核货" forState:UIControlStateDisabled];
     }else {
-        cell.labelView.rightLabel.text = @"未核货";
+        cell.labelView.rightLabel.text = [NSString stringWithFormat:@"%@/%@（%@）",model.actualNum,model.buyNum,model.unit];
         cell.labelView.rightLabel.textColor = COLOR_PRICE;
         [self.receiveDoneBtn setTitle:@"一键核货" forState:UIControlStateNormal];
     }

@@ -24,8 +24,9 @@
     // Do any additional setup after loading the view.
     self.naviTitle = @"运单详情";
     _page = 1;
-    [self historyDetailRequest];
     [self setUI];
+    [self showNetTips:LOADING_TIPS];
+    [self historyDetailRequest];
 }
 - (void)loadMoreData:(id)view {
     if (_page<_allPage) {
@@ -43,7 +44,6 @@
                        @"lineId":self.lineId,
                        @"shopId":self.shopId}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
-                 [self hideNetTips];
                  if (code) {
                      //
                      DLog(@"detail_responseObj:%@",responseObj);
@@ -53,6 +53,7 @@
                      
                      [self historyGoodsCategoryRequest];
                  }else {
+                     [self hideNetTips];
                      [self showToast:failMessag];
                  }
              } failure:^(NSString * _Nonnull errorStr) {

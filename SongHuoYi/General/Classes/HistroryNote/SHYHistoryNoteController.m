@@ -138,7 +138,7 @@
     [label3 setIcon:@"dizhi" size:CGSizeMake(24, 28)];
     
     label1.titleLabel.text = taskModel.lineName;
-    label2.titleLabel.text = [NSString stringWithFormat:@"任务单号：%@",taskModel.taskId];
+    label2.titleLabel.text = [NSString stringWithFormat:@"任务单号：%@",taskModel.taskCode];
     label3.titleLabel.text = [NSString stringWithFormat:@"地址：%@",taskModel.startAddr];
     label4.titleLabel.text = [NSString stringWithFormat:@"订单数：%@",taskModel.orderNum];
     label5.titleLabel.text = [NSString stringWithFormat:@"门店数：%@",taskModel.merchantNum];

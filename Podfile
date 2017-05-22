@@ -17,7 +17,7 @@ pod 'MJRefresh'
 pod 'IQKeyboardManager' 
 pod 'ReactiveObjC'
 
-pod 'BaiduMapKit' #百度地图SDK
+#pod 'BaiduMapKit' #百度地图SDK
 pod 'GTSDK', '1.6.3.0-noidfa'
 
 end

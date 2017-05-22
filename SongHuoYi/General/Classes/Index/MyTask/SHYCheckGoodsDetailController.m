@@ -19,6 +19,8 @@
 @property (nonatomic, strong) UIButton * startSendGoods;
 @property (nonatomic, strong) UIPasteboard * pasteBoard;
 
+@property (nonatomic, strong, nonnull) UIView * goodsHeaderView;
+
 @end
 
 @implementation SHYCheckGoodsDetailController
@@ -240,7 +242,7 @@
     [label3 setIcon:@"daishoukuan" size:CGSizeMake(24, 24)];
     [label4 setIcon:@"xingming" size:CGSizeMake(24, 24)];
     [label5 setIcon:@"calldianhua" size:CGSizeMake(24, 24)];
-    [label3 setIcon:@"dizhi" size:CGSizeMake(24, 28)];
+    [label6 setIcon:@"dizhi" size:CGSizeMake(24, 28)];
     
     label1.titleLabel.text = model.lineName;
     label2.titleLabel.text = [NSString stringWithFormat:@"任务单号：%@",model.taskId];
@@ -341,25 +343,14 @@
         if (model.goods.count<2) {
             goodsCount = 2;
         }
-        if (indexPath.row == 0) {
-            goodsCount++;
-        }
         //货物种类
-        SHYGoodsCell * cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"SHYGoodsCell_CAT:%ld",goodsCount]];
+        SHYGoodsCell * cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"SHYGoodsCell_CAT:%ld",(long)goodsCount]];
         if (!cell) {
-            cell = [SHYGoodsCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[NSString stringWithFormat:@"SHYGoodsCell_CAT:%ld",goodsCount] isAll:NO lineCount:goodsCount];
+            cell = [SHYGoodsCell.alloc initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[NSString stringWithFormat:@"SHYGoodsCell_CAT:%ld",(long)goodsCount] isAll:NO lineCount:goodsCount];
         }
-        [cell addTopView];
-        
         
         int i = 0;
         
-        if (indexPath.row == 0) {
-            SHYTwoSideLabel * label = (SHYTwoSideLabel*)cell.rowArray.firstObject;
-            [label setLeftStr:@"货物清单" rightStr:nil rightIcon:nil];
-            label.leftLabel.font = [UIFont boldSystemFontOfSize:16];
-            [cell.rowArray removeObjectAtIndex:0];
-        }
         
         for (SHYTwoSideLabel * label in cell.rowArray) {
             label.rightLabel.textAlignment = NSTextAlignmentRight;
@@ -394,6 +385,13 @@
 //    }
 //    return nil;
 //}
+- (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    if (section==1) {
+        
+        return self.goodsHeaderView;
+    }
+    return [UIView new];
+}
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
@@ -408,13 +406,13 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (section == 1) {
+        return 46.f;
+    }
     return 0.1f;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    if (section == 1) {
-        return 120;
-    }
-    return 0.1f;
+    return 10.f;
 }
 
 - (SHYBaseTableView *)checkGoodsDetailView {
@@ -430,6 +428,23 @@
         _headerDetailView = [SHYTaskCell.alloc initWithFrame:CGRectZero labelCount:7];
     }
     return _headerDetailView;
+}
+-(UIView *)goodsHeaderView{
+    if (!_goodsHeaderView) {
+        UIView * view = [UIView.alloc initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 46)];
+        UIView * bottomLine = [UIView.alloc initWithFrame:CGRectMake(0, 45, SCREEN_WIDTH, 1)];
+        UILabel * label = [UILabel.alloc initWithFrame:view.bounds];
+        label.x = 8;
+        label.text = @"货物清单";
+        label.backgroundColor = COLOR_WHITE;
+        view.backgroundColor = COLOR_WHITE;
+        bottomLine.backgroundColor = LINE_COLOR;
+        label.font = [UIFont boldSystemFontOfSize:16];
+        [view addSubview:label];
+        [view addSubview:bottomLine];
+        _goodsHeaderView = view;
+    }
+    return _goodsHeaderView;
 }
 - (UIButton *)startSendGoods {
     if (!_startSendGoods) {

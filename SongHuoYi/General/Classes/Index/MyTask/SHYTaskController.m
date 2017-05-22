@@ -84,6 +84,7 @@
 }
 
 - (void)jumpToMyTransport {
+    
     SHYTransportController * VC = [SHYTransportController.alloc init];
     [self.navigationController pushViewController:VC animated:YES];
 }
@@ -241,8 +242,8 @@
     [label3 setIcon:@"dizhi" size:CGSizeMake(24, 28)];
     
     label1.titleLabel.text = taskModel.lineName;
-    label2.titleLabel.text = [NSString stringWithFormat:@"任务单号：%@",taskModel.tasksId];
-    label3.titleLabel.text = [NSString stringWithFormat:@"地址：%@",taskModel.startAddr];
+    label2.titleLabel.text = [NSString stringWithFormat:@"任务单号：%@",taskModel.taskCode];
+    label3.titleLabel.text = [NSString stringWithFormat:@"取货地址：%@",taskModel.targetAddr];
     label4.titleLabel.text = [NSString stringWithFormat:@"商品数：%@",taskModel.totalNum];
     label5.titleLabel.text = [NSString stringWithFormat:@"门店数：%@",taskModel.merchantNum];
     label6.titleLabel.text = [NSString stringWithFormat:@"共计：%@",taskModel.taskDetail];

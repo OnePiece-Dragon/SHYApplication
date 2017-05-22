@@ -14,6 +14,8 @@
 #import <UserNotifications/UserNotifications.h>
 #endif
 
+
+
 @interface AppDelegate ()<GeTuiSdkDelegate, UNUserNotificationCenterDelegate>
 
 {
@@ -73,8 +75,9 @@
         SHYUserModel *model = UnArchiveObjWithData(UserDefaultObjectForKey(USER_MESSAGE));
         SHYUserModel *newModel = [SHYUserModel shareUserMsg];
         [newModel mj_setKeyValues:model.mj_keyValues];
+        
         //已经登录
-        self.window.rootViewController = self.tabBarVC;
+        [self switchToHome];
     }else {
         [self switchToLogin];
     }
@@ -187,11 +190,15 @@
 }
 
 - (void)switchToLogin {
+    [self.locationService stopService];
+    
     UserDefaultSetObjectForKey(@0, USER_LOGIN_STATUS);
     [SHYUserModel shareUserMsg].status = @0;
     self.window.rootViewController = self.loginVC;
 }
 - (void)switchToHome {
+    [self.locationService startServiceWithName:UserDefaultObjectForKey(USER_PHONE)];
+    
     UserDefaultSetObjectForKey(@1, USER_LOGIN_STATUS);
     self.window.rootViewController = self.tabBarVC;
 }
@@ -227,6 +234,14 @@
     }
     return _loginVC;
 }
+- (SHYLocationServer *)locationService {
+    if (!_locationService) {
+        _locationService = [SHYLocationServer shareInstance];
+        
+    }
+    return _locationService;
+}
+
 /** 注册 APNs */
 - (void)registerRemoteNotification {
     /*

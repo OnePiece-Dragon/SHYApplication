@@ -29,6 +29,8 @@
 #import "NetManager.h"
 #import "Factory.h"
 
+#import "SHYLocationServer.h"
+
 #import "SHYBaseViewModel.h"
 #import <MJRefresh/MJRefresh.h>
 

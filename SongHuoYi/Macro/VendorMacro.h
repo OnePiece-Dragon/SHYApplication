@@ -10,9 +10,13 @@
 #define VendorMacro_h
 
 //百度鹰眼
-#define BM_AK               @"sLaGHslIyKzT4jFQYtYwa639"
-#define BM_API_KEY          @"E76L0yGeL1rBmLGEbd23cQfgzuaLOgsR"
-#define BM_SECRET_KEY       @"Tht688FFCTVXRI28uRbrumQPxwqTDVci"
+//U6bYbmB7qUqp6GcoF5rYB9d037Pe6I52
+#define BM_AK               @"U6bYbmB7qUqp6GcoF5rYB9d037Pe6I52"
+//#define BM_API_KEY          @"E76L0yGeL1rBmLGEbd23cQfgzuaLOgsR"
+//#define BM_SECRET_KEY       @"Tht688FFCTVXRI28uRbrumQPxwqTDVci"
+
+#define BM_MCODE            @"cn.tianxi.SongHuoYi"
+#define BM_SERVICE_ID       @"123836"
 
 //个推
 #define kGtAppId            @"ZYwkdQXlYi6yddr8s97mL3"

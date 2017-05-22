@@ -54,8 +54,8 @@
 - (void)fetchResponse:(id)responseObj code:(BOOL)code fail:(NSString *)fail {
     [super fetchResponse:responseObj code:code fail:fail];
     if (code) {
-        [self.responseSignal sendNext:@YES];
         [self saveAccount];
+        [self.responseSignal sendNext:@YES];
     }else {
         [self.responseSignal sendNext:@NO];
     }

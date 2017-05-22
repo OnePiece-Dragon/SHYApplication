@@ -165,8 +165,8 @@
                        @"page":@(_rightPage)}
              success:^(NSDictionary * _Nonnull responseObj, NSString * _Nonnull failMessag, BOOL code) {
                  [self.deliveryDoneView endRefresh];
+                 [self hideNetTips];
                  if (code) {
-                     [self hideNetTips];
                      DLog(@"responseObj_Done:%@",responseObj);
                      if (responseObj[@"pages"]) {
                          _rightAllPage = [responseObj[@"pages"] integerValue];
@@ -216,6 +216,7 @@
                    if (code) {
                        //
                        [self showToast:@"操作成功!"];
+                       
                        
                        if (self.deliveryingArray.count == 1) {
                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -384,6 +385,7 @@
     if (index == 1 && !_haveSlide) {
         //
         _haveSlide = YES;
+        [self showNetTips:LOADING_TIPS];
         [self requestDeliveryDoneData];
     }
     

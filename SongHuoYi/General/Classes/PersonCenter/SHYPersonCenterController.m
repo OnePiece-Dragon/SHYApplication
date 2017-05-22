@@ -13,7 +13,7 @@
 #import "SHYFeedBackController.h"
 #import "SHYHelpCenterController.h"
 
-#define SERVE_PHONE     @"0571-8888888"
+#define SERVE_PHONE     @"0571-85353721"
 
 @interface SHYPersonCenterController ()
 
@@ -147,7 +147,7 @@
             make.right.equalTo(weakView).offset(-20);
             make.size.mas_equalTo(CGSizeMake(56, 32));
         }];
-        
+        cell.contentLabel.bottomLine.hidden = YES;
     }else {
         [cell.contentLabel setLeftStr:self.dataArray[indexPath.row]
                              rightStr:nil

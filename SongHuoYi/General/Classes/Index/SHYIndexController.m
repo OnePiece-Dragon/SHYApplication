@@ -46,6 +46,7 @@
     [self cancelBackItem];
     self.naviTitle = @"送货易";
     kWeakSelf(self);
+    
     [self setRightItem:@"message" rightBlock:^{
         [weakself messageItem];
     }];
@@ -119,9 +120,18 @@
                      if ([USER_WORK_STATUS integerValue] == 1) {
                          //上班状态
                          _canWork = YES;
+                         
+                         AppDelegate * app = APP_DELEGATE;
+                         [app.locationService startGather];
+                         
+                         
                          [self workModelStatus:1 workTime:model.workTime];
                      }else {
                          _canWork = NO;
+                         
+                         AppDelegate * app = APP_DELEGATE;
+                         [app.locationService stopGather];
+                         
                          [self workModelStatus:model.status.integerValue workTime:nil];
                      }
                  }else {

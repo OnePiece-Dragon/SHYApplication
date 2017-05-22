@@ -9,6 +9,6 @@
 #import "SHYBaseController.h"
 #import "SHYIndexCell.h"
 
-@interface SHYIndexController : SHYBaseController
+@interface SHYIndexController : SHYBaseController<BTKTraceDelegate, BTKFenceDelegate, BTKTrackDelegate, BTKEntityDelegate, BTKAnalysisDelegate>
 
 @end

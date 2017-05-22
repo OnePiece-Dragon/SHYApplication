@@ -41,6 +41,9 @@
 
 @property (nonatomic, strong) SHYLoginController * loginVC;
 
+@property (nonatomic, strong) SHYLocationServer * locationService;
+
+
 - (void)switchToLogin;
 - (void)switchToHome;
 

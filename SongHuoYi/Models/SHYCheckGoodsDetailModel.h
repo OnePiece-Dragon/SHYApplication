@@ -56,6 +56,7 @@
 @property (nonatomic, strong) NSString * senderAddr;
 @property (nonatomic, strong) NSNumber * senderPhone;
 @property (nonatomic, strong) NSString * senderName;
+
 /**
  寄件人id
  */

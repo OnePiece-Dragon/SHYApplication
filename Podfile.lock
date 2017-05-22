@@ -14,7 +14,6 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
-  - BaiduMapKit (3.3.0)
   - GTSDK (1.6.3.0-noidfa)
   - IQKeyboardManager (4.0.9)
   - Masonry (1.0.2)
@@ -28,7 +27,6 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking
-  - BaiduMapKit
   - GTSDK (= 1.6.3.0-noidfa)
   - IQKeyboardManager
   - Masonry
@@ -40,7 +38,6 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
-  BaiduMapKit: 6517f84bdca032170ee9da39985bb64eba8ed900
   GTSDK: f73bbc487a472ad8c0e316b69748c9d24dc047f6
   IQKeyboardManager: 322c7405df3eb5f7e50dede32ea937bf3d4364e0
   Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
@@ -50,6 +47,6 @@ SPEC CHECKSUMS:
   ReactiveObjC: ce79989e8684b9086b5f8d0c74bc7b81a8729c9e
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
 
-PODFILE CHECKSUM: 8f6eeac8cf7e9c70507f3909ec18ac5fcdfb7939
+PODFILE CHECKSUM: 304b763cb848597e868557574803af522a75985b
 
 COCOAPODS: 1.2.1.beta.1
